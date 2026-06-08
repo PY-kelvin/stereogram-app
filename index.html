@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cat Stereogram Game</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- App Container -->
+    <div id="app">
+
+        <!-- Password Modal -->
+        <div id="password-modal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Admin Override</h3>
+                <p>Enter password to unlock Stage 2.</p>
+                <input type="password" id="admin-password" placeholder="Password">
+                <div class="modal-actions">
+                    <button id="btn-cancel-pwd" class="btn btn-secondary btn-small">Cancel</button>
+                    <button id="btn-submit-pwd" class="btn btn-primary btn-small">Unlock</button>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Notification Toast -->
+        <div id="notification" class="hidden">
+            <p id="notification-message"></p>
+        </div>
+
+        <!-- AUTH SCREEN -->
+        <section id="screen-auth" class="screen active">
+            <div class="card">
+                <h1>😺 MyEyeGym</h1>
+                <p class="subtitle">Lets have fun with training</p>
+
+                <div class="tabs">
+                    <button id="tab-login" class="tab-btn active">Login</button>
+                    <button id="tab-register" class="tab-btn">Register</button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="form-login" class="auth-form">
+                    <div class="input-group">
+                        <label for="login-username">Username</label>
+                        <input type="text" id="login-username" required placeholder="catlover">
+                    </div>
+                    <div class="input-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Let's Play!</button>
+                </form>
+
+                <!-- Register Form -->
+                <form id="form-register" class="auth-form hidden">
+                    <div class="input-group">
+                        <label>Choose your Avatar</label>
+                        <div class="avatar-selector">
+                            <label><input type="radio" name="animal" value="cat" checked><img src="avatar_cat.png"
+                                    alt="Cat"></label>
+                            <label><input type="radio" name="animal" value="cow"><img src="avatar_cow.png"
+                                    alt="Cow"></label>
+                            <label><input type="radio" name="animal" value="hamster"><img src="avatar_hamster.png"
+                                    alt="Hamster"></label>
+                            <label><input type="radio" name="animal" value="puppy"><img src="avatar_puppy.png"
+                                    alt="Puppy"></label>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="reg-username">Username</label>
+                        <input type="text" id="reg-username" required placeholder="catlover">
+                    </div>
+                    <div class="input-group">
+                        <label for="reg-password">Password</label>
+                        <input type="password" id="reg-password" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Create Account</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- MAIN MENU SCREEN -->
+        <section id="screen-main-menu" class="screen">
+            <header class="map-header" style="justify-content: center;">
+                <h2>Main Menu</h2>
+            </header>
+            <div class="bubble-container">
+                <button id="btn-menu-instructions" class="bubble-btn bg-farm">
+                    <span class="bubble-text">Instructions</span>
+                </button>
+                <button id="btn-menu-start" class="bubble-btn bg-city">
+                    <span class="bubble-text">Start Game</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- INSTRUCTIONS SCREEN -->
+        <section id="screen-instructions" class="screen" style="background: linear-gradient(135deg, #e0f7fa 0%, #fff9c4 100%); position: relative; overflow: hidden;">
+            <!-- Cute decorations -->
+            <img src="avatar_cat.png" style="position: absolute; bottom: 5%; left: 5%; width: 120px; opacity: 0.6; transform: rotate(-15deg); z-index: 0;">
+            <img src="avatar_cow.png" style="position: absolute; top: 15%; right: 5%; width: 100px; opacity: 0.6; transform: rotate(10deg); z-index: 0;">
+            <img src="avatar_hamster.png" style="position: absolute; bottom: 10%; right: 10%; width: 90px; opacity: 0.6; transform: rotate(25deg); z-index: 0;">
+            <div style="position: absolute; top: 20%; left: 15%; font-size: 3rem; opacity: 0.4; z-index: 0;">🌸</div>
+            <div style="position: absolute; bottom: 30%; right: 25%; font-size: 3rem; opacity: 0.4; z-index: 0;">✨</div>
+            <div style="position: absolute; top: 40%; left: 10%; font-size: 2.5rem; opacity: 0.4; z-index: 0;">🦋</div>
+
+            <header class="map-header" style="position: relative; z-index: 1;">
+                <button id="btn-back-main-menu" class="btn btn-secondary btn-small">⬅ Back</button>
+                <h2 style="flex: 2; text-align: center;">Instructions</h2>
+                <div style="flex: 1;"></div>
+            </header>
+            
+            <div class="instructions-content" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: calc(100vh - 80px); gap: 40px; position: relative; z-index: 1;">
+                
+                <div class="instruction-category" style="text-align: center; width: 100%;">
+                    <h3 style="color: #2b2d42; margin-bottom: 20px; font-size: 1.5rem; background: rgba(255,255,255,0.7); display: inline-block; padding: 5px 20px; border-radius: 20px; border: 2px solid #2b2d42;">📖 PDF Manuals</h3>
+                    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
+                        <a href="cat-stereogram-exercise-distance-english.pdf" target="_blank" class="bubble-link">
+                            <button class="bubble-btn bubble-small">
+                                <span class="bubble-text">Stereogram<br>Distance</span>
+                            </button>
+                        </a>
+                        <a href="cat-stereogram-exercise-near-english.pdf" target="_blank" class="bubble-link">
+                            <button class="bubble-btn bubble-small bubble-alt">
+                                <span class="bubble-text">Stereogram<br>Near</span>
+                            </button>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="instruction-category" style="text-align: center; width: 100%;">
+                    <h3 style="color: #2b2d42; margin-bottom: 20px; font-size: 1.5rem; background: rgba(255,255,255,0.7); display: inline-block; padding: 5px 20px; border-radius: 20px; border: 2px solid #2b2d42;">🎥 Video Demonstrations</h3>
+                    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
+                        <a href="https://www.youtube.com/watch?v=h76TnuYiEMc" target="_blank" class="bubble-link">
+                            <button class="bubble-btn bubble-small">
+                                <span class="bubble-text" style="font-size: 1.2rem;">Stereogram Distance<br>Video Demonstration</span>
+                            </button>
+                        </a>
+                        <a href="https://www.youtube.com/watch?v=WyUWp6Qtww8" target="_blank" class="bubble-link">
+                            <button class="bubble-btn bubble-small bubble-alt">
+                                <span class="bubble-text" style="font-size: 1.2rem;">Stereogram Near<br>Video Demonstration</span>
+                            </button>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- MAP SCREEN -->
+        <section id="screen-map" class="screen">
+            <header class="map-header">
+                <div class="header-left" style="display: flex; align-items: center; gap: 10px;">
+                    <button id="btn-back-main-menu-from-map" class="btn btn-secondary btn-small">⬅ Back</button>
+                    <h2 style="margin: 0;">Level Map 🗺️</h2>
+                </div>
+                <div class="header-center">
+                    <span id="streak-counter">🔥 Times: 0/30</span>
+                </div>
+                <div class="user-stats header-right">
+                    <div class="header-buttons-stacked">
+                        <button id="btn-progress" class="btn btn-primary btn-small">Progress</button>
+                        <button id="btn-logout" class="btn btn-small">Logout</button>
+                    </div>
+                </div>
+            </header>
+
+            <div class="map-container">
+                <div class="map-content">
+                    <!-- SVG path for the dotted line -->
+                    <svg class="map-path" id="map-svg" viewBox="0 0 100 200" preserveAspectRatio="none">
+                        <path id="path-line-1" d="M 28 35 C 90 45, 90 70, 50 100" fill="none" stroke="#2b2d42"
+                            stroke-width="4" stroke-dasharray="10, 10" vector-effect="non-scaling-stroke" />
+                        <path id="path-line-2" d="M 50 100 C 10 130, 10 170, 70 190" fill="none" stroke="#2b2d42"
+                            stroke-width="4" stroke-dasharray="10, 10" vector-effect="non-scaling-stroke" />
+                    </svg>
+
+                    <div class="stage-node stage-1" id="node-stage1">
+                        <span class="stage-label">Stage 1</span>
+                        <div class="node-icon bg-farm"></div>
+                    </div>
+
+                    <div class="stage-node stage-2 locked" id="node-stage2">
+                        <span class="stage-label">Stage 2</span>
+                        <div class="node-icon bg-city">
+                            <div class="lock-overlay">🔒</div>
+                        </div>
+                    </div>
+
+                    <div class="stage-node stage-3 locked" id="node-stage3">
+                        <span class="stage-label">Stage 3</span>
+                        <div class="node-icon bg-castle">
+                            <div class="lock-overlay">🔒</div>
+                        </div>
+                    </div>
+
+                    <!-- The Cat avatar that moves -->
+                    <img id="player-avatar" class="player-avatar" src="avatar_cat.png" alt="Player">
+                </div>
+            </div>
+        </section>
+
+        <!-- GAME SCREEN -->
+        <section id="screen-game" class="screen">
+            <div id="rotate-overlay" class="hidden">
+                <div class="rotate-content">
+                    <span class="rotate-icon">🔄</span>
+                    <h2>Please rotate your device</h2>
+                    <p>Stereogram training must be completed in landscape mode.</p>
+                </div>
+            </div>
+
+            <header class="game-header">
+                <button id="btn-back-map" class="btn btn-small btn-back">⬅ Back</button>
+                <div class="timer-container">
+                    <span id="timer-display">10:00</span>
+                </div>
+                <div class="stage-info">
+                    <span id="current-stage-title">Stage 1</span>
+                </div>
+            </header>
+
+            <div class="canvas-container">
+                <button id="btn-img-prev" class="btn-image-nav">&lt;</button>
+                <canvas id="game-canvas"></canvas>
+                <button id="btn-img-next" class="btn-image-nav">&gt;</button>
+            </div>
+
+            <div class="controls-overlay">
+                <button id="btn-toggle-timer" class="btn btn-primary">Start Exercise</button>
+                <button id="btn-save-rest" class="btn btn-secondary">Save & Rest</button>
+            </div>
+        </section>
+
+        <!-- PROGRESS REPORT SCREEN -->
+        <section id="screen-progress" class="screen">
+            <header class="map-header">
+                <h2>Progress Report 📊</h2>
+                <button id="btn-back-map-from-progress" class="btn btn-small">⬅ Back to Map</button>
+            </header>
+
+            <div class="progress-container">
+                <div class="tabs" style="margin-bottom: 20px;">
+                    <button id="tab-calendar" class="tab-btn active">Calendar</button>
+                    <button id="tab-summary" class="tab-btn">Summary</button>
+                </div>
+
+                <div class="calendar-header">
+                    <button id="btn-prev-month" class="btn btn-small btn-secondary">&lt;</button>
+                    <h3 id="calendar-month-year">June 2026</h3>
+                    <button id="btn-next-month" class="btn btn-small btn-secondary">&gt;</button>
+                </div>
+
+                <div id="view-calendar" class="progress-view active">
+                    <div class="calendar-grid">
+                        <div class="day-name">Sun</div>
+                        <div class="day-name">Mon</div>
+                        <div class="day-name">Tue</div>
+                        <div class="day-name">Wed</div>
+                        <div class="day-name">Thu</div>
+                        <div class="day-name">Fri</div>
+                        <div class="day-name">Sat</div>
+                        <!-- Days injected here -->
+                    </div>
+                    <div id="calendar-day-details" class="day-details hidden">
+                        <h4>Details for <span id="detail-date"></span></h4>
+                        <p>Times done: <strong id="detail-times">0</strong></p>
+                        <p>Average duration: <strong id="detail-duration">0 min</strong></p>
+                    </div>
+                </div>
+
+                <div id="view-summary" class="progress-view hidden">
+                    <div class="summary-cards">
+                        <div class="summary-card">
+                            <h3 id="title-stat-month">Times Done This Month</h3>
+                            <p id="stat-month" class="stat-number">0</p>
+                        </div>
+                        <div class="summary-card">
+                            <h3 id="title-stat-week">Times Done This Week</h3>
+                            <p id="stat-week" class="stat-number">0</p>
+                        </div>
+                        <div class="summary-card">
+                            <h3 id="title-stat-duration">Average Duration</h3>
+                            <p id="stat-freq" class="stat-number">0 mins</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/app.js?v=2"></script>
+</body>
+
+</html>
