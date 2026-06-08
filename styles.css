@@ -420,6 +420,19 @@ canvas {
     z-index: 100; /* Ensure above canvas */
 }
 
+.controls-overlay .btn {
+    padding: 10px; 
+    font-size: 1.5rem; 
+    width: 60px; 
+    height: 60px;
+    border-radius: 30px; /* Make them perfect circles */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
 /* Landscape Mode Adjustments for Stereogram Training */
 @media (orientation: landscape) {
     #screen-game {
@@ -445,22 +458,26 @@ canvas {
     
     .controls-overlay {
         position: absolute;
-        bottom: auto;
-        top: 50%;
-        left: auto;
-        right: 5px; /* Extreme right */
-        transform: translateY(-50%);
-        flex-direction: column;
-        gap: 8px;
+        bottom: 10px;
+        top: auto;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        flex-direction: row;
+        gap: 15px;
         z-index: 100;
     }
 
     .controls-overlay .btn {
-        padding: 5px 10px; /* Smaller padding */
-        font-size: 0.85rem; /* Smaller font */
-        width: 100px; /* Thinner button */
-        white-space: normal; /* Allow text to wrap nicely */
-        line-height: 1.2;
+        padding: 10px; 
+        font-size: 1.5rem; 
+        width: 50px; 
+        height: 50px;
+        border-radius: 25px; /* Make them perfect circles */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        white-space: nowrap;
     }
     
     .canvas-container {

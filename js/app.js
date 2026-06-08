@@ -505,7 +505,7 @@ const Game = {
                 // Portrait mode detected
                 if (this.isPlaying) {
                     this.pauseTimer();
-                    document.getElementById('btn-toggle-timer').innerText = "Resume Exercise";
+                    document.getElementById('btn-toggle-timer').innerText = "▶";
                     window.App.showNotification("Exercise paused. Please rotate to landscape mode.", "warning");
                 }
             }
@@ -522,10 +522,10 @@ const Game = {
         document.getElementById('btn-toggle-timer').addEventListener('click', (e) => {
             if (this.isPlaying) {
                 this.pauseTimer();
-                e.target.innerText = "Resume Exercise";
+                e.target.innerText = "▶";
             } else {
                 this.startTimer();
-                e.target.innerText = "Pause Exercise";
+                e.target.innerText = "⏸";
             }
         });
 
@@ -635,7 +635,7 @@ const Game = {
         this.updateTimerDisplay();
 
         document.getElementById('current-stage-title').innerText = `Stage ${stageNum}`;
-        document.getElementById('btn-toggle-timer').innerText = "Start Exercise";
+        document.getElementById('btn-toggle-timer').innerText = "▶";
 
         this.loadImage(stageNum);
 
