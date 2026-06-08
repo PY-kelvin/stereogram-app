@@ -568,9 +568,8 @@ const Game = {
     },
 
     resizeCanvas() {
-        const container = document.querySelector('.canvas-container');
-        this.canvas.width = container.clientWidth;
-        this.canvas.height = container.clientHeight;
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
     },
 
     updateNavButtonsVisibility() {

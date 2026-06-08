@@ -494,7 +494,7 @@ canvas {
     }
     
     #btn-img-next {
-        right: 120px; /* Make room for the right-side controls */
+        right: 10px; 
     }
 }
 
