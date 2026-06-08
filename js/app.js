@@ -667,8 +667,7 @@ const Game = {
     },
 
     render() {
-        this.ctx.fillStyle = '#1a1a24';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         if (this.imageObj && this.imageObj.complete && this.imageObj.naturalWidth > 0) {
             const imgRatio = this.imageObj.width / this.imageObj.height;

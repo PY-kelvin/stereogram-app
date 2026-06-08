@@ -209,8 +209,29 @@
         </section>
 
         <!-- GAME SCREEN -->
-        <section id="screen-game" class="screen">
-            <div id="rotate-overlay" class="hidden">
+        <section id="screen-game" class="screen" style="background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);">
+            
+            <!-- Cheerful Background Decorations -->
+            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; overflow: hidden;">
+                <!-- Bubbles/Sparkles -->
+                <div style="position: absolute; top: 10%; left: 15%; font-size: 2.5rem; opacity: 0.5;">✨</div>
+                <div style="position: absolute; bottom: 20%; left: 8%; font-size: 3rem; opacity: 0.5;">⭐</div>
+                <div style="position: absolute; top: 25%; right: 10%; font-size: 3rem; opacity: 0.5;">🌟</div>
+                <div style="position: absolute; bottom: 15%; right: 15%; font-size: 2.5rem; opacity: 0.5;">✨</div>
+                
+                <!-- Animals with encouragement -->
+                <div style="position: absolute; bottom: 5%; left: 3%; transform: rotate(-10deg); text-align: center;">
+                    <div style="background: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; color: #2b2d42; border: 2px solid #2b2d42; margin-bottom: 5px; box-shadow: 2px 2px 0 #2b2d42;">You can do it!</div>
+                    <img src="avatar_cat.png" style="width: 100px;">
+                </div>
+                
+                <div style="position: absolute; top: 5%; right: 5%; transform: rotate(15deg); text-align: center;">
+                    <img src="avatar_hamster.png" style="width: 90px;">
+                    <div style="background: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; color: #2b2d42; border: 2px solid #2b2d42; margin-top: 5px; box-shadow: 2px 2px 0 #2b2d42;">Keep it up!</div>
+                </div>
+            </div>
+
+            <div id="rotate-overlay" class="hidden" style="z-index: 9999;">
                 <div class="rotate-content">
                     <span class="rotate-icon">🔄</span>
                     <h2>Please rotate your device</h2>

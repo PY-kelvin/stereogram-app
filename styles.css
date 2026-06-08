@@ -406,7 +406,7 @@ h1, h2, h3 {
 .canvas-container {
     width: 100%;
     height: 100%;
-    background: #000; /* Dark bg for contrast with stereogram */
+    background: transparent;
     display: flex;
     justify-content: center;
     align-items: center;
