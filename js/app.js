@@ -675,10 +675,10 @@ const Game = {
             let drawWidth, drawHeight, x, y;
 
             if (canvasRatio > imgRatio) {
-                drawHeight = this.canvas.height * 0.95;
+                drawHeight = this.canvas.height * 0.98;
                 drawWidth = drawHeight * imgRatio;
             } else {
-                drawWidth = this.canvas.width * 0.95;
+                drawWidth = this.canvas.width * 0.98;
                 drawHeight = drawWidth / imgRatio;
             }
             x = (this.canvas.width - drawWidth) / 2;

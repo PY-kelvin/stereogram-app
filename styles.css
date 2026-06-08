@@ -226,18 +226,7 @@ h1, h2, h3 {
     gap: 5px;
 }
 
-.canvas-container {
-    flex: 1;
-    position: relative;
-    background: #e5e5e5;
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    border: 2px solid var(--text-dark);
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+
 
 .btn-image-nav {
     position: absolute;
@@ -404,12 +393,15 @@ h1, h2, h3 {
 }
 
 .canvas-container {
+    flex: 1;
     width: 100%;
     height: 100%;
     background: transparent;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+    overflow: hidden;
 }
 
 canvas {
@@ -425,7 +417,57 @@ canvas {
     transform: translateX(-50%);
     display: flex;
     gap: 15px;
-    z-index: 10;
+    z-index: 100; /* Ensure above canvas */
+}
+
+/* Landscape Mode Adjustments for Stereogram Training */
+@media (orientation: landscape) {
+    #screen-game {
+        padding: 0;
+        flex-direction: row;
+    }
+    
+    .game-header {
+        position: absolute;
+        top: 15px;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 30px;
+        z-index: 110;
+        pointer-events: none; /* Let clicks pass through to canvas */
+    }
+    
+    .game-header * {
+        pointer-events: auto; /* Re-enable clicks on header buttons */
+    }
+    
+    .controls-overlay {
+        bottom: auto;
+        top: 50%;
+        left: auto;
+        right: 30px;
+        transform: translateY(-50%);
+        flex-direction: column;
+    }
+    
+    .canvas-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 50;
+    }
+    
+    #btn-img-prev {
+        left: 30px;
+    }
+    
+    #btn-img-next {
+        right: 200px; /* Make room for the right-side controls */
+    }
 }
 
 .btn-debug {
