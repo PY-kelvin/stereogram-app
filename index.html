@@ -4,6 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- iOS Web App Tags for Fullscreen -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Stereogram">
+    
     <title>Cat Stereogram Game</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -240,12 +245,13 @@
             </div>
 
             <header class="game-header">
-                <button id="btn-back-map" class="btn btn-small btn-back">⬅ Back</button>
-                <div class="timer-container">
+                <button id="btn-back-map" class="btn btn-small btn-back" style="flex: 1;">⬅ Back</button>
+                <div class="timer-container" style="flex: 2; text-align: center;">
                     <span id="timer-display">10:00</span>
                 </div>
-                <div class="stage-info">
+                <div class="stage-info" style="flex: 1; display: flex; justify-content: flex-end; gap: 10px;">
                     <span id="current-stage-title">Stage 1</span>
+                    <button id="btn-fullscreen" class="btn btn-small" style="background: #2b2d42; margin-top: 0;">⛶</button>
                 </div>
             </header>
 

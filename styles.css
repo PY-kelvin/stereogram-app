@@ -423,50 +423,53 @@ canvas {
 /* Landscape Mode Adjustments for Stereogram Training */
 @media (orientation: landscape) {
     #screen-game {
-        padding: 0;
-        flex-direction: row;
+        padding: 10px;
+        display: grid;
+        grid-template-columns: 1fr 180px;
+        grid-template-rows: 60px 1fr;
+        grid-template-areas: 
+            "header header"
+            "canvas controls";
+        gap: 10px;
+        align-items: stretch;
     }
     
     .game-header {
-        position: absolute;
-        top: 15px;
-        left: 0;
+        position: static;
+        grid-area: header;
+        padding: 0 10px;
         width: 100%;
         display: flex;
         justify-content: space-between;
-        padding: 0 30px;
-        z-index: 110;
-        pointer-events: none; /* Let clicks pass through to canvas */
-    }
-    
-    .game-header * {
-        pointer-events: auto; /* Re-enable clicks on header buttons */
+        align-items: center;
+        z-index: 10;
+        pointer-events: auto;
     }
     
     .controls-overlay {
-        bottom: auto;
-        top: 50%;
-        left: auto;
-        right: 30px;
-        transform: translateY(-50%);
+        position: static;
+        grid-area: controls;
+        transform: none;
         flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
     }
     
     .canvas-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
+        position: relative;
+        grid-area: canvas;
+        width: 100%;
+        height: 100%;
         z-index: 50;
     }
     
     #btn-img-prev {
-        left: 30px;
+        left: 10px;
     }
     
     #btn-img-next {
-        right: 200px; /* Make room for the right-side controls */
+        right: 10px;
     }
 }
 
