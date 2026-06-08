@@ -682,6 +682,9 @@ const Game = {
                 drawHeight = drawWidth / imgRatio;
             }
             x = (this.canvas.width - drawWidth) / 2;
+            if (window.innerWidth > window.innerHeight) {
+                x -= 70; // Shift left to make room for right-side buttons
+            }
             y = (this.canvas.height - drawHeight) / 2;
 
             this.ctx.drawImage(this.imageObj, x, y, drawWidth, drawHeight);
