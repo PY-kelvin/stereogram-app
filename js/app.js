@@ -253,13 +253,13 @@ const Map = {
                     
                     if (!user.unlockedStages.includes(2)) user.unlockedStages.push(2);
                     
-                    const oldStreak = user.streak;
-                    user.streak = 30;
-                    user.sessionHistory = []; // Wipe corrupted backfill
                     if (window.Progress) window.Progress.saveUser();
                     
                     this.animateUnlockStage(2);
-                    this.moveToStage(2, oldStreak / 60);
+                    // Do not artificially move the avatar to stage 2 permanently, just let it stay at true streak
+                    setTimeout(() => {
+                        window.App.showScreen('screen-map');
+                    }, 500);
                 } else {
                     window.App.showNotification("Incorrect Password.", "warning");
                 }
@@ -271,14 +271,13 @@ const Map = {
                     if (!user.unlockedStages.includes(2)) user.unlockedStages.push(2);
                     if (!user.unlockedStages.includes(3)) user.unlockedStages.push(3);
                     
-                    const oldStreak = user.streak;
-                    user.streak = 60;
-                    user.sessionHistory = []; // Wipe corrupted backfill
                     if (window.Progress) window.Progress.saveUser();
                     
                     this.animateUnlockStage(2);
                     this.animateUnlockStage(3);
-                    this.moveToStage(3, oldStreak / 60);
+                    setTimeout(() => {
+                        window.App.showScreen('screen-map');
+                    }, 500);
                 } else {
                     window.App.showNotification("Incorrect Password.", "warning");
                 }
