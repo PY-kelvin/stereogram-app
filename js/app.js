@@ -97,9 +97,8 @@ const Auth = {
             // If they played today but history was wiped, ensure at least 1
             const trueStreak = Math.max(uniqueDays, user.dailyProgress === 1 ? 1 : 0);
             
-            // Only heal if the current streak is suspiciously much higher than reality 
-            // (e.g. forced to 30 or 60 by the bug)
-            if (user.streak > trueStreak && (user.streak === 30 || user.streak === 60)) {
+            // If streak is mathematically impossible, aggressively heal it
+            if (user.streak > trueStreak) {
                 user.streak = trueStreak;
                 localStorage.setItem(`user_${username}`, JSON.stringify(user));
             }
@@ -131,7 +130,8 @@ const Auth = {
                 if (user.sessionHistory && Array.isArray(user.sessionHistory)) {
                     const uniqueDays = new Set(user.sessionHistory.map(s => s.dateStr)).size;
                     const trueStreak = Math.max(uniqueDays, user.dailyProgress === 1 ? 1 : 0);
-                    if (user.streak > trueStreak && (user.streak === 30 || user.streak === 60)) {
+                    // If streak is corrupted (greater than mathematically possible), forcefully heal it
+                    if (user.streak > trueStreak) {
                         user.streak = trueStreak;
                         localStorage.setItem(`user_${username}`, JSON.stringify(user));
                     }
@@ -516,11 +516,11 @@ const Game = {
     },
 
     stage1Ratios: {
-        'stage 1/Stage 1D.png?v=3': 0.5000,
-        'stage 1/Stage 1E.png?v=3': 0.4995,
-        'stage 1/stage 1A.png?v=3': 0.5000,
-        'stage 1/stage 1B.png?v=3': 0.4995,
-        'stage 1/stage 1C.png?v=3': 0.5000,
+        'stage 1/Stage 1D.png?v=3': 0.3696,
+        'stage 1/Stage 1E.png?v=3': 0.4747,
+        'stage 1/stage 1A.png?v=3': 0.3778,
+        'stage 1/stage 1B.png?v=3': 0.4747,
+        'stage 1/stage 1C.png?v=3': 0.3856,
     },
     
     stage2Ratios: {
