@@ -487,26 +487,13 @@ const Game = {
     init() {
         this.currentStage = 1;
         this.currentImageIndex = 0;
-        window.addEventListener('orientationchange', () => this.handleOrientationChange());
+        this.bindEvents();
         window.addEventListener('beforeunload', () => {
             if (this.isPlaying || (this.timeLeft > 0 && this.timeLeft < 600)) {
                 this.pauseTimer();
             }
         });
-    },
-
-    handleOrientationChange() {
-        // Allow a slight delay for the browser to update window.orientation
-        setTimeout(() => {
-            if (window.orientation === 0 || window.orientation === 180) {
-                // Portrait mode detected
-                if (this.isPlaying) {
-                    this.pauseTimer();
-                    document.getElementById('btn-toggle-timer').innerText = "▶";
-                    window.App.showNotification("Exercise paused. Please rotate to landscape mode.", "warning");
-                }
-            }
-        }, 300);
+        });
     },
 
     bindEvents() {
