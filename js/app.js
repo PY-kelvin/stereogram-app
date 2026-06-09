@@ -480,16 +480,14 @@ const Game = {
         1: ['stage 1/Stage 1D.png', 'stage 1/Stage 1E.png', 'stage 1/stage 1A.png', 'stage 1/stage 1B.png', 'stage 1/stage 1C.png'],
         2: ['stage 2/stage 2A.png', 'stage 2/stage 2B.png', 'stage 2/stage 2C.png', 'stage 2/stage 2D.png', 'stage 2/stage 2E.png'],
         3: ['stage 3/Stage 3C.png', 'stage 3/stage 3A.png', 'stage 3/stage 3B.png', 'stage 3/stage 3D.png', 'stage 3/stage 3E.png']
+        3: ['stage 3/Stage 3C.png', 'stage 3/Stage 3A.png', 'stage 3/Stage 3B.png', 'stage 3/stage 3D.png', 'stage 3/stage 3E.png']
     },
     currentImageIndex: 0,
     hasStartedCurrentSession: false,
 
     init() {
-        this.canvas = document.getElementById('game-canvas');
-        this.ctx = this.canvas.getContext('2d');
-        this.bindEvents();
-        this.resizeCanvas();
-        window.addEventListener('resize', () => this.resizeCanvas());
+        this.currentStage = 1;
+        this.currentImageIndex = 0;
         window.addEventListener('orientationchange', () => this.handleOrientationChange());
         window.addEventListener('beforeunload', () => {
             if (this.isPlaying || (this.timeLeft > 0 && this.timeLeft < 600)) {
@@ -509,7 +507,6 @@ const Game = {
                     window.App.showNotification("Exercise paused. Please rotate to landscape mode.", "warning");
                 }
             }
-            this.resizeCanvas();
         }, 300);
     },
 
@@ -519,6 +516,11 @@ const Game = {
             window.App.showScreen('screen-map');
         });
 
+        document.getElementById('btn-fullscreen').addEventListener('click', () => {
+            const screen = document.getElementById('screen-game');
+            screen.classList.toggle('focus-mode');
+        });
+        
         document.getElementById('btn-toggle-timer').addEventListener('click', (e) => {
             if (this.isPlaying) {
                 this.pauseTimer();
@@ -565,11 +567,6 @@ const Game = {
             this.currentImageIndex = (this.currentImageIndex + 1) % images.length;
             this.loadImage(this.currentStage);
         });
-    },
-
-    resizeCanvas() {
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
     },
 
     updateNavButtonsVisibility() {
@@ -641,55 +638,11 @@ const Game = {
         // Particles removed as requested
 
         window.App.showScreen('screen-game');
-        this.resizeCanvas();
-        this.startGameLoop();
     },
 
     loadImage(stageNum) {
-        this.imageObj = new Image();
-        this.imageObj.onerror = () => {
-            console.warn(`Could not load stage ${stageNum} image. Using fallback rendering.`);
-            this.imageObj = null;
-        };
         const images = this.stageImages[stageNum] || this.stageImages[1];
-        this.imageObj.src = images[this.currentImageIndex];
-    },
-
-    startGameLoop() {
-        if (this.animationId) cancelAnimationFrame(this.animationId);
-
-        const loop = () => {
-            this.render();
-            this.animationId = requestAnimationFrame(loop);
-        };
-        loop();
-    },
-
-    render() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        if (this.imageObj && this.imageObj.complete && this.imageObj.naturalWidth > 0) {
-            const imgRatio = this.imageObj.width / this.imageObj.height;
-            const canvasRatio = this.canvas.width / this.canvas.height;
-            let drawWidth, drawHeight, x, y;
-
-            if (canvasRatio > imgRatio) {
-                drawHeight = this.canvas.height * 0.95;
-                drawWidth = drawHeight * imgRatio;
-            } else {
-                drawWidth = this.canvas.width * 0.95;
-                drawHeight = drawWidth / imgRatio;
-            }
-            x = (this.canvas.width - drawWidth) / 2;
-            y = (this.canvas.height - drawHeight) / 2;
-
-            this.ctx.drawImage(this.imageObj, x, y, drawWidth, drawHeight);
-        } else {
-            this.ctx.fillStyle = 'white';
-            this.ctx.font = '24px Fredoka';
-            this.ctx.textAlign = 'center';
-            this.ctx.fillText(`Stereogram Image ${this.currentStage} Loading...`, this.canvas.width / 2, this.canvas.height / 2);
-        }
+        document.getElementById('game-image').src = images[this.currentImageIndex];
     },
 
     startTimer() {
@@ -743,7 +696,8 @@ const Game = {
     stopGame() {
         this.pauseTimer();
         this.isPlaying = false;
-        if (this.animationId) cancelAnimationFrame(this.animationId);
+        // Turn off focus mode
+        document.getElementById('screen-game').classList.remove('focus-mode');
     }
 };
 

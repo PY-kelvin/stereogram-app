@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=6">
+    <link rel="stylesheet" href="styles.css?v=7">
 </head>
 
 <body>
@@ -217,7 +217,7 @@
         <section id="screen-game" class="screen" style="background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);">
             
             <!-- Cheerful Background Decorations -->
-            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; overflow: hidden;">
+            <div id="cheerful-decorations" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; overflow: hidden;">
                 <!-- Bubbles/Sparkles -->
                 <div style="position: absolute; top: 10%; left: 15%; font-size: 2.5rem; opacity: 0.5;">✨</div>
                 <div style="position: absolute; bottom: 20%; left: 8%; font-size: 3rem; opacity: 0.5;">⭐</div>
@@ -257,7 +257,7 @@
 
             <div class="canvas-container">
                 <button id="btn-img-prev" class="btn-image-nav">&lt;</button>
-                <canvas id="game-canvas"></canvas>
+                <img id="game-image" src="" alt="Stereogram">
                 <button id="btn-img-next" class="btn-image-nav">&gt;</button>
             </div>
 
