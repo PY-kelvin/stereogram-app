@@ -1,9 +1,9 @@
-const CACHE_NAME = 'myeyegym-cache-v16';
+const CACHE_NAME = 'myeyegym-cache-v17';
 const urlsToCache = [
   './',
-  './index.html?v=16',
-  './styles.css?v=16',
-  './js/app.js?v=16',
+  './index.html?v=17',
+  './styles.css?v=17',
+  './js/app.js?v=17',
   './manifest.json',
   './avatar_cat.png',
   './avatar_cow.png',
@@ -12,6 +12,7 @@ const urlsToCache = [
 ];
 
 self.addEventListener('install', event => {
+  self.skipWaiting(); // Force the waiting service worker to become the active service worker.
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
@@ -33,16 +34,16 @@ self.addEventListener('fetch', event => {
 });
 
 self.addEventListener('activate', event => {
-  const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
+          if (cacheName !== CACHE_NAME) {
             return caches.delete(cacheName);
           }
         })
       );
     })
   );
+  return self.clients.claim(); // Ensure the new service worker takes control immediately
 });
