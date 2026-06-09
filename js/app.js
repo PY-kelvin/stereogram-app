@@ -89,6 +89,23 @@ const Auth = {
         if (user.dailyProgress === undefined) user.dailyProgress = 0;
         if (user.lastActivityDate === undefined) user.lastActivityDate = user.lastSessionDate || null;
 
+        // --- SELF HEAL CORRUPTED PROFILES ---
+        // If the user's streak was artificially corrupted by the old override bug, 
+        // we can heal it by counting the true number of unique days played in sessionHistory.
+        if (user.sessionHistory && Array.isArray(user.sessionHistory)) {
+            const uniqueDays = new Set(user.sessionHistory.map(s => s.dateStr)).size;
+            // If they played today but history was wiped, ensure at least 1
+            const trueStreak = Math.max(uniqueDays, user.dailyProgress === 1 ? 1 : 0);
+            
+            // Only heal if the current streak is suspiciously much higher than reality 
+            // (e.g. forced to 30 or 60 by the bug)
+            if (user.streak > trueStreak && (user.streak === 30 || user.streak === 60)) {
+                user.streak = trueStreak;
+                localStorage.setItem(`user_${username}`, JSON.stringify(user));
+            }
+        }
+        // ------------------------------------
+
         window.App.showScreen('screen-main-menu');
         window.App.showNotification(`Welcome back, ${username}!`, "success");
 
@@ -108,7 +125,20 @@ const Auth = {
         if (username) {
             const userStr = localStorage.getItem(`user_${username}`);
             if (userStr) {
-                window.App.currentUser = JSON.parse(userStr);
+                const user = JSON.parse(userStr);
+                
+                // --- SELF HEAL CORRUPTED PROFILES ---
+                if (user.sessionHistory && Array.isArray(user.sessionHistory)) {
+                    const uniqueDays = new Set(user.sessionHistory.map(s => s.dateStr)).size;
+                    const trueStreak = Math.max(uniqueDays, user.dailyProgress === 1 ? 1 : 0);
+                    if (user.streak > trueStreak && (user.streak === 30 || user.streak === 60)) {
+                        user.streak = trueStreak;
+                        localStorage.setItem(`user_${username}`, JSON.stringify(user));
+                    }
+                }
+                // ------------------------------------
+
+                window.App.currentUser = user;
                 window.App.showScreen('screen-main-menu');
                 if (window.Progress) window.Progress.loadUserData();
                 return true;
