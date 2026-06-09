@@ -30,11 +30,10 @@ body {
     overflow: hidden; /* Prevent scrolling, handle via app container */
 }
 
-/* App Container (Mobile First, max width for desktop) */
+/* App Container */
 #app {
     width: 100vw;
     height: 100vh;
-    max-width: 600px;
     position: relative;
     background: transparent;
     overflow: hidden;
@@ -486,8 +485,8 @@ h1, h2, h3 {
         position: absolute;
         top: 0;
         left: 0;
-        width: 100vw;
-        height: 100vh;
+        width: 100%;
+        height: 100%;
         z-index: 50;
         display: flex;
         justify-content: center;
