@@ -769,7 +769,7 @@ const distContent = `
     <li>You may notice 4 images at times - you can adjust the distance of the card slightly until you see the fused image.<br><br></li>
     <li>4 images should become 3 images with the middle (fused) image appearing complete.<br><br></li>
     <li>Once the middle image appears, try to keep the third image in focus for <u>10 seconds</u>. Do NOT look at the middle complete image as it will disappear immediately if you do. If the third image disappears, stop counting and refocus to get the third image to appear again.<br><br></li>
-    <li>Repeat.</li>
+    <li>Repeat.<br><br></li>
 </ol>
 <p><strong>Frequency:</strong> Perform for 10 to 15 minutes a day. This can be broken up into 2 or 3 sessions.</p>
 <div style="background: #fff3cd; padding: 15px; border-radius: 10px; border-left: 5px solid #ffc107; margin-top: 20px;">
@@ -786,7 +786,7 @@ const nearContent = `
     <li>Whilst looking at the pen you should be aware of both the images becoming double, therefore you should see 4 images.<br><br></li>
     <li>4 images should become 3 images with the middle (fused) image appearing complete.<br><br></li>
     <li>Once the middle image appears, stop moving the pen and try to keep the third image in focus for <u>10 seconds</u>. Do NOT look at the middle complete image as it will disappear immediately if you do. If the third image disappears, stop counting and refocus to get the third image to appear again.<br><br></li>
-    <li>Repeat.</li>
+    <li>Repeat.<br><br></li>
 </ol>
 <p><strong>Frequency:</strong> Perform for 10 to 15 minutes a day. This can be broken up into 2 or 3 sessions.</p>
 <div style="background: #fff3cd; padding: 15px; border-radius: 10px; border-left: 5px solid #ffc107; margin-top: 20px;">
