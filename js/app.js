@@ -507,6 +507,14 @@ const Game = {
         'stage 2/stage 2D.png?v=2': 0.5385,
         'stage 2/stage 2E.png?v=2': 0.5826,
     },
+    
+    stage3Ratios: {
+        'stage 3/stage 3A.png?v=2': 0.6257,
+        'stage 3/stage 3B.png?v=2': 0.6309,
+        'stage 3/Stage 3C.png?v=2': 0.5906,
+        'stage 3/stage 3D.png?v=2': 0.5910,
+        'stage 3/stage 3E.png?v=2': 0.6259,
+    },
     currentImageIndex: 0,
     hasStartedCurrentSession: false,
     uiTimeout: null,
@@ -712,6 +720,15 @@ const Game = {
             const ratio = this.stage2Ratios[imgPath];
             const ppcm = window.App.pixelsPerCm || 37.795;
             const targetWidthPx = (5.0 * ppcm) / ratio;
+            gameImageEl.style.width = targetWidthPx + 'px';
+            gameImageEl.style.height = 'auto';
+            gameImageEl.style.maxWidth = 'none';
+            gameImageEl.style.maxHeight = 'none';
+            gameImageEl.style.objectFit = 'fill';
+        } else if (stageNum === 3 && this.stage3Ratios[imgPath]) {
+            const ratio = this.stage3Ratios[imgPath];
+            const ppcm = window.App.pixelsPerCm || 37.795;
+            const targetWidthPx = (6.0 * ppcm) / ratio;
             gameImageEl.style.width = targetWidthPx + 'px';
             gameImageEl.style.height = 'auto';
             gameImageEl.style.maxWidth = 'none';
