@@ -3,12 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <!-- iOS Web App Tags for Fullscreen -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Stereogram">
-    
+
     <title>Cat Stereogram Game</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <!-- PWA Settings -->
@@ -17,7 +18,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="MyEyeGym">
     <link rel="apple-touch-icon" href="avatar_cat.png">
-    
+
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -114,34 +115,44 @@
         </section>
 
         <!-- INSTRUCTIONS SCREEN -->
-        <section id="screen-instructions" class="screen" style="background: linear-gradient(135deg, #e0f7fa 0%, #fff9c4 100%); position: relative; overflow-y: auto; overflow-x: hidden;">
+        <section id="screen-instructions" class="screen"
+            style="background: linear-gradient(135deg, #e0f7fa 0%, #fff9c4 100%); position: relative; overflow-y: auto; overflow-x: hidden;">
             <!-- Cute decorations -->
-            <img src="avatar_cat.png" style="position: absolute; bottom: 5%; left: 5%; width: 120px; opacity: 0.6; transform: rotate(-15deg); z-index: 0;">
-            <img src="avatar_cow.png" style="position: absolute; top: 15%; right: 5%; width: 100px; opacity: 0.6; transform: rotate(10deg); z-index: 0;">
-            <img src="avatar_hamster.png" style="position: absolute; bottom: 10%; right: 10%; width: 90px; opacity: 0.6; transform: rotate(25deg); z-index: 0;">
+            <img src="avatar_cat.png"
+                style="position: absolute; bottom: 5%; left: 5%; width: 120px; opacity: 0.6; transform: rotate(-15deg); z-index: 0;">
+            <img src="avatar_cow.png"
+                style="position: absolute; top: 15%; right: 5%; width: 100px; opacity: 0.6; transform: rotate(10deg); z-index: 0;">
+            <img src="avatar_hamster.png"
+                style="position: absolute; bottom: 10%; right: 10%; width: 90px; opacity: 0.6; transform: rotate(25deg); z-index: 0;">
             <div style="position: absolute; top: 20%; left: 15%; font-size: 3rem; opacity: 0.4; z-index: 0;">🌸</div>
             <div style="position: absolute; bottom: 30%; right: 25%; font-size: 3rem; opacity: 0.4; z-index: 0;">✨</div>
             <div style="position: absolute; top: 40%; left: 10%; font-size: 2.5rem; opacity: 0.4; z-index: 0;">🦋</div>
 
             <header class="map-header" style="position: relative; z-index: 1;">
-                <button id="btn-back-main-menu" class="btn btn-secondary btn-small">⬅ Back</button>
-                <h2 style="flex: 2; text-align: center;">Instructions</h2>
+                <div style="flex: 1; display: flex; justify-content: flex-start;">
+                    <button id="btn-back-main-menu" class="btn btn-secondary btn-small">⬅ Back</button>
+                </div>
+                <h2 style="flex: 2; text-align: center; margin: 0;">Instructions</h2>
                 <div style="flex: 1;"></div>
             </header>
-            
-            <div class="instructions-content" style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: calc(100vh - 80px); padding: 40px 0; gap: 40px; position: relative; z-index: 1;">
-                
+
+            <div class="instructions-content"
+                style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: calc(100vh - 80px); padding: 40px 0; gap: 40px; position: relative; z-index: 1;">
+
                 <div class="instruction-category" style="text-align: center; width: 100%;">
-                    <h3 style="color: #2b2d42; margin-bottom: 20px; font-size: 1.5rem; background: rgba(255,255,255,0.7); display: inline-block; padding: 5px 20px; border-radius: 20px; border: 2px solid #2b2d42;">🎥 Video Demonstrations</h3>
+                    <h3
+                        style="color: #2b2d42; margin-bottom: 20px; font-size: 1.5rem; background: rgba(255,255,255,0.7); display: inline-block; padding: 5px 20px; border-radius: 20px; border: 2px solid #2b2d42;">
+                        🎥 Video Demonstrations</h3>
                     <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
                         <a href="https://www.youtube.com/watch?v=h76TnuYiEMc" target="_blank" class="bubble-link">
                             <button class="bubble-btn bubble-small">
-                                <span class="bubble-text" style="font-size: 1.2rem;">Stereogram Distance<br>Video Demonstration</span>
+                                <span class="bubble-text" style="font-size: 1.2rem;">Stereogram Distance<br>Video
+                                </span>
                             </button>
                         </a>
                         <a href="https://www.youtube.com/watch?v=WyUWp6Qtww8" target="_blank" class="bubble-link">
                             <button class="bubble-btn bubble-small bubble-alt">
-                                <span class="bubble-text" style="font-size: 1.2rem;">Stereogram Near<br>Video Demonstration</span>
+                                <span class="bubble-text" style="font-size: 1.2rem;">Stereogram Near<br>Video </span>
                             </button>
                         </a>
                     </div>
@@ -205,24 +216,29 @@
 
         <!-- GAME SCREEN -->
         <section id="screen-game" class="screen" style="background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);">
-            
+
             <!-- Cheerful Background Decorations -->
-            <div id="cheerful-decorations" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; overflow: hidden;">
+            <div id="cheerful-decorations"
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; overflow: hidden;">
                 <!-- Bubbles/Sparkles -->
                 <div style="position: absolute; top: 10%; left: 15%; font-size: 2.5rem; opacity: 0.5;">✨</div>
                 <div style="position: absolute; bottom: 20%; left: 8%; font-size: 3rem; opacity: 0.5;">⭐</div>
                 <div style="position: absolute; top: 25%; right: 10%; font-size: 3rem; opacity: 0.5;">🌟</div>
                 <div style="position: absolute; bottom: 15%; right: 15%; font-size: 2.5rem; opacity: 0.5;">✨</div>
-                
+
                 <!-- Animals with encouragement -->
                 <div style="position: absolute; bottom: 5%; left: 3%; transform: rotate(-10deg); text-align: center;">
-                    <div style="background: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; color: #2b2d42; border: 2px solid #2b2d42; margin-bottom: 5px; box-shadow: 2px 2px 0 #2b2d42;">You can do it!</div>
+                    <div
+                        style="background: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; color: #2b2d42; border: 2px solid #2b2d42; margin-bottom: 5px; box-shadow: 2px 2px 0 #2b2d42;">
+                        You can do it!</div>
                     <img src="avatar_cat.png" style="width: 100px;">
                 </div>
-                
+
                 <div style="position: absolute; top: 5%; right: 5%; transform: rotate(15deg); text-align: center;">
                     <img src="avatar_hamster.png" style="width: 90px;">
-                    <div style="background: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; color: #2b2d42; border: 2px solid #2b2d42; margin-top: 5px; box-shadow: 2px 2px 0 #2b2d42;">Keep it up!</div>
+                    <div
+                        style="background: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; color: #2b2d42; border: 2px solid #2b2d42; margin-top: 5px; box-shadow: 2px 2px 0 #2b2d42;">
+                        Keep it up!</div>
                 </div>
             </div>
 
@@ -240,7 +256,8 @@
                 </div>
                 <div class="stage-info" style="flex: 1; display: flex; justify-content: flex-end; gap: 10px;">
                     <span id="current-stage-title">Stage 1</span>
-                    <button id="btn-fullscreen" class="btn btn-small" style="background: #2b2d42; margin-top: 0;">⛶</button>
+                    <button id="btn-fullscreen" class="btn btn-small"
+                        style="background: #2b2d42; margin-top: 0;">⛶</button>
                 </div>
             </header>
 
