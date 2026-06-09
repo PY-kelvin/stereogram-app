@@ -758,6 +758,42 @@ window.Progress = Progress;
 window.Map = Map;
 window.Game = Game;
 
+const LOCAL_STORAGE_KEY = 'stereogram_app_data';
+
+const distContent = `
+<p><strong>Purpose:</strong> To improve relaxation of your eyes (ie. Divergence).</p>
+<ol style="margin-left: 20px; font-size: 1.1rem; line-height: 1.6;">
+    <li>Hold the card with the images facing you at arm's length at eye level.</li>
+    <li>Focus on a central object in the distance (at least 3m away) just above the card (or looking through the transparent card) while being aware of the images on your card.</li>
+    <li>Concentrate on this distant object until you are aware of a third fused (merged) image in the centre of the two images on your card. It is very important at this stage of the exercise NOT to look directly at the card or the exercise will not work - look continuously at the distant object.</li>
+    <li>You may notice 4 images at times - you can adjust the distance of the card slightly until you see the fused image.</li>
+    <li>4 images should become 3 images with the middle (fused) image appearing complete.</li>
+    <li>Once the middle image appears, try to keep the third image in focus for <u>10 seconds</u>. Do NOT look at the middle complete image as it will disappear immediately if you do. If the third image disappears, stop counting and refocus to get the third image to appear again.</li>
+    <li>Repeat.</li>
+</ol>
+<p><strong>Frequency:</strong> Perform for 10 to 15 minutes a day. This can be broken up into 2 or 3 sessions.</p>
+<div style="background: #fff3cd; padding: 15px; border-radius: 10px; border-left: 5px solid #ffc107; margin-top: 20px;">
+    <strong>At the end of your exercise session</strong> it is important to relax your eyes by looking out of a window at a faraway object OR by closing your eyes for a few minutes. <strong>Do not proceed to do near work immediately.</strong>
+</div>
+`;
+
+const nearContent = `
+<p><strong>Purpose:</strong> To improve control of your eyes and encourage convergence.</p>
+<ol style="margin-left: 20px; font-size: 1.1rem; line-height: 1.6;">
+    <li>Hold the card with the images facing you at arm's length at eye level.</li>
+    <li>Place a pen in front of the card and in between the two images.</li>
+    <li>Keep looking at the pen constantly. It is very important at this stage of the exercise NOT to look directly at the card or the exercise will not work - look continuously at the pen.</li>
+    <li>Whilst looking at the pen you should be aware of both the images becoming double, therefore you should see 4 images.</li>
+    <li>4 images should become 3 images with the middle (fused) image appearing complete.</li>
+    <li>Once the middle image appears, stop moving the pen and try to keep the third image in focus for <u>10 seconds</u>. Do NOT look at the middle complete image as it will disappear immediately if you do. If the third image disappears, stop counting and refocus to get the third image to appear again.</li>
+    <li>Repeat.</li>
+</ol>
+<p><strong>Frequency:</strong> Perform for 10 to 15 minutes a day. This can be broken up into 2 or 3 sessions.</p>
+<div style="background: #fff3cd; padding: 15px; border-radius: 10px; border-left: 5px solid #ffc107; margin-top: 20px;">
+    <strong>At the end of your exercise session</strong> it is important to relax your eyes by looking out of a window at a faraway object OR by closing your eyes for a few minutes. <strong>Do not proceed to do near work immediately.</strong>
+</div>
+`;
+
 const App = {
     currentUser: null,
     notificationTimeout: null,
@@ -991,6 +1027,22 @@ const Menu = {
 
         document.getElementById('btn-back-main-menu-from-map').addEventListener('click', () => {
             window.App.showScreen('screen-main-menu');
+        });
+
+        document.getElementById('btn-inst-dist').addEventListener('click', () => {
+            document.getElementById('written-inst-title').innerText = "Cat Stereogram Exercise (Distance)";
+            document.getElementById('written-inst-content').innerHTML = distContent;
+            window.App.showScreen('screen-written-instruction');
+        });
+
+        document.getElementById('btn-inst-near').addEventListener('click', () => {
+            document.getElementById('written-inst-title').innerText = "Cat Stereogram Exercise (Near)";
+            document.getElementById('written-inst-content').innerHTML = nearContent;
+            window.App.showScreen('screen-written-instruction');
+        });
+
+        document.getElementById('btn-back-instructions').addEventListener('click', () => {
+            window.App.showScreen('screen-instructions');
         });
     }
 };
