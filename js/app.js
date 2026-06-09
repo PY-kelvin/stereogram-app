@@ -766,11 +766,7 @@ const distContent = `
     <li>Hold the card with the images facing you at arm's length at eye level.<br><br></li>
     <li>Focus on a central object in the distance (at least 3m away) just above the card (or looking through the transparent card) while being aware of the images on your card.<br><br></li>
     <li>Concentrate on this distant object until you are aware of a third fused (merged) image in the centre of the two images on your card. It is very important at this stage of the exercise NOT to look directly at the card or the exercise will not work - look continuously at the distant object.<br><br></li>
-    <li>You may notice 4 images at times - you can adjust the distance of the card slightly until you see the fused image.<br><br>
-        <div style="text-align: center; margin: 10px 0;">
-            <img src="stereo instructions/diagram1.png" style="max-width: 100%; border-radius: 10px;" alt="Diagram 1">
-        </div><br>
-    </li>
+    <li>You may notice 4 images at times - you can adjust the distance of the card slightly until you see the fused image.<br><br></li>
     <li>4 images should become 3 images with the middle (fused) image appearing complete.<br><br></li>
     <li>Once the middle image appears, try to keep the third image in focus for <u>10 seconds</u>. Do NOT look at the middle complete image as it will disappear immediately if you do. If the third image disappears, stop counting and refocus to get the third image to appear again.<br><br></li>
     <li>Repeat.</li>
