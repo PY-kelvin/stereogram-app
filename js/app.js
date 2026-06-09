@@ -491,6 +491,14 @@ const Game = {
         2: ['stage 2/stage 2A.png?v=2', 'stage 2/stage 2B.png?v=2', 'stage 2/stage 2C.png?v=2', 'stage 2/stage 2D.png?v=2', 'stage 2/stage 2E.png?v=2'],
         3: ['stage 3/Stage 3C.png?v=2', 'stage 3/stage 3A.png?v=2', 'stage 3/stage 3B.png?v=2', 'stage 3/stage 3D.png?v=2', 'stage 3/stage 3E.png?v=2']
     },
+
+    stage1Ratios: {
+        'stage 1/stage 1A.png?v=2': 0.3881,
+        'stage 1/stage 1B.png?v=2': 0.4433,
+        'stage 1/stage 1C.png?v=2': 0.4235,
+        'stage 1/Stage 1D.png?v=2': 0.4371,
+        'stage 1/Stage 1E.png?v=2': 0.4383
+    },
     currentImageIndex: 0,
     hasStartedCurrentSession: false,
     uiTimeout: null,
@@ -669,7 +677,31 @@ const Game = {
 
     loadImage(stageNum) {
         const images = this.stageImages[stageNum] || this.stageImages[1];
-        document.getElementById('game-image').src = images[this.currentImageIndex];
+        const imgPath = images[this.currentImageIndex];
+        const gameImageEl = document.getElementById('game-image');
+        
+        gameImageEl.src = imgPath;
+
+        // Force exactly 4.0 cm physical separation for Stage 1 images
+        if (stageNum === 1 && this.stage1Ratios[imgPath]) {
+            const ratio = this.stage1Ratios[imgPath];
+            // By scaling the total width of the image by 4cm divided by its internal distance ratio,
+            // we mathematically guarantee the distance between the two cats is exactly 4.0 CSS cm.
+            gameImageEl.style.width = `calc(4cm / ${ratio})`;
+            gameImageEl.style.height = 'auto';
+            // Override max-width/max-height to prevent CSS from squishing it smaller than 4cm
+            gameImageEl.style.maxWidth = 'none';
+            gameImageEl.style.maxHeight = 'none';
+            // Disable object-fit since we are explicitly sizing the image mathematically
+            gameImageEl.style.objectFit = 'fill';
+        } else {
+            // Revert back to standard sizing for other stages
+            gameImageEl.style.width = '';
+            gameImageEl.style.height = '';
+            gameImageEl.style.maxWidth = '';
+            gameImageEl.style.maxHeight = '';
+            gameImageEl.style.objectFit = '';
+        }
     },
 
     startTimer() {
