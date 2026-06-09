@@ -314,6 +314,7 @@
                 <div class="rotate-content">
                     <span class="rotate-icon">🔄</span>
                     <h2>Please turn the device to landscape mode to start</h2>
+                    <button id="btn-back-rotate" class="btn btn-secondary" style="margin-top: 20px; font-size: 1.2rem; padding: 10px 20px; pointer-events: auto;">⬅ Back to Map</button>
                 </div>
             </div>
 
@@ -400,12 +401,12 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=20"></script>
+    <script src="js/app.js?v=27"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js?v=20').then(registration => {
+                navigator.serviceWorker.register('./sw.js?v=27').then(registration => {
                     console.log('ServiceWorker registration successful with scope: ', registration.scope);
                 }, err => {
                     console.log('ServiceWorker registration failed: ', err);

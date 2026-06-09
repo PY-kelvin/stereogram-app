@@ -520,6 +520,11 @@ const Game = {
             window.App.showScreen('screen-map');
         });
 
+        document.getElementById('btn-back-rotate').addEventListener('click', () => {
+            this.stopGame();
+            window.App.showScreen('screen-map');
+        });
+
         document.getElementById('btn-fullscreen').addEventListener('click', () => {
             const screen = document.getElementById('screen-game');
             screen.classList.toggle('focus-mode');
