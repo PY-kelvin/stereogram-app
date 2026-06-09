@@ -480,7 +480,6 @@ const Game = {
         1: ['stage 1/Stage 1D.png', 'stage 1/Stage 1E.png', 'stage 1/stage 1A.png', 'stage 1/stage 1B.png', 'stage 1/stage 1C.png'],
         2: ['stage 2/stage 2A.png', 'stage 2/stage 2B.png', 'stage 2/stage 2C.png', 'stage 2/stage 2D.png', 'stage 2/stage 2E.png'],
         3: ['stage 3/Stage 3C.png', 'stage 3/stage 3A.png', 'stage 3/stage 3B.png', 'stage 3/stage 3D.png', 'stage 3/stage 3E.png']
-        3: ['stage 3/Stage 3C.png', 'stage 3/Stage 3A.png', 'stage 3/Stage 3B.png', 'stage 3/stage 3D.png', 'stage 3/stage 3E.png']
     },
     currentImageIndex: 0,
     hasStartedCurrentSession: false,
