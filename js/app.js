@@ -540,10 +540,10 @@ const Game = {
     },
 
     stage1Ratios: {
-        'stage 1/Stage 1D.png?v=3': 0.3696,
-        'stage 1/Stage 1E.png?v=3': 0.4747,
+        'stage 1/Stage 1D.png?v=3': 0.3691,
+        'stage 1/Stage 1E.png?v=3': 0.3578,
         'stage 1/stage 1A.png?v=3': 0.3778,
-        'stage 1/stage 1B.png?v=3': 0.4747,
+        'stage 1/stage 1B.png?v=3': 0.3878,
         'stage 1/stage 1C.png?v=3': 0.3856,
     },
     
