@@ -93,7 +93,6 @@ const Auth = {
         window.App.showNotification(`Welcome back, ${username}!`, "success");
 
         if (window.Progress) window.Progress.loadUserData();
-        if (window.Map) window.Map.updateUI();
     },
 
     logout() {
@@ -112,7 +111,6 @@ const Auth = {
                 window.App.currentUser = JSON.parse(userStr);
                 window.App.showScreen('screen-main-menu');
                 if (window.Progress) window.Progress.loadUserData();
-                if (window.Map) window.Map.updateUI();
                 return true;
             }
         }
@@ -320,12 +318,7 @@ const Map = {
             if (lock) lock.style.display = 'flex';
         }
 
-        let ratio = Math.min(user.streak / 60, 1);
-        
-        // If roaming, place avatar at the target node
-        if (user.currentMapNode === 1) ratio = 0;
-        if (user.currentMapNode === 2 && user.unlockedStages.includes(2)) ratio = 0.5;
-        if (user.currentMapNode === 3 && user.unlockedStages.includes(3)) ratio = 1;
+        let ratio = this.getAvatarRatio(user);
 
         const pos = this.getPointCSS(ratio);
         avatar.style.transition = 'none';
@@ -347,16 +340,13 @@ const Map = {
         if (overrideStartRatio !== null) {
             currentRatio = overrideStartRatio;
         } else {
-            currentRatio = Math.min(user.streak / 60, 1);
-            if (user.currentMapNode === 1) currentRatio = 0;
-            if (user.currentMapNode === 2 && user.unlockedStages.includes(2)) currentRatio = 0.5;
-            if (user.currentMapNode === 3 && user.unlockedStages.includes(3)) currentRatio = 1;
+            currentRatio = this.getAvatarRatio(user);
         }
 
-        // If the avatar is acting as a progress tracker on the path (Stage 2/3 locked),
-        // we shouldn't animate it back to Stage 1 to start the game, just start the game instantly.
-        if ((stageNum === 1 && currentRatio > 0 && currentRatio < 0.5) || 
-            (stageNum === 2 && currentRatio > 0.5 && currentRatio < 1)) {
+        // If the avatar is acting as a progress tracker on the path (Next stage locked),
+        // and they click the current stage to play it, we shouldn't animate back.
+        if ((stageNum === 1 && !user.unlockedStages.includes(2)) || 
+            (stageNum === 2 && !user.unlockedStages.includes(3))) {
             setTimeout(() => {
                 if (window.Game) window.Game.startStage(stageNum);
             }, 500);
@@ -394,6 +384,22 @@ const Map = {
             }
         };
         requestAnimationFrame(step);
+    },
+
+    getAvatarRatio(user) {
+        if (!user) return 0;
+        let ratio = Math.min(user.streak / 60, 1);
+        
+        // If they chose to play an older stage, visually move the avatar to that stage
+        if (user.currentMapNode === 1 && user.unlockedStages.includes(2)) {
+            ratio = 0;
+        } else if (user.currentMapNode === 2 && user.unlockedStages.includes(3)) {
+            ratio = 0.5;
+        } else if (user.currentMapNode === 3) {
+            ratio = 1;
+        }
+        
+        return ratio;
     },
 
     getPointCSS(ratio) {
@@ -732,6 +738,8 @@ const App = {
         document.getElementById(screenId).classList.add('active');
         if (screenId === 'screen-game') {
             Game.resizeCanvas();
+        } else if (screenId === 'screen-map') {
+            if (window.Map) window.Map.updateUI();
         }
     },
 
