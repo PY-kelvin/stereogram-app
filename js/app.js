@@ -493,7 +493,6 @@ const Game = {
                 this.pauseTimer();
             }
         });
-        });
     },
 
     bindEvents() {
