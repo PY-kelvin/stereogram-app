@@ -287,6 +287,7 @@ const Map = {
     },
 
     updateUI() {
+        if (this.isAnimating) return;
         const user = window.App.currentUser;
         if (!user) return;
 
@@ -429,6 +430,7 @@ const Map = {
             return; // Once fully unlocked, the avatar roams freely and stops step animations.
         }
 
+        this.isAnimating = true;
         const avatar = document.getElementById('player-avatar');
         const duration = 2000;
         const start = performance.now();
@@ -452,6 +454,8 @@ const Map = {
 
             if (progress < 1) {
                 requestAnimationFrame(step);
+            } else {
+                this.isAnimating = false;
             }
         };
         requestAnimationFrame(step);
@@ -739,7 +743,11 @@ const App = {
         if (screenId === 'screen-game') {
             Game.resizeCanvas();
         } else if (screenId === 'screen-map') {
-            if (window.Map) window.Map.updateUI();
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    if (window.Map) window.Map.updateUI();
+                }, 50);
+            });
         }
     },
 
