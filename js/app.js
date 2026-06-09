@@ -276,6 +276,30 @@ const Map = {
             const pwd = rawPwd.trim().toLowerCase();
             const user = window.App.currentUser;
             
+            // Secret repair command to forcefully restore corrupted history
+            if (pwd.startsWith('repair ')) {
+                const daysToRestore = parseInt(pwd.replace('repair ', '').trim());
+                if (!isNaN(daysToRestore) && daysToRestore > 0) {
+                    user.streak = daysToRestore;
+                    user.sessionHistory = [];
+                    const now = new Date().getTime();
+                    // Backfill fake days
+                    for (let i = daysToRestore; i > 0; i--) {
+                        const fakeDate = new Date(now - (i * 24 * 60 * 60 * 1000));
+                        user.sessionHistory.push({
+                            dateStr: fakeDate.toDateString(),
+                            timestamp: fakeDate.getTime(),
+                            durationMins: 10
+                        });
+                    }
+                    if (window.Progress) window.Progress.saveUser();
+                    document.getElementById('password-modal').classList.add('hidden');
+                    window.App.showNotification(`Avatar physically repaired to ${daysToRestore} days!`, "success");
+                    this.updateUI();
+                    return;
+                }
+            }
+            
             if (this.pwdTargetStage === 2) {
                 if (pwd === 'orthoptics') {
                     document.getElementById('password-modal').classList.add('hidden');
