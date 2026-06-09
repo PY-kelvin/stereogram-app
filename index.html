@@ -40,6 +40,22 @@
             </div>
         </div>
 
+        <!-- Calibration Instructions Modal -->
+        <div id="calibration-modal" class="modal hidden">
+            <div class="modal-content" style="text-align: center;">
+                <h3 style="margin-bottom: 15px; color: #0d47a1;">Calibration</h3>
+                <p style="font-size: 1.1rem; color: #444; margin-bottom: 10px;">
+                    Place a standard credit card or ID card horizontally on your screen.
+                </p>
+                <p style="font-size: 1.1rem; color: #0d47a1; margin-bottom: 20px; font-weight: bold;">
+                    👈 Pinch or stretch the screen with two fingers 👉<br>until the blue box exactly matches your card's width.
+                </p>
+                <div class="modal-actions" style="justify-content: center;">
+                    <button id="btn-close-calibration-modal" class="btn btn-primary">Got it!</button>
+                </div>
+            </div>
+        </div>
+
 
 
         <!-- Notification Toast -->
@@ -118,30 +134,23 @@
         </section>
 
         <!-- CALIBRATION SCREEN -->
-        <section id="screen-calibration" class="screen">
-            <header class="game-header">
-                <button id="btn-back-calibrate" class="btn-back">⬅ Back</button>
-                <h2>Screen Calibration</h2>
-                <div style="width: 60px;"></div>
+        <section id="screen-calibration" class="screen" style="position: relative; overflow: hidden; touch-action: none; background-color: #f0f4f8;">
+            <!-- Floating Header -->
+            <header class="game-header" style="position: absolute; top: 0; left: 0; right: 0; z-index: 10; background: transparent; box-shadow: none; pointer-events: none;">
+                <button id="btn-back-calibrate" class="btn-back" style="pointer-events: auto; background-color: white; border: 2px solid #ccc; border-radius: 8px; padding: 5px 10px;">⬅ Back</button>
+                <div style="flex-grow: 1;"></div>
             </header>
             
-            <div id="calibration-content-area" style="padding: 20px; display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 600px; margin: 0 auto; height: calc(100vh - 80px); overflow: hidden; position: relative; touch-action: none;">
-                <div id="calibration-text-container" style="transition: opacity 0.3s;">
-                    <p style="font-size: 1.1rem; color: #444; margin-bottom: 10px;">
-                        Place a standard credit card or ID card horizontally on your screen.
-                    </p>
-                    <p style="font-size: 1.1rem; color: #0d47a1; margin-bottom: 20px; font-weight: bold;">
-                        👈 Pinch or stretch the screen with two fingers 👉<br>until the blue box exactly matches your card's width.
-                    </p>
+            <!-- Absolutely Centered Area -->
+            <div id="calibration-content-area" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; z-index: 1;">
+                <div id="calibration-card" style="width: 200px; aspect-ratio: 1.5857; background: linear-gradient(135deg, #2196F3, #0D47A1); border-radius: 10px; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 8px 16px rgba(0,0,0,0.3);">
+                    85.6 mm
                 </div>
-                
-                <div style="flex-grow: 1; display: flex; align-items: center; justify-content: center; width: 100%;">
-                    <div id="calibration-card" style="width: 200px; aspect-ratio: 1.5857; background: linear-gradient(135deg, #2196F3, #0D47A1); border-radius: 10px; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-                        85.6 mm
-                    </div>
-                </div>
-                
-                <button id="btn-save-calibration" class="btn btn-primary" style="width: 100%; max-width: 300px; transition: opacity 0.3s; margin-bottom: 20px;">Save Calibration</button>
+            </div>
+
+            <!-- Floating Save Button -->
+            <div style="position: absolute; bottom: 30px; left: 0; right: 0; display: flex; justify-content: center; z-index: 10; pointer-events: none;">
+                <button id="btn-save-calibration" class="btn btn-primary" style="pointer-events: auto; width: 80%; max-width: 300px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">Save Calibration</button>
             </div>
         </section>
 

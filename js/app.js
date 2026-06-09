@@ -1088,9 +1088,20 @@ const Menu = {
         if (btnCalibrate) {
             btnCalibrate.addEventListener('click', () => {
                 window.App.showScreen('screen-calibration');
+                // Show instructions modal
+                const calModal = document.getElementById('calibration-modal');
+                if (calModal) calModal.classList.remove('hidden');
+                
                 const card = document.getElementById('calibration-card');
                 window.App.currentCalibrationWidth = 8.56 * window.App.pixelsPerCm;
                 card.style.width = window.App.currentCalibrationWidth + 'px';
+            });
+        }
+        
+        const btnCloseCalModal = document.getElementById('btn-close-calibration-modal');
+        if (btnCloseCalModal) {
+            btnCloseCalModal.addEventListener('click', () => {
+                document.getElementById('calibration-modal').classList.add('hidden');
             });
         }
 
@@ -1103,8 +1114,6 @@ const Menu = {
 
         // Pinch to zoom logic for calibration
         const calArea = document.getElementById('calibration-content-area');
-        const calText = document.getElementById('calibration-text-container');
-        const calBtn = document.getElementById('btn-save-calibration');
         const calCard = document.getElementById('calibration-card');
         
         let initialPinchDistance = null;
@@ -1112,10 +1121,6 @@ const Menu = {
 
         if (calArea) {
             calArea.addEventListener('touchstart', (e) => {
-                // Fade out text and button to give full view of card
-                calText.style.opacity = '0';
-                calBtn.style.opacity = '0';
-                
                 if (e.touches.length === 2) {
                     initialPinchDistance = Math.hypot(
                         e.touches[0].clientX - e.touches[1].clientX,
@@ -1148,17 +1153,10 @@ const Menu = {
                 if (e.touches.length < 2) {
                     initialPinchDistance = null;
                 }
-                if (e.touches.length === 0) {
-                    // Fade text and button back in
-                    calText.style.opacity = '1';
-                    calBtn.style.opacity = '1';
-                }
             });
             
             calArea.addEventListener('touchcancel', (e) => {
                 initialPinchDistance = null;
-                calText.style.opacity = '1';
-                calBtn.style.opacity = '1';
             });
         }
 
