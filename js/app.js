@@ -487,17 +487,17 @@ const Game = {
     particles: [],
     
     stageImages: {
-        1: ['stage 1/Stage 1D.png?v=3', 'stage 1/Stage 1E.png?v=3', 'stage 1/stage 1A.png?v=3', 'stage 1/stage 1B.png?v=3', 'stage 1/stage 1C.png?v=3'],
+        1: ['stage 1/Stage 1D.png?v=2', 'stage 1/Stage 1E.png?v=2', 'stage 1/stage 1A.png?v=2', 'stage 1/stage 1B.png?v=2', 'stage 1/stage 1C.png?v=2'],
         2: ['stage 2/stage 2A.png?v=2', 'stage 2/stage 2B.png?v=2', 'stage 2/stage 2C.png?v=2', 'stage 2/stage 2D.png?v=2', 'stage 2/stage 2E.png?v=2'],
-        3: ['stage 3/Stage 3C.png?v=2', 'stage 3/Stage 3A.png?v=2', 'stage 3/Stage 3B.png?v=2', 'stage 3/Stage 3D.png?v=2', 'stage 3/Stage 3E.png?v=2']
+        3: ['stage 3/Stage 3C.png?v=2', 'stage 3/stage 3A.png?v=2', 'stage 3/stage 3B.png?v=2', 'stage 3/stage 3D.png?v=2', 'stage 3/stage 3E.png?v=2']
     },
 
     stage1Ratios: {
-        'stage 1A.png': 0.3227,
-        'stage 1B.png': 0.3742,
-        'stage 1C.png': 0.3553,
-        'Stage 1D.png': 0.3686,
-        'Stage 1E.png': 0.3695,
+        'stage 1/stage 1A.png?v=2': 0.3881,
+        'stage 1/stage 1B.png?v=2': 0.4433,
+        'stage 1/stage 1C.png?v=2': 0.4235,
+        'stage 1/Stage 1D.png?v=2': 0.4371,
+        'stage 1/Stage 1E.png?v=2': 0.4383
     },
     currentImageIndex: 0,
     hasStartedCurrentSession: false,
@@ -682,15 +682,9 @@ const Game = {
         
         gameImageEl.src = imgPath;
 
-        // Clean imgPath to just the filename to match the stage1Ratios keys
-        let filename = imgPath.split('/').pop();
-        if (filename.includes('?')) {
-            filename = filename.split('?')[0];
-        }
-
         // Force exactly 4.0 cm physical separation for Stage 1 images
-        if (stageNum === 1 && this.stage1Ratios[filename]) {
-            const ratio = this.stage1Ratios[filename];
+        if (stageNum === 1 && this.stage1Ratios[imgPath]) {
+            const ratio = this.stage1Ratios[imgPath];
             // Use calibrated pixels per cm (fallback to standard CSS cm if none)
             const ppcm = window.App.pixelsPerCm || 37.795;
             const targetWidthPx = (4.0 * ppcm) / ratio;
