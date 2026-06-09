@@ -529,7 +529,32 @@ const Game = {
                 e.target.innerText = "▶";
             } else {
                 this.startTimer();
-                e.target.innerText = "⏸";
+                if (this.isPlaying) {
+                    e.target.innerText = "⏸";
+                }
+            }
+        });
+
+        window.addEventListener('orientationchange', () => {
+            if (document.getElementById('screen-game').classList.contains('active')) {
+                setTimeout(() => {
+                    const isPortrait = window.innerHeight > window.innerWidth;
+                    if (isPortrait) {
+                        document.getElementById('rotate-overlay').style.display = 'flex';
+                        if (this.isPlaying) {
+                            this.wasAutoPaused = true;
+                            this.pauseTimer();
+                            document.getElementById('btn-toggle-timer').innerText = "▶";
+                        }
+                    } else {
+                        document.getElementById('rotate-overlay').style.display = 'none';
+                        if (this.wasAutoPaused) {
+                            this.wasAutoPaused = false;
+                            this.startTimer();
+                            document.getElementById('btn-toggle-timer').innerText = "⏸";
+                        }
+                    }
+                }, 300);
             }
         });
 
@@ -648,6 +673,13 @@ const Game = {
     },
 
     startTimer() {
+        const isPortrait = window.innerHeight > window.innerWidth;
+        if (isPortrait) {
+            document.getElementById('rotate-overlay').style.display = 'flex';
+            this.wasAutoPaused = true;
+            return;
+        }
+
         this.isPlaying = true;
         this.hasStartedCurrentSession = true;
         this.updateNavButtonsVisibility();
