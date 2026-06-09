@@ -477,9 +477,9 @@ const Game = {
     particles: [],
     
     stageImages: {
-        1: ['stage 1/Stage 1D.png', 'stage 1/Stage 1E.png', 'stage 1/stage 1A.png', 'stage 1/stage 1B.png', 'stage 1/stage 1C.png'],
-        2: ['stage 2/stage 2A.png', 'stage 2/stage 2B.png', 'stage 2/stage 2C.png', 'stage 2/stage 2D.png', 'stage 2/stage 2E.png'],
-        3: ['stage 3/Stage 3C.png', 'stage 3/stage 3A.png', 'stage 3/stage 3B.png', 'stage 3/stage 3D.png', 'stage 3/stage 3E.png']
+        1: ['stage 1/Stage 1D.png?v=2', 'stage 1/Stage 1E.png?v=2', 'stage 1/stage 1A.png?v=2', 'stage 1/stage 1B.png?v=2', 'stage 1/stage 1C.png?v=2'],
+        2: ['stage 2/stage 2A.png?v=2', 'stage 2/stage 2B.png?v=2', 'stage 2/stage 2C.png?v=2', 'stage 2/stage 2D.png?v=2', 'stage 2/stage 2E.png?v=2'],
+        3: ['stage 3/Stage 3C.png?v=2', 'stage 3/stage 3A.png?v=2', 'stage 3/stage 3B.png?v=2', 'stage 3/stage 3D.png?v=2', 'stage 3/stage 3E.png?v=2']
     },
     currentImageIndex: 0,
     hasStartedCurrentSession: false,
