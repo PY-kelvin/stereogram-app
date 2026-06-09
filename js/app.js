@@ -685,9 +685,10 @@ const Game = {
         // Force exactly 4.0 cm physical separation for Stage 1 images
         if (stageNum === 1 && this.stage1Ratios[imgPath]) {
             const ratio = this.stage1Ratios[imgPath];
-            // By scaling the total width of the image by 4cm divided by its internal distance ratio,
-            // we mathematically guarantee the distance between the two cats is exactly 4.0 CSS cm.
-            gameImageEl.style.width = `calc(4cm / ${ratio})`;
+            // Use calibrated pixels per cm (fallback to standard CSS cm if none)
+            const ppcm = window.App.pixelsPerCm || 37.795;
+            const targetWidthPx = (4.0 * ppcm) / ratio;
+            gameImageEl.style.width = targetWidthPx + 'px';
             gameImageEl.style.height = 'auto';
             // Override max-width/max-height to prevent CSS from squishing it smaller than 4cm
             gameImageEl.style.maxWidth = 'none';
@@ -829,8 +830,14 @@ const nearContent = `
 const App = {
     currentUser: null,
     notificationTimeout: null,
+    pixelsPerCm: 37.795,
 
     init() {
+        const savedPpcm = localStorage.getItem('stereogram_calibration_ppcm');
+        if (savedPpcm) {
+            this.pixelsPerCm = parseFloat(savedPpcm);
+        }
+        
         Auth.init();
         Map.init();
         Game.init();
@@ -1076,6 +1083,43 @@ const Menu = {
         document.getElementById('btn-back-instructions').addEventListener('click', () => {
             window.App.showScreen('screen-instructions');
         });
+
+        const btnCalibrate = document.getElementById('btn-menu-calibrate');
+        if (btnCalibrate) {
+            btnCalibrate.addEventListener('click', () => {
+                window.App.showScreen('screen-calibration');
+                const slider = document.getElementById('calibration-slider');
+                const card = document.getElementById('calibration-card');
+                slider.value = 8.56 * window.App.pixelsPerCm;
+                card.style.width = slider.value + 'px';
+            });
+        }
+
+        const btnBackCalibrate = document.getElementById('btn-back-calibrate');
+        if (btnBackCalibrate) {
+            btnBackCalibrate.addEventListener('click', () => {
+                window.App.showScreen('screen-main-menu');
+            });
+        }
+
+        const calibrationSlider = document.getElementById('calibration-slider');
+        if (calibrationSlider) {
+            calibrationSlider.addEventListener('input', (e) => {
+                document.getElementById('calibration-card').style.width = e.target.value + 'px';
+            });
+        }
+
+        const btnSaveCalibration = document.getElementById('btn-save-calibration');
+        if (btnSaveCalibration) {
+            btnSaveCalibration.addEventListener('click', () => {
+                const sliderValue = document.getElementById('calibration-slider').value;
+                const ppcm = sliderValue / 8.56;
+                window.App.pixelsPerCm = ppcm;
+                localStorage.setItem('stereogram_calibration_ppcm', ppcm);
+                window.App.showNotification("Calibration saved successfully!");
+                window.App.showScreen('screen-main-menu');
+            });
+        }
     }
 };
 
