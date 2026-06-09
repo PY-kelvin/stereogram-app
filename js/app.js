@@ -420,14 +420,8 @@ const Map = {
         if (!user) return 0;
         let ratio = Math.min(user.streak / 60, 1);
         
-        // If they chose to play an older stage, visually move the avatar to that stage
-        if (user.currentMapNode === 1 && user.unlockedStages.includes(2)) {
-            ratio = 0;
-        } else if (user.currentMapNode === 2 && user.unlockedStages.includes(3)) {
-            ratio = 0.5;
-        } else if (user.currentMapNode === 3) {
-            ratio = 1;
-        }
+        // Remove artificial snapping to stages. The avatar should always 
+        // return to its "true" streak position to accurately track progress!
         
         return ratio;
     },
@@ -516,17 +510,17 @@ const Game = {
     particles: [],
     
     stageImages: {
-        1: ['stage 1/Stage 1D.png?v=2', 'stage 1/Stage 1E.png?v=2', 'stage 1/stage 1A.png?v=2', 'stage 1/stage 1B.png?v=2', 'stage 1/stage 1C.png?v=2'],
+        1: ['stage 1/stage 1A.png?v=3', 'stage 1/stage 1B.png?v=3', 'stage 1/stage 1C.png?v=3', 'stage 1/Stage 1D.png?v=3', 'stage 1/Stage 1E.png?v=3'],
         2: ['stage 2/stage 2A.png?v=2', 'stage 2/stage 2B.png?v=2', 'stage 2/stage 2C.png?v=2', 'stage 2/stage 2D.png?v=2', 'stage 2/stage 2E.png?v=2'],
-        3: ['stage 3/Stage 3C.png?v=2', 'stage 3/stage 3A.png?v=2', 'stage 3/stage 3B.png?v=2', 'stage 3/stage 3D.png?v=2', 'stage 3/stage 3E.png?v=2']
+        3: ['stage 3/Stage 3C.png?v=2', 'stage 3/Stage 3A.png?v=2', 'stage 3/Stage 3B.png?v=2', 'stage 3/Stage 3D.png?v=2', 'stage 3/Stage 3E.png?v=2']
     },
 
     stage1Ratios: {
-        'stage 1/stage 1A.png?v=2': 0.3881,
-        'stage 1/stage 1B.png?v=2': 0.4433,
-        'stage 1/stage 1C.png?v=2': 0.4235,
-        'stage 1/Stage 1D.png?v=2': 0.4371,
-        'stage 1/Stage 1E.png?v=2': 0.4383
+        'stage 1/Stage 1D.png?v=3': 0.5000,
+        'stage 1/Stage 1E.png?v=3': 0.4995,
+        'stage 1/stage 1A.png?v=3': 0.5000,
+        'stage 1/stage 1B.png?v=3': 0.4995,
+        'stage 1/stage 1C.png?v=3': 0.5000,
     },
     
     stage2Ratios: {
