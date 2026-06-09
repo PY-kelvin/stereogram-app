@@ -125,11 +125,15 @@
                 <div style="width: 60px;"></div>
             </header>
             
-            <div style="padding: 20px; display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 600px; margin: 0 auto; height: calc(100vh - 80px); overflow-y: auto;">
-                <p style="font-size: 1.1rem; color: #444; margin-bottom: 20px;">
-                    Place a standard credit card or ID card horizontally on your screen.<br>
-                    Adjust the slider until the blue box below <strong>exactly matches</strong> the physical width of your card.
-                </p>
+            <div id="calibration-content-area" style="padding: 20px; display: flex; flex-direction: column; align-items: center; text-align: center; max-width: 600px; margin: 0 auto; height: calc(100vh - 80px); overflow: hidden; position: relative; touch-action: none;">
+                <div id="calibration-text-container" style="transition: opacity 0.3s;">
+                    <p style="font-size: 1.1rem; color: #444; margin-bottom: 10px;">
+                        Place a standard credit card or ID card horizontally on your screen.
+                    </p>
+                    <p style="font-size: 1.1rem; color: #0d47a1; margin-bottom: 20px; font-weight: bold;">
+                        👈 Pinch or stretch the screen with two fingers 👉<br>until the blue box exactly matches your card's width.
+                    </p>
+                </div>
                 
                 <div style="flex-grow: 1; display: flex; align-items: center; justify-content: center; width: 100%;">
                     <div id="calibration-card" style="width: 200px; aspect-ratio: 1.5857; background: linear-gradient(135deg, #2196F3, #0D47A1); border-radius: 10px; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
@@ -137,12 +141,7 @@
                     </div>
                 </div>
                 
-                <div style="width: 100%; margin-top: 30px; margin-bottom: 30px;">
-                    <input type="range" id="calibration-slider" min="100" max="800" value="200" style="width: 100%; height: 20px;">
-                    <p style="margin-top: 10px; color: #666;">Drag to resize</p>
-                </div>
-                
-                <button id="btn-save-calibration" class="btn btn-primary" style="width: 100%; max-width: 300px;">Save Calibration</button>
+                <button id="btn-save-calibration" class="btn btn-primary" style="width: 100%; max-width: 300px; transition: opacity 0.3s; margin-bottom: 20px;">Save Calibration</button>
             </div>
         </section>
 

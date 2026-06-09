@@ -1088,10 +1088,9 @@ const Menu = {
         if (btnCalibrate) {
             btnCalibrate.addEventListener('click', () => {
                 window.App.showScreen('screen-calibration');
-                const slider = document.getElementById('calibration-slider');
                 const card = document.getElementById('calibration-card');
-                slider.value = 8.56 * window.App.pixelsPerCm;
-                card.style.width = slider.value + 'px';
+                window.App.currentCalibrationWidth = 8.56 * window.App.pixelsPerCm;
+                card.style.width = window.App.currentCalibrationWidth + 'px';
             });
         }
 
@@ -1102,18 +1101,71 @@ const Menu = {
             });
         }
 
-        const calibrationSlider = document.getElementById('calibration-slider');
-        if (calibrationSlider) {
-            calibrationSlider.addEventListener('input', (e) => {
-                document.getElementById('calibration-card').style.width = e.target.value + 'px';
+        // Pinch to zoom logic for calibration
+        const calArea = document.getElementById('calibration-content-area');
+        const calText = document.getElementById('calibration-text-container');
+        const calBtn = document.getElementById('btn-save-calibration');
+        const calCard = document.getElementById('calibration-card');
+        
+        let initialPinchDistance = null;
+        let initialCardWidth = null;
+
+        if (calArea) {
+            calArea.addEventListener('touchstart', (e) => {
+                // Fade out text and button to give full view of card
+                calText.style.opacity = '0';
+                calBtn.style.opacity = '0';
+                
+                if (e.touches.length === 2) {
+                    initialPinchDistance = Math.hypot(
+                        e.touches[0].clientX - e.touches[1].clientX,
+                        e.touches[0].clientY - e.touches[1].clientY
+                    );
+                    initialCardWidth = window.App.currentCalibrationWidth;
+                }
+            });
+
+            calArea.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 2 && initialPinchDistance !== null) {
+                    // Prevent default scrolling during pinch
+                    e.preventDefault();
+                    const currentDistance = Math.hypot(
+                        e.touches[0].clientX - e.touches[1].clientX,
+                        e.touches[0].clientY - e.touches[1].clientY
+                    );
+                    const scale = currentDistance / initialPinchDistance;
+                    let newWidth = initialCardWidth * scale;
+                    // Clamp width logically
+                    if (newWidth < 50) newWidth = 50;
+                    if (newWidth > window.innerWidth * 2) newWidth = window.innerWidth * 2;
+                    
+                    window.App.currentCalibrationWidth = newWidth;
+                    calCard.style.width = newWidth + 'px';
+                }
+            }, { passive: false });
+
+            calArea.addEventListener('touchend', (e) => {
+                if (e.touches.length < 2) {
+                    initialPinchDistance = null;
+                }
+                if (e.touches.length === 0) {
+                    // Fade text and button back in
+                    calText.style.opacity = '1';
+                    calBtn.style.opacity = '1';
+                }
+            });
+            
+            calArea.addEventListener('touchcancel', (e) => {
+                initialPinchDistance = null;
+                calText.style.opacity = '1';
+                calBtn.style.opacity = '1';
             });
         }
 
         const btnSaveCalibration = document.getElementById('btn-save-calibration');
         if (btnSaveCalibration) {
             btnSaveCalibration.addEventListener('click', () => {
-                const sliderValue = document.getElementById('calibration-slider').value;
-                const ppcm = sliderValue / 8.56;
+                const ppcm = window.App.currentCalibrationWidth / 8.56;
                 window.App.pixelsPerCm = ppcm;
                 localStorage.setItem('stereogram_calibration_ppcm', ppcm);
                 window.App.showNotification("Calibration saved successfully!");
