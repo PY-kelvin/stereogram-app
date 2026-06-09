@@ -499,6 +499,14 @@ const Game = {
         'stage 1/Stage 1D.png?v=2': 0.4371,
         'stage 1/Stage 1E.png?v=2': 0.4383
     },
+    
+    stage2Ratios: {
+        'stage 2/stage 2A.png?v=2': 0.5185,
+        'stage 2/stage 2B.png?v=2': 0.5587,
+        'stage 2/stage 2C.png?v=2': 0.5620,
+        'stage 2/stage 2D.png?v=2': 0.5385,
+        'stage 2/stage 2E.png?v=2': 0.5826,
+    },
     currentImageIndex: 0,
     hasStartedCurrentSession: false,
     uiTimeout: null,
@@ -699,6 +707,15 @@ const Game = {
             gameImageEl.style.maxWidth = 'none';
             gameImageEl.style.maxHeight = 'none';
             // Disable object-fit since we are explicitly sizing the image mathematically
+            gameImageEl.style.objectFit = 'fill';
+        } else if (stageNum === 2 && this.stage2Ratios[imgPath]) {
+            const ratio = this.stage2Ratios[imgPath];
+            const ppcm = window.App.pixelsPerCm || 37.795;
+            const targetWidthPx = (5.0 * ppcm) / ratio;
+            gameImageEl.style.width = targetWidthPx + 'px';
+            gameImageEl.style.height = 'auto';
+            gameImageEl.style.maxWidth = 'none';
+            gameImageEl.style.maxHeight = 'none';
             gameImageEl.style.objectFit = 'fill';
         } else {
             // Revert back to standard sizing for other stages
