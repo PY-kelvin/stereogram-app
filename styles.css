@@ -60,6 +60,16 @@ body {
     display: none !important;
 }
 
+/* UI Auto-Hide feature */
+.game-ui {
+    transition: opacity 0.5s ease;
+}
+
+.ui-hidden {
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
 /* Typography */
 h1, h2, h3 {
     color: var(--text-dark);

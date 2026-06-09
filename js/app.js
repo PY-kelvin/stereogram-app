@@ -483,6 +483,7 @@ const Game = {
     },
     currentImageIndex: 0,
     hasStartedCurrentSession: false,
+    uiTimeout: null,
 
     init() {
         this.currentStage = 1;
@@ -505,6 +506,12 @@ const Game = {
             const screen = document.getElementById('screen-game');
             screen.classList.toggle('focus-mode');
         });
+        
+        // UI Auto-Hide on Interaction
+        const resetUI = () => this.resetUITimer();
+        document.getElementById('screen-game').addEventListener('click', resetUI);
+        document.getElementById('screen-game').addEventListener('touchstart', resetUI);
+        document.getElementById('screen-game').addEventListener('mousemove', resetUI);
         
         document.getElementById('btn-toggle-timer').addEventListener('click', (e) => {
             if (this.isPlaying) {
@@ -634,6 +641,7 @@ const Game = {
         this.isPlaying = true;
         this.hasStartedCurrentSession = true;
         this.updateNavButtonsVisibility();
+        this.resetUITimer();
         this.timerInterval = setInterval(() => {
             this.timeLeft--;
             this.updateTimerDisplay();
@@ -647,6 +655,10 @@ const Game = {
     pauseTimer() {
         this.isPlaying = false;
         if (this.timerInterval) clearInterval(this.timerInterval);
+        
+        // Show UI when paused
+        if (this.uiTimeout) clearTimeout(this.uiTimeout);
+        document.querySelectorAll('.game-ui').forEach(ui => ui.classList.remove('ui-hidden'));
         
         const user = window.App.currentUser;
         if (user && this.timeLeft > 0 && this.timeLeft < 600) {
@@ -683,6 +695,19 @@ const Game = {
         this.isPlaying = false;
         // Turn off focus mode
         document.getElementById('screen-game').classList.remove('focus-mode');
+    },
+
+    resetUITimer() {
+        const uis = document.querySelectorAll('.game-ui');
+        uis.forEach(ui => ui.classList.remove('ui-hidden'));
+
+        if (this.uiTimeout) clearTimeout(this.uiTimeout);
+
+        if (this.isPlaying) {
+            this.uiTimeout = setTimeout(() => {
+                uis.forEach(ui => ui.classList.add('ui-hidden'));
+            }, 3000);
+        }
     }
 };
 
