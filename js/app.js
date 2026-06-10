@@ -426,8 +426,8 @@ const Map = {
 
         // If the avatar is acting as a progress tracker on the path (Next stage locked),
         // and they click the current stage to play it, we shouldn't animate back.
-        if ((stageNum === 1 && !user.unlockedStages.includes(2)) || 
-            (stageNum === 2 && !user.unlockedStages.includes(3))) {
+        if ((stageNum === 1 && !user.unlockedStages.includes(2) && currentRatio > 0) || 
+            (stageNum === 2 && !user.unlockedStages.includes(3) && currentRatio > 0.5)) {
             setTimeout(() => {
                 if (window.Game) window.Game.startStage(stageNum);
             }, 500);
