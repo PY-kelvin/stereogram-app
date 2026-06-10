@@ -363,6 +363,7 @@ h1, h2, h3 {
     padding: 0; /* Full screen */
     overflow: hidden;
     touch-action: none;
+    background: #ffffff;
 }
 
 .game-header {

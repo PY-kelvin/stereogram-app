@@ -588,11 +588,6 @@ const Game = {
             window.App.showScreen('screen-map');
         });
 
-        document.getElementById('btn-fullscreen').addEventListener('click', () => {
-            const screen = document.getElementById('screen-game');
-            screen.classList.toggle('focus-mode');
-        });
-        
         // UI Auto-Hide on Interaction
         const resetUI = () => this.resetUITimer();
         document.getElementById('screen-game').addEventListener('click', resetUI);
