@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="avatar_cat.png">
 
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=50">
+    <link rel="stylesheet" href="styles.css?v=51">
 </head>
 
 <body>
@@ -132,8 +132,9 @@
 
         <!-- MAIN MENU SCREEN -->
         <section id="screen-main-menu" class="screen">
-            <header class="map-header" style="justify-content: center;">
+            <header class="map-header" style="justify-content: center; position: relative;">
                 <h2>Main Menu</h2>
+                <button id="btn-logout-main" class="btn btn-small" style="position: absolute; right: 15px;">Logout</button>
             </header>
             <div class="bubble-container">
                 <button id="btn-menu-instructions" class="bubble-btn bg-farm">
@@ -389,12 +390,12 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=50"></script>
+    <script src="js/app.js?v=51"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js?v=50').then(registration => {
+                navigator.serviceWorker.register('./sw.js?v=51').then(registration => {
                     console.log('ServiceWorker registration successful with scope: ', registration.scope);
                 }, err => {
                     console.log('ServiceWorker registration failed: ', err);

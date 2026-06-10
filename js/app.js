@@ -58,6 +58,13 @@ const Auth = {
         document.getElementById('btn-logout').addEventListener('click', () => {
             this.logout();
         });
+        
+        const btnLogoutMain = document.getElementById('btn-logout-main');
+        if (btnLogoutMain) {
+            btnLogoutMain.addEventListener('click', () => {
+                this.logout();
+            });
+        }
     },
 
     register(username, password, animal = 'cat') {
