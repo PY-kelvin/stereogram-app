@@ -24,6 +24,21 @@ const Auth = {
             loginForm.classList.add('hidden');
         });
 
+        // Welcome Screen Start
+        const btnWelcomeStart = document.getElementById('btn-welcome-start');
+        if (btnWelcomeStart) {
+            btnWelcomeStart.addEventListener('click', () => {
+                // Play audio on tap
+                const audio = document.getElementById('bgm-audio');
+                if (audio && audio.paused) {
+                    audio.play().catch(e => console.log('Audio autoplay blocked', e));
+                }
+                
+                window.App.showScreen('screen-main-menu');
+                if (window.Progress) window.Progress.loadUserData();
+            });
+        }
+
         // Form Submissions
         regForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -152,8 +167,7 @@ const Auth = {
                 // ------------------------------------
 
                 window.App.currentUser = user;
-                window.App.showScreen('screen-main-menu');
-                if (window.Progress) window.Progress.loadUserData();
+                window.App.showScreen('screen-welcome');
                 return true;
             }
         }

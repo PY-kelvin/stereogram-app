@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="avatar_cat.png">
 
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=43">
+    <link rel="stylesheet" href="styles.css?v=44">
 </head>
 
 <body>
@@ -116,6 +116,15 @@
                 </form>
             </div>
         </section>
+
+        <!-- Welcome Screen (Returning Users) -->
+        <div id="screen-welcome" class="screen hidden">
+            <div class="auth-container" style="text-align: center; padding: 40px 20px;">
+                <h1 style="color: var(--primary-color); font-size: 2.5rem; margin-bottom: 10px;">Welcome Back!</h1>
+                <p style="color: var(--text-color); margin-bottom: 30px; font-size: 1.2rem;">Ready for your next eye workout?</p>
+                <button id="btn-welcome-start" class="btn btn-primary" style="font-size: 1.5rem; padding: 15px 40px; border-radius: 30px; box-shadow: 0 4px 15px rgba(239, 35, 60, 0.3);">Tap to Start</button>
+            </div>
+        </div>
 
         <!-- MAIN MENU SCREEN -->
         <section id="screen-main-menu" class="screen">
@@ -376,12 +385,12 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=43"></script>
+    <script src="js/app.js?v=44"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js?v=43').then(registration => {
+                navigator.serviceWorker.register('./sw.js?v=44').then(registration => {
                     console.log('ServiceWorker registration successful with scope: ', registration.scope);
                 }, err => {
                     console.log('ServiceWorker registration failed: ', err);
