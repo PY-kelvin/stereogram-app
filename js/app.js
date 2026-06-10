@@ -236,6 +236,7 @@ const Progress = {
         window.App.showScreen('screen-map');
 
         this.saveUser();
+        this.updateUI();
         
         if (window.Map) {
             window.Map.animateStep(user.streak - 1, user.streak);
