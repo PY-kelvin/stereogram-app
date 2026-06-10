@@ -534,17 +534,17 @@ const Game = {
     particles: [],
     
     stageImages: {
-        1: ['stage 1/stage 1A.png?v=3', 'stage 1/stage 1B.png?v=3', 'stage 1/stage 1C.png?v=3', 'stage 1/Stage 1D.png?v=3', 'stage 1/Stage 1E.png?v=3'],
+        1: ['stage 1/stage 1A.png?v=4', 'stage 1/stage 1B.png?v=4', 'stage 1/stage 1C.png?v=4', 'stage 1/Stage 1D.png?v=4', 'stage 1/Stage 1E.png?v=4'],
         2: ['stage 2/stage 2A.png?v=2', 'stage 2/stage 2B.png?v=2', 'stage 2/stage 2C.png?v=2', 'stage 2/stage 2D.png?v=2', 'stage 2/stage 2E.png?v=2'],
         3: ['stage 3/Stage 3C.png?v=2', 'stage 3/Stage 3A.png?v=2', 'stage 3/Stage 3B.png?v=2', 'stage 3/Stage 3D.png?v=2', 'stage 3/Stage 3E.png?v=2']
     },
 
     stage1Ratios: {
-        'stage 1/Stage 1D.png?v=3': 0.3691,
-        'stage 1/Stage 1E.png?v=3': 0.3578,
-        'stage 1/stage 1A.png?v=3': 0.3778,
-        'stage 1/stage 1B.png?v=3': 0.3878,
-        'stage 1/stage 1C.png?v=3': 0.3856,
+        'stage 1/Stage 1D.png?v=4': 0.3691,
+        'stage 1/Stage 1E.png?v=4': 0.3578,
+        'stage 1/stage 1A.png?v=4': 0.3778,
+        'stage 1/stage 1B.png?v=4': 0.3878,
+        'stage 1/stage 1C.png?v=4': 0.3856,
     },
     
     stage2Ratios: {
