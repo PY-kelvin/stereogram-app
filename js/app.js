@@ -30,13 +30,6 @@ const Auth = {
             const username = document.getElementById('reg-username').value;
             const password = document.getElementById('reg-password').value;
             const animal = document.querySelector('input[name="animal"]:checked').value;
-            
-            // Start BGM on user interaction
-            const audio = document.getElementById('bgm-audio');
-            if (audio && audio.paused) {
-                audio.play().catch(e => console.log('Audio autoplay blocked', e));
-            }
-
             this.register(username, password, animal);
         });
 
@@ -44,13 +37,6 @@ const Auth = {
             e.preventDefault();
             const username = document.getElementById('login-username').value;
             const password = document.getElementById('login-password').value;
-
-            // Start BGM on user interaction
-            const audio = document.getElementById('bgm-audio');
-            if (audio && audio.paused) {
-                audio.play().catch(e => console.log('Audio autoplay blocked', e));
-            }
-
             this.login(username, password);
         });
 
@@ -119,6 +105,12 @@ const Auth = {
         }
         // ------------------------------------
 
+        // Start BGM ONLY on successful login
+        const audio = document.getElementById('bgm-audio');
+        if (audio && audio.paused) {
+            audio.play().catch(e => console.log('Audio autoplay blocked', e));
+        }
+
         window.App.showScreen('screen-main-menu');
         window.App.showNotification(`Welcome back, ${username}!`, "success");
 
@@ -126,6 +118,13 @@ const Auth = {
     },
 
     logout() {
+        // Pause BGM on logout
+        const audio = document.getElementById('bgm-audio');
+        if (audio) {
+            audio.pause();
+            audio.currentTime = 0;
+        }
+
         localStorage.removeItem('currentUser');
         window.App.currentUser = null;
         window.App.showScreen('screen-auth');
