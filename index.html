@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="avatar_cat.png">
 
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=39">
+    <link rel="stylesheet" href="styles.css?v=40">
 </head>
 
 <body>
@@ -283,32 +283,7 @@
         </section>
 
         <!-- GAME SCREEN -->
-        <section id="screen-game" class="screen" style="background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);">
-
-            <!-- Cheerful Background Decorations -->
-            <div id="cheerful-decorations"
-                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; overflow: hidden;">
-                <!-- Bubbles/Sparkles -->
-                <div style="position: absolute; top: 10%; left: 15%; font-size: 2.5rem; opacity: 0.5;">✨</div>
-                <div style="position: absolute; bottom: 20%; left: 8%; font-size: 3rem; opacity: 0.5;">⭐</div>
-                <div style="position: absolute; top: 25%; right: 10%; font-size: 3rem; opacity: 0.5;">🌟</div>
-                <div style="position: absolute; bottom: 15%; right: 15%; font-size: 2.5rem; opacity: 0.5;">✨</div>
-
-                <!-- Animals with encouragement -->
-                <div style="position: absolute; bottom: 5%; left: 3%; transform: rotate(-10deg); text-align: center;">
-                    <div
-                        style="background: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; color: #2b2d42; border: 2px solid #2b2d42; margin-bottom: 5px; box-shadow: 2px 2px 0 #2b2d42;">
-                        You can do it!</div>
-                    <img src="avatar_cat.png" style="width: 100px;">
-                </div>
-
-                <div style="position: absolute; top: 5%; right: 5%; transform: rotate(15deg); text-align: center;">
-                    <img src="avatar_hamster.png" style="width: 90px;">
-                    <div
-                        style="background: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; color: #2b2d42; border: 2px solid #2b2d42; margin-top: 5px; box-shadow: 2px 2px 0 #2b2d42;">
-                        Keep it up!</div>
-                </div>
-            </div>
+        <section id="screen-game" class="screen" style="background: #ffffff;">
 
             <div id="rotate-overlay" style="z-index: 9999; display: none;">
                 <div class="rotate-content">
@@ -399,12 +374,12 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=39"></script>
+    <script src="js/app.js?v=40"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js?v=39').then(registration => {
+                navigator.serviceWorker.register('./sw.js?v=40').then(registration => {
                     console.log('ServiceWorker registration successful with scope: ', registration.scope);
                 }, err => {
                     console.log('ServiceWorker registration failed: ', err);
