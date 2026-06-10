@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="avatar_cat.png">
 
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=45">
+    <link rel="stylesheet" href="styles.css?v=46">
 </head>
 
 <body>
@@ -118,7 +118,7 @@
         </section>
 
         <!-- Welcome Screen (Returning Users) -->
-        <div id="screen-welcome" class="screen hidden">
+        <div id="screen-welcome" class="screen">
             <div class="auth-container" style="text-align: center; padding: 40px 20px;">
                 <h1 style="color: var(--primary-color); font-size: 2.5rem; margin-bottom: 10px;">Welcome Back!</h1>
                 <p style="color: var(--text-color); margin-bottom: 30px; font-size: 1.2rem;">Ready for your next eye workout?</p>
@@ -385,12 +385,12 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=45"></script>
+    <script src="js/app.js?v=46"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js?v=45').then(registration => {
+                navigator.serviceWorker.register('./sw.js?v=46').then(registration => {
                     console.log('ServiceWorker registration successful with scope: ', registration.scope);
                 }, err => {
                     console.log('ServiceWorker registration failed: ', err);
