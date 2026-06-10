@@ -951,6 +951,35 @@ const App = {
         Map.init();
         Game.init();
         Auth.checkSession();
+
+        document.addEventListener("visibilitychange", () => {
+            const audio = document.getElementById('bgm-audio');
+            if (document.hidden) {
+                if (audio && !audio.paused) {
+                    audio.pause();
+                    window.App.bgmWasPlaying = true;
+                }
+                
+                if (window.Game && window.Game.isPlaying) {
+                    window.Game.pauseTimer();
+                    const btn = document.getElementById('btn-toggle-timer');
+                    if (btn) btn.innerText = "▶";
+                    window.Game.wasAutoPausedByVisibility = true;
+                }
+            } else {
+                if (window.App.bgmWasPlaying && audio && audio.paused) {
+                    audio.play().catch(e => console.log('Audio resume blocked', e));
+                    window.App.bgmWasPlaying = false;
+                }
+                
+                if (window.Game && window.Game.wasAutoPausedByVisibility) {
+                    window.Game.startTimer();
+                    const btn = document.getElementById('btn-toggle-timer');
+                    if (btn) btn.innerText = "⏸";
+                    window.Game.wasAutoPausedByVisibility = false;
+                }
+            }
+        });
     },
 
     showScreen(screenId) {
