@@ -229,41 +229,46 @@ const Progress = {
     },
 
     recordPlayCount(stageNum) {
-        const user = window.App.currentUser;
-        if (!user) return;
+        try {
+            const user = window.App.currentUser;
+            if (!user) return;
 
-        const today = new Date().toDateString();
+            const today = new Date().toDateString();
 
-        if (user.lastActivityDate !== today) {
-            user.lastActivityDate = today;
-            user.dailyProgress = 0;
-            user.stageDailyProgress = { 1: 0, 2: 0, 3: 0 };
-        }
+            if (user.lastActivityDate !== today) {
+                user.lastActivityDate = today;
+                user.dailyProgress = 0;
+                user.stageDailyProgress = { 1: 0, 2: 0, 3: 0 };
+            }
 
-        user.stagePlays = user.stagePlays || { 1: user.streak || 0, 2: 0, 3: 0 };
-        user.stageDailyProgress = user.stageDailyProgress || { 1: 0, 2: 0, 3: 0 };
+            user.stagePlays = user.stagePlays || { 1: user.streak || 0, 2: 0, 3: 0 };
+            user.stageDailyProgress = user.stageDailyProgress || { 1: 0, 2: 0, 3: 0 };
 
-        let isExtraSession = false;
+            let isExtraSession = false;
 
-        if (user.stageDailyProgress[stageNum] >= 1) {
-            isExtraSession = true; // Already played this stage today
-        } else {
-            user.stageDailyProgress[stageNum] = 1;
-            user.stagePlays[stageNum] += 1;
-        }
+            if (user.stageDailyProgress[stageNum] >= 1) {
+                isExtraSession = true; // Already played this stage today
+            } else {
+                user.stageDailyProgress[stageNum] = 1;
+                user.stagePlays[stageNum] += 1;
+            }
 
-        if (user.dailyProgress >= 1) {
-            isExtraSession = true; // For global map streak purposes
-        } else {
-            user.dailyProgress = 1;
-            user.streak += 1;
-        }
+            if (user.dailyProgress >= 1) {
+                isExtraSession = true; // For global map streak purposes
+            } else {
+                user.dailyProgress = 1;
+                user.streak += 1;
+            }
 
-        this.saveUser();
-        this.updateUI();
-        
-        if (window.Map) {
-            window.Map.updateUI();
+            this.saveUser();
+            this.updateUI();
+            
+            if (window.Map) {
+                window.Map.updateUI();
+            }
+        } catch (err) {
+            alert("Error in recordPlayCount: " + err.message);
+            console.error(err);
         }
     },
 
@@ -875,30 +880,35 @@ const Game = {
     },
 
     startTimer() {
-        const isPortrait = window.innerHeight > window.innerWidth;
-        if (isPortrait) {
-            document.getElementById('rotate-overlay').style.display = 'flex';
-            this.wasAutoPaused = true;
-            return;
-        }
-
-        if (this.timeLeft === 600) {
-            window.Progress.recordPlayCount(this.currentStage);
-        }
-        this.currentStintStartTime = new Date().getTime();
-
-        this.isPlaying = true;
-        this.hasStartedCurrentSession = true;
-        this.updateNavButtonsVisibility();
-        this.resetUITimer();
-        this.timerInterval = setInterval(() => {
-            this.timeLeft--;
-            this.updateTimerDisplay();
-
-            if (this.timeLeft <= 0) {
-                this.onSessionComplete();
+        try {
+            const isPortrait = window.innerHeight > window.innerWidth;
+            if (isPortrait) {
+                document.getElementById('rotate-overlay').style.display = 'flex';
+                this.wasAutoPaused = true;
+                return;
             }
-        }, 1000);
+
+            if (this.timeLeft === 600) {
+                window.Progress.recordPlayCount(this.currentStage);
+            }
+            this.currentStintStartTime = new Date().getTime();
+
+            this.isPlaying = true;
+            this.hasStartedCurrentSession = true;
+            this.updateNavButtonsVisibility();
+            this.resetUITimer();
+            this.timerInterval = setInterval(() => {
+                this.timeLeft--;
+                this.updateTimerDisplay();
+
+                if (this.timeLeft <= 0) {
+                    this.onSessionComplete();
+                }
+            }, 1000);
+        } catch (err) {
+            alert("Error in startTimer: " + err.message);
+            console.error(err);
+        }
     },
 
     pauseTimer() {
