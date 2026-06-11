@@ -1,9 +1,9 @@
-const CACHE_NAME = 'myeyegym-cache-v83';
+const CACHE_NAME = 'myeyegym-cache-v84';
 const urlsToCache = [
   './',
-  './index.html?v=83',
-  './styles.css?v=83',
-  './js/app.js?v=83',
+  './index.html?v=84',
+  './styles.css?v=84',
+  './js/app.js?v=84',
   './manifest.json',
   './avatar_cat.png',
   './avatar_cow.png',
@@ -14,7 +14,11 @@ const urlsToCache = [
   './calibrate_node_v2.png',
   './calibrate_node_v3.png',
   './calibrate_node_v4.png',
-  './clock_bg.png'
+  './clock_bg.png',
+  './reward_horse.png',
+  './reward_cow.png',
+  './reward_chicken.png',
+  './reward_duck.png'
 ];
 
 self.addEventListener('install', event => {

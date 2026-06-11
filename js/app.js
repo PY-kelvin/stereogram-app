@@ -947,12 +947,12 @@ const Game = {
             if (window.Progress) window.Progress.saveUser();
         }
         
-        window.App.showNotification("Great job! Session completed.", "success");
-        setTimeout(() => {
-            window.App.showNotification("Please take an eye break and rest your eyes.", "warning");
-        }, 3000);
+        const animals = ['reward_horse.png', 'reward_cow.png', 'reward_chicken.png', 'reward_duck.png'];
+        const randomAnimal = animals[Math.floor(Math.random() * animals.length)];
         
-        window.App.showScreen('screen-map');
+        document.getElementById('reward-animal').src = randomAnimal;
+        document.getElementById('reward-modal').classList.remove('hidden');
+        window.Confetti.start();
     },
 
     stopGame() {
@@ -1470,8 +1470,94 @@ window.App = App;
 window.ProgressReport = ProgressReport;
 window.Menu = Menu;
 
+const Confetti = {
+    particles: [],
+    canvas: null,
+    ctx: null,
+    animationId: null,
+    colors: ['#ff6b6b', '#ffd166', '#06d6a0', '#118ab2', '#073b4c', '#a06cd5', '#ff9f1c'],
+
+    start() {
+        this.canvas = document.getElementById('confetti-canvas');
+        if (!this.canvas) return;
+        this.ctx = this.canvas.getContext('2d');
+        this.resize();
+        window.addEventListener('resize', this.resize.bind(this));
+
+        this.particles = [];
+        for (let i = 0; i < 150; i++) {
+            this.particles.push(this.createParticle());
+        }
+
+        if (this.animationId) cancelAnimationFrame(this.animationId);
+        this.update();
+    },
+
+    stop() {
+        if (this.animationId) cancelAnimationFrame(this.animationId);
+        if (this.ctx && this.canvas) {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+        window.removeEventListener('resize', this.resize.bind(this));
+    },
+
+    resize() {
+        if (!this.canvas) return;
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+    },
+
+    createParticle() {
+        return {
+            x: Math.random() * window.innerWidth,
+            y: Math.random() * window.innerHeight - window.innerHeight,
+            size: Math.random() * 10 + 5,
+            color: this.colors[Math.floor(Math.random() * this.colors.length)],
+            speedY: Math.random() * 3 + 2,
+            speedX: Math.random() * 2 - 1,
+            rotation: Math.random() * 360,
+            rotationSpeed: Math.random() * 10 - 5
+        };
+    },
+
+    update() {
+        if (!this.ctx || !this.canvas) return;
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        for (let p of this.particles) {
+            p.y += p.speedY;
+            p.x += p.speedX;
+            p.rotation += p.rotationSpeed;
+
+            if (p.y > this.canvas.height) {
+                p.y = -20;
+                p.x = Math.random() * this.canvas.width;
+            }
+
+            this.ctx.save();
+            this.ctx.translate(p.x, p.y);
+            this.ctx.rotate((p.rotation * Math.PI) / 180);
+            this.ctx.fillStyle = p.color;
+            this.ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+            this.ctx.restore();
+        }
+
+        this.animationId = requestAnimationFrame(this.update.bind(this));
+    }
+};
+window.Confetti = Confetti;
+
 document.addEventListener('DOMContentLoaded', () => {
     App.init();
     ProgressReport.init();
     Menu.init();
+
+    const btnCloseReward = document.getElementById('btn-close-reward');
+    if (btnCloseReward) {
+        btnCloseReward.addEventListener('click', () => {
+            document.getElementById('reward-modal').classList.add('hidden');
+            window.Confetti.stop();
+            window.App.showScreen('screen-map');
+        });
+    }
 });

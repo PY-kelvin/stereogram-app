@@ -568,6 +568,17 @@ h1, h2, h3 {
     to { transform: translate(-50%, 0); }
 }
 
+@keyframes bounceWiggle {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-20px) rotate(-5deg); }
+    50% { transform: translateY(0) rotate(0deg); }
+    75% { transform: translateY(-10px) rotate(5deg); }
+}
+
+.bounce-wiggle {
+    animation: bounceWiggle 1s ease-in-out infinite;
+}
+
 /* Avatar Selector */
 .avatar-selector {
     display: flex;
