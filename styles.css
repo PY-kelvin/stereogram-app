@@ -867,8 +867,8 @@ img.player-avatar {
 }
 
 .bubble-small {
-    width: 160px;
-    height: 160px;
+    width: 145px;
+    height: 145px;
     background: #ffb703;
 }
 
@@ -880,13 +880,13 @@ img.player-avatar {
 }
 
 .menu-bg-farm {
-    background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), url('farm_node.png');
+    background: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)), url('farm_node.png');
     background-size: cover;
     background-position: center;
 }
 
 .menu-bg-city {
-    background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), url('city_node.png');
+    background: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)), url('city_node.png');
     background-size: cover;
     background-position: center;
 }
