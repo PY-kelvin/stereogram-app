@@ -237,7 +237,11 @@ const Progress = {
         if (user.lastActivityDate !== today) {
             user.lastActivityDate = today;
             user.dailyProgress = 0;
+            user.stageDailyProgress = { 1: 0, 2: 0, 3: 0 };
         }
+
+        user.stagePlays = user.stagePlays || { 1: user.streak || 0, 2: 0, 3: 0 };
+        user.stageDailyProgress = user.stageDailyProgress || { 1: 0, 2: 0, 3: 0 };
 
         const todayStr = new Date().toDateString();
         user.sessionHistory = user.sessionHistory || [];
@@ -247,16 +251,30 @@ const Progress = {
             durationMins: 10
         });
 
+        const stageNum = window.Game ? window.Game.currentStage : 1;
+        let isExtraSession = false;
+
+        if (user.stageDailyProgress[stageNum] >= 1) {
+            isExtraSession = true; // Already played this stage today
+        } else {
+            user.stageDailyProgress[stageNum] = 1;
+            user.stagePlays[stageNum] += 1;
+        }
+
         if (user.dailyProgress >= 1) {
+            isExtraSession = true; // For global map streak purposes
+        } else {
+            user.dailyProgress = 1;
+            user.streak += 1;
+        }
+
+        if (isExtraSession) {
             window.App.showNotification("Extra session completed! Checked in Progress Report.", "success");
             window.App.showScreen('screen-map');
             this.saveUser();
             return;
         }
 
-        user.dailyProgress = 1;
-        user.streak += 1;
-        
         window.App.showNotification(`Great job! Times completed: ${user.streak}/30`, "success");
 
         setTimeout(() => {
@@ -629,10 +647,14 @@ const Game = {
     getUnlockedImageCount() {
         const user = window.App.currentUser;
         if (!user) return 1;
-        if (user.streak >= 24) return 5;
-        if (user.streak >= 18) return 4;
-        if (user.streak >= 12) return 3;
-        if (user.streak >= 6) return 2;
+        
+        user.stagePlays = user.stagePlays || { 1: user.streak || 0, 2: 0, 3: 0 };
+        const plays = user.stagePlays[this.currentStage] || 0;
+
+        if (plays >= 24) return 5;
+        if (plays >= 18) return 4;
+        if (plays >= 12) return 3;
+        if (plays >= 6) return 2;
         return 1;
     },
 
