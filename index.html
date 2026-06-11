@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="avatar_cat.png">
 
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=60">
+    <link rel="stylesheet" href="styles.css?v=61">
 </head>
 
 <body>
@@ -203,7 +203,7 @@
                 style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: calc(100vh - 80px); padding: 40px 0; gap: 40px; position: relative; z-index: 1;">
 
                 <div class="instruction-category" style="text-align: center; width: 100%;">
-                    <h3 style="color: #2b2d42; margin-bottom: 20px; font-size: 1.5rem; background: rgba(255,255,255,0.7); display: inline-block; padding: 5px 20px; border-radius: 20px; border: 2px solid #2b2d42;">📖 Instructions</h3>
+                    <h3 style="color: #2b2d42; margin-bottom: 20px; font-size: 1.5rem; background: rgba(255,255,255,0.7); display: inline-block; padding: 5px 20px; border-radius: 20px; border: 2px solid #2b2d42;">📖 Written Instructions</h3>
                     <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
                         <button id="btn-inst-dist" class="bubble-btn bubble-small">
                             <span class="bubble-text" style="font-size: 1.2rem;">Stereogram<br>Distance</span>
@@ -215,7 +215,7 @@
                 </div>
 
                 <div class="instruction-category" style="text-align: center; width: 100%;">
-                    <h3 style="color: #2b2d42; margin-bottom: 20px; font-size: 1.5rem; background: rgba(255,255,255,0.7); display: inline-block; padding: 5px 20px; border-radius: 20px; border: 2px solid #2b2d42;">🎥 Video Demonstrations</h3>
+                    <h3 style="color: #2b2d42; margin-bottom: 20px; font-size: 1.5rem; background: rgba(255,255,255,0.7); display: inline-block; padding: 5px 20px; border-radius: 20px; border: 2px solid #2b2d42;">🎥 Video Demonstration</h3>
                     <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
                         <a href="https://www.youtube.com/watch?v=h76TnuYiEMc" target="_blank" class="bubble-link">
                             <button class="bubble-btn bubble-small">
@@ -397,12 +397,12 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=60"></script>
+    <script src="js/app.js?v=61"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js?v=60').then(registration => {
+                navigator.serviceWorker.register('./sw.js?v=61').then(registration => {
                     console.log('ServiceWorker registration successful with scope: ', registration.scope);
                 }, err => {
                     console.log('ServiceWorker registration failed: ', err);
