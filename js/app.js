@@ -1312,11 +1312,43 @@ const Menu = {
         }
         
         const btnAlarm = document.getElementById('btn-menu-alarm');
-        if (btnAlarm) {
+        const alarmModal = document.getElementById('alarm-modal');
+        if (btnAlarm && alarmModal) {
             btnAlarm.addEventListener('click', () => {
+                alarmModal.classList.remove('hidden');
+            });
+            
+            document.getElementById('btn-cancel-alarm').addEventListener('click', () => {
+                alarmModal.classList.add('hidden');
+            });
+
+            document.getElementById('btn-confirm-alarm').addEventListener('click', () => {
+                const timeVal = document.getElementById('alarm-time').value; // "HH:MM"
+                const freqVal = document.getElementById('alarm-freq').value; // "DAILY" etc
+                const textVal = document.getElementById('alarm-text').value || "Eye Gym Exercise";
+                
                 const now = new Date();
-                const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-                const formatICSDate = (date) => date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+                const [hours, minutes] = timeVal.split(':');
+                
+                let alarmDate = new Date();
+                alarmDate.setHours(parseInt(hours, 10));
+                alarmDate.setMinutes(parseInt(minutes, 10));
+                alarmDate.setSeconds(0);
+                
+                // If the selected time is strictly in the past for today, schedule for tomorrow
+                if (alarmDate <= now) {
+                    alarmDate.setDate(alarmDate.getDate() + 1);
+                }
+                
+                const formatICSDate = (date) => {
+                    const pad = (n) => n < 10 ? '0' + n : n;
+                    return date.getUTCFullYear() + 
+                           pad(date.getUTCMonth() + 1) + 
+                           pad(date.getUTCDate()) + 'T' + 
+                           pad(date.getUTCHours()) + 
+                           pad(date.getUTCMinutes()) + 
+                           pad(date.getUTCSeconds()) + 'Z';
+                };
                 
                 const icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
@@ -1324,10 +1356,10 @@ PRODID:-//SNEC//Eye Gym Exercise//EN
 BEGIN:VEVENT
 UID:${now.getTime()}@eyegym.app
 DTSTAMP:${formatICSDate(now)}
-DTSTART:${formatICSDate(tomorrow)}
-RRULE:FREQ=DAILY
+DTSTART:${formatICSDate(alarmDate)}
+RRULE:FREQ=${freqVal}
 SUMMARY:Eye Gym Exercise
-DESCRIPTION:Time to do your Stereogram exercises!
+DESCRIPTION:${textVal}
 BEGIN:VALARM
 TRIGGER:-PT0M
 ACTION:DISPLAY
@@ -1344,6 +1376,7 @@ END:VCALENDAR`;
                 link.click();
                 document.body.removeChild(link);
                 
+                alarmModal.classList.add('hidden');
                 window.App.showNotification("Calendar reminder file generated! Please open it to add to your calendar.", "success");
             });
         }

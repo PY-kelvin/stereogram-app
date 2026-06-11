@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="avatar_cat.png">
 
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=74">
+    <link rel="stylesheet" href="styles.css?v=75">
 </head>
 
 <body>
@@ -54,6 +54,33 @@
                 </p>
                 <div class="modal-actions" style="justify-content: center;">
                     <button id="btn-close-calibration-modal" class="btn btn-primary">Got it!</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alarm Reminder Settings Modal -->
+        <div id="alarm-modal" class="modal hidden">
+            <div class="modal-content" style="text-align: left;">
+                <h3 style="margin-bottom: 15px; color: #ef233c; text-align: center;">Set Alarm Reminder</h3>
+                <div class="input-group">
+                    <label for="alarm-time">Time</label>
+                    <input type="time" id="alarm-time" value="08:00" required>
+                </div>
+                <div class="input-group">
+                    <label for="alarm-freq">Frequency</label>
+                    <select id="alarm-freq" style="width: 100%; padding: 10px; border: 2px solid #8d99ae; border-radius: 8px; font-family: 'Fredoka', sans-serif;">
+                        <option value="DAILY">Everyday</option>
+                        <option value="DAILY;INTERVAL=2">Every Two Days</option>
+                        <option value="WEEKLY">Once a Week</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="alarm-text">Reminder Message</label>
+                    <input type="text" id="alarm-text" value="Time to do your Stereogram exercises!" placeholder="Custom message...">
+                </div>
+                <div class="modal-actions" style="justify-content: space-between; margin-top: 20px;">
+                    <button id="btn-cancel-alarm" class="btn btn-secondary btn-small" style="background: #8d99ae; border: none; color: white;">Cancel</button>
+                    <button id="btn-confirm-alarm" class="btn btn-primary btn-small">Confirm & Create</button>
                 </div>
             </div>
         </div>
@@ -397,12 +424,12 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=74"></script>
+    <script src="js/app.js?v=75"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js?v=74').then(registration => {
+                navigator.serviceWorker.register('./sw.js?v=75').then(registration => {
                     console.log('ServiceWorker registration successful with scope: ', registration.scope);
                 }, err => {
                     console.log('ServiceWorker registration failed: ', err);
