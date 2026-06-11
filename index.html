@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="avatar_cat.png">
 
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=54">
+    <link rel="stylesheet" href="styles.css?v=55">
 </head>
 
 <body>
@@ -146,8 +146,8 @@
                     <button id="btn-menu-instructions" class="bubble-btn bubble-small menu-bg-farm">
                         <span class="bubble-text bubble-text-dark">Instructions</span>
                     </button>
-                    <button id="btn-menu-calibrate" class="bubble-btn bubble-small" style="background-color: #bbdefb; color: #0d47a1;">
-                        <span class="bubble-text bubble-text-dark">Calibrate Screen</span>
+                    <button id="btn-menu-calibrate" class="bubble-btn bubble-small menu-bg-calibrate">
+                        <span class="bubble-text bubble-text-dark">Calibrate<br>Screen</span>
                     </button>
                 </div>
                 <button id="btn-menu-start" class="bubble-btn bubble-rect menu-bg-city">
@@ -397,12 +397,12 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=54"></script>
+    <script src="js/app.js?v=55"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js?v=54').then(registration => {
+                navigator.serviceWorker.register('./sw.js?v=55').then(registration => {
                     console.log('ServiceWorker registration successful with scope: ', registration.scope);
                 }, err => {
                     console.log('ServiceWorker registration failed: ', err);
