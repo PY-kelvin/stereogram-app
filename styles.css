@@ -49,6 +49,7 @@ body {
     display: none; /* Hide by default */
     flex-direction: column;
     padding: 20px;
+    overflow-y: auto;
     animation: fadeIn 0.4s ease;
 }
 
@@ -124,7 +125,7 @@ h1, h2, h3 {
 
 /* Authentication Screen */
 #screen-auth {
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
 }
 
@@ -136,6 +137,7 @@ h1, h2, h3 {
     width: 100%;
     max-width: 400px;
     border: 3px solid var(--text-dark); /* Cartoon outline */
+    margin: auto;
 }
 
 .tabs {
