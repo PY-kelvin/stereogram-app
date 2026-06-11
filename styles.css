@@ -894,6 +894,11 @@ img.player-avatar {
     background-size: cover;
 }
 
+.menu-bg-alarm {
+    background: linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url('clock_bg.png') no-repeat center center;
+    background-size: cover;
+}
+
 .bubble-alt {
     background: #8ecae6;
 }

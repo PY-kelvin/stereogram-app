@@ -1311,6 +1311,43 @@ const Menu = {
             });
         }
         
+        const btnAlarm = document.getElementById('btn-menu-alarm');
+        if (btnAlarm) {
+            btnAlarm.addEventListener('click', () => {
+                const now = new Date();
+                const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+                const formatICSDate = (date) => date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+                
+                const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//SNEC//Eye Gym Exercise//EN
+BEGIN:VEVENT
+UID:${now.getTime()}@eyegym.app
+DTSTAMP:${formatICSDate(now)}
+DTSTART:${formatICSDate(tomorrow)}
+RRULE:FREQ=DAILY
+SUMMARY:Eye Gym Exercise
+DESCRIPTION:Time to do your Stereogram exercises!
+BEGIN:VALARM
+TRIGGER:-PT0M
+ACTION:DISPLAY
+DESCRIPTION:Reminder
+END:VALARM
+END:VEVENT
+END:VCALENDAR`;
+                
+                const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'Eye_Gym_Reminder.ics';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                window.App.showNotification("Calendar reminder file generated! Please open it to add to your calendar.", "success");
+            });
+        }
+        
         const btnCloseCalModal = document.getElementById('btn-close-calibration-modal');
         if (btnCloseCalModal) {
             btnCloseCalModal.addEventListener('click', () => {
