@@ -1350,14 +1350,15 @@ const Menu = {
                            pad(date.getUTCSeconds()) + 'Z';
                 };
                 
+                const rruleLine = freqVal === "ONCE" ? "" : `\nRRULE:FREQ=${freqVal}`;
+                
                 const icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//SNEC//Eye Gym Exercise//EN
 BEGIN:VEVENT
 UID:${now.getTime()}@eyegym.app
 DTSTAMP:${formatICSDate(now)}
-DTSTART:${formatICSDate(alarmDate)}
-RRULE:FREQ=${freqVal}
+DTSTART:${formatICSDate(alarmDate)}${rruleLine}
 SUMMARY:Eye Gym Exercise
 DESCRIPTION:${textVal}
 BEGIN:VALARM

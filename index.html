@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="avatar_cat.png">
 
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=75">
+    <link rel="stylesheet" href="styles.css?v=76">
 </head>
 
 <body>
@@ -69,9 +69,16 @@
                 <div class="input-group">
                     <label for="alarm-freq">Frequency</label>
                     <select id="alarm-freq" style="width: 100%; padding: 10px; border: 2px solid #8d99ae; border-radius: 8px; font-family: 'Fredoka', sans-serif;">
+                        <option value="ONCE">Only Once</option>
                         <option value="DAILY">Everyday</option>
-                        <option value="DAILY;INTERVAL=2">Every Two Days</option>
+                        <option value="DAILY;INTERVAL=2">Every 2 Days</option>
+                        <option value="DAILY;INTERVAL=3">Every 3 Days</option>
+                        <option value="DAILY;INTERVAL=4">Every 4 Days</option>
+                        <option value="DAILY;INTERVAL=5">Every 5 Days</option>
+                        <option value="DAILY;INTERVAL=6">Every 6 Days</option>
                         <option value="WEEKLY">Once a Week</option>
+                        <option value="WEEKLY;INTERVAL=2">Every 2 Weeks</option>
+                        <option value="MONTHLY">Once a Month</option>
                     </select>
                 </div>
                 <div class="input-group">
@@ -424,12 +431,12 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=75"></script>
+    <script src="js/app.js?v=76"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js?v=75').then(registration => {
+                navigator.serviceWorker.register('./sw.js?v=76').then(registration => {
                     console.log('ServiceWorker registration successful with scope: ', registration.scope);
                 }, err => {
                     console.log('ServiceWorker registration failed: ', err);
