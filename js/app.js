@@ -263,17 +263,7 @@ const Progress = {
             window.App.showNotification("Please take an eye break and rest your eyes.", "warning");
         }, 3000);
 
-        if (user.streak >= 30 && !user.unlockedStages.includes(2)) {
-            user.unlockedStages.push(2);
-            window.App.showNotification("🎉 CONGRATULATIONS! Stage 2 Unlocked! 🎉", "success");
-            if (window.Map) window.Map.animateUnlockStage(2);
-        }
         
-        if (user.streak >= 60 && !user.unlockedStages.includes(3)) {
-            user.unlockedStages.push(3);
-            window.App.showNotification("🎉 CONGRATULATIONS! Stage 3 Unlocked! 🎉", "success");
-            if (window.Map) window.Map.animateUnlockStage(3);
-        }
         window.App.showScreen('screen-map');
 
         this.saveUser();
