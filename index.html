@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="avatar_cat.png">
 
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=85">
+    <link rel="stylesheet" href="styles.css?v=86">
 </head>
 
 <body>
@@ -136,6 +136,12 @@
                                     alt="Hamster"></label>
                             <label><input type="radio" name="animal" value="puppy"><img src="avatar_puppy.png"
                                     alt="Puppy"></label>
+                            <label><input type="radio" name="animal" value="penguin"><img src="avatar_penguin.png"
+                                    alt="Penguin"></label>
+                            <label><input type="radio" name="animal" value="capybara"><img src="avatar_capybara.png"
+                                    alt="Capybara"></label>
+                            <label><input type="radio" name="animal" value="dino"><img src="avatar_dino.png"
+                                    alt="Dino"></label>
                         </div>
                     </div>
                     <div class="input-group">
@@ -449,12 +455,12 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=85"></script>
+    <script src="js/app.js?v=86"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js?v=85').then(registration => {
+                navigator.serviceWorker.register('./sw.js?v=86').then(registration => {
                     console.log('ServiceWorker registration successful with scope: ', registration.scope);
                 }, err => {
                     console.log('ServiceWorker registration failed: ', err);
