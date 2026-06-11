@@ -228,7 +228,7 @@ const Progress = {
         localStorage.setItem(`user_${username}`, JSON.stringify(window.App.currentUser));
     },
 
-    completeSession() {
+    recordPlayCount(stageNum) {
         const user = window.App.currentUser;
         if (!user) return;
 
@@ -243,15 +243,6 @@ const Progress = {
         user.stagePlays = user.stagePlays || { 1: user.streak || 0, 2: 0, 3: 0 };
         user.stageDailyProgress = user.stageDailyProgress || { 1: 0, 2: 0, 3: 0 };
 
-        const todayStr = new Date().toDateString();
-        user.sessionHistory = user.sessionHistory || [];
-        user.sessionHistory.push({
-            dateStr: todayStr,
-            timestamp: new Date().getTime(),
-            durationMins: 10
-        });
-
-        const stageNum = window.Game ? window.Game.currentStage : 1;
         let isExtraSession = false;
 
         if (user.stageDailyProgress[stageNum] >= 1) {
@@ -268,28 +259,28 @@ const Progress = {
             user.streak += 1;
         }
 
-        if (isExtraSession) {
-            window.App.showNotification("Extra session completed! Checked in Progress Report.", "success");
-            window.App.showScreen('screen-map');
-            this.saveUser();
-            return;
-        }
-
-        window.App.showNotification(`Great job! Times completed: ${user.streak}/30`, "success");
-
-        setTimeout(() => {
-            window.App.showNotification("Please take an eye break and rest your eyes.", "warning");
-        }, 3000);
-
-        
-        window.App.showScreen('screen-map');
-
         this.saveUser();
         this.updateUI();
         
         if (window.Map) {
-            window.Map.animateStep(user.streak - 1, user.streak);
+            window.Map.render();
         }
+    },
+
+    recordTimeSpent(durationMins) {
+        const user = window.App.currentUser;
+        if (!user || durationMins <= 0) return;
+        
+        const todayStr = new Date().toDateString();
+        user.sessionHistory = user.sessionHistory || [];
+        user.sessionHistory.push({
+            dateStr: todayStr,
+            timestamp: new Date().getTime(),
+            durationMins: durationMins
+        });
+        
+        this.saveUser();
+        this.updateUI();
     },
 
     updateUI() {
@@ -814,19 +805,8 @@ const Game = {
                 this.timeLeft = saved.timeLeft;
                 window.App.showNotification(`Resuming saved Stage ${stageNum} session!`, "success");
             } else {
-                // Log the expired session so they still get credit for their time!
-                let durationMins = Math.round((600 - saved.timeLeft) / 60);
-                if (durationMins < 1) durationMins = 1; // Minimum 1 minute
-                
-                if (!user.sessionHistory) user.sessionHistory = [];
-                user.sessionHistory.push({
-                    dateStr: new Date(saved.timestamp).toDateString(),
-                    timestamp: saved.timestamp,
-                    durationMins: durationMins
-                });
-
                 this.timeLeft = 600;
-                window.App.showNotification("Saved session expired (>12 hours). Time logged to Progress Report!", "warning");
+                window.App.showNotification("Saved session expired (>12 hours). Restarting!", "warning");
             }
             delete user.savedSessions[stageNum];
             if (window.Progress) window.Progress.saveUser();
@@ -902,6 +882,11 @@ const Game = {
             return;
         }
 
+        if (this.timeLeft === 600) {
+            window.Progress.recordPlayCount(this.currentStage);
+        }
+        this.currentStintStartTime = new Date().getTime();
+
         this.isPlaying = true;
         this.hasStartedCurrentSession = true;
         this.updateNavButtonsVisibility();
@@ -917,6 +902,13 @@ const Game = {
     },
 
     pauseTimer() {
+        if (this.isPlaying && this.currentStintStartTime) {
+            const stintMs = new Date().getTime() - this.currentStintStartTime;
+            const durationMins = stintMs / 1000 / 60;
+            if (window.Progress) window.Progress.recordTimeSpent(durationMins);
+            this.currentStintStartTime = null;
+        }
+
         this.isPlaying = false;
         if (this.timerInterval) clearInterval(this.timerInterval);
         
@@ -951,7 +943,13 @@ const Game = {
             delete user.savedSessions[this.currentStage];
             if (window.Progress) window.Progress.saveUser();
         }
-        window.Progress.completeSession();
+        
+        window.App.showNotification("Great job! Session completed.", "success");
+        setTimeout(() => {
+            window.App.showNotification("Please take an eye break and rest your eyes.", "warning");
+        }, 3000);
+        
+        window.App.showScreen('screen-map');
     },
 
     stopGame() {
