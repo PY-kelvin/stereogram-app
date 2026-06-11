@@ -272,7 +272,7 @@ const Progress = {
         }
     },
 
-    recordTimeSpent(durationMins) {
+    recordTimeSpent(durationMins, stageNum) {
         const user = window.App.currentUser;
         if (!user || durationMins <= 0) return;
         
@@ -281,7 +281,8 @@ const Progress = {
         user.sessionHistory.push({
             dateStr: todayStr,
             timestamp: new Date().getTime(),
-            durationMins: durationMins
+            durationMins: durationMins,
+            stageNum: stageNum || 1
         });
         
         this.saveUser();
@@ -915,7 +916,7 @@ const Game = {
         if (this.isPlaying && this.currentStintStartTime) {
             const stintMs = new Date().getTime() - this.currentStintStartTime;
             const durationMins = stintMs / 1000 / 60;
-            if (window.Progress) window.Progress.recordTimeSpent(durationMins);
+            if (window.Progress) window.Progress.recordTimeSpent(durationMins, this.currentStage);
             this.currentStintStartTime = null;
         }
 
@@ -1234,6 +1235,14 @@ const ProgressReport = {
         
         let totalMins = daySessions.reduce((sum, s) => sum + (s.durationMins || 10), 0);
         document.getElementById('detail-duration').innerText = `${totalMins.toFixed(1)} mins`;
+
+        let s1 = daySessions.filter(s => (s.stageNum || 1) === 1).reduce((sum, s) => sum + (s.durationMins || 10), 0);
+        let s2 = daySessions.filter(s => s.stageNum === 2).reduce((sum, s) => sum + (s.durationMins || 10), 0);
+        let s3 = daySessions.filter(s => s.stageNum === 3).reduce((sum, s) => sum + (s.durationMins || 10), 0);
+
+        document.getElementById('detail-duration-s1').innerText = `${s1.toFixed(1)} mins`;
+        document.getElementById('detail-duration-s2').innerText = `${s2.toFixed(1)} mins`;
+        document.getElementById('detail-duration-s3').innerText = `${s3.toFixed(1)} mins`;
     },
 
     renderSummary() {

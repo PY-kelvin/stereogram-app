@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="avatar_cat.png">
 
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=81">
+    <link rel="stylesheet" href="styles.css?v=82">
 </head>
 
 <body>
@@ -408,7 +408,12 @@
                     <div id="calendar-day-details" class="day-details hidden">
                         <h4>Details for <span id="detail-date"></span></h4>
                         <p>Times done: <strong id="detail-times">0</strong></p>
-                        <p>Total duration: <strong id="detail-duration">0 min</strong></p>
+                        <p style="margin-bottom: 5px;">Total duration: <strong id="detail-duration">0 min</strong></p>
+                        <ul style="list-style: none; padding-left: 0; margin-top: 0; font-size: 0.95rem; color: #555;">
+                            <li>Stage 1: <strong id="detail-duration-s1">0.0 mins</strong></li>
+                            <li>Stage 2: <strong id="detail-duration-s2">0.0 mins</strong></li>
+                            <li>Stage 3: <strong id="detail-duration-s3">0.0 mins</strong></li>
+                        </ul>
                     </div>
                 </div>
 
@@ -431,12 +436,12 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=81"></script>
+    <script src="js/app.js?v=82"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js?v=81').then(registration => {
+                navigator.serviceWorker.register('./sw.js?v=82').then(registration => {
                     console.log('ServiceWorker registration successful with scope: ', registration.scope);
                 }, err => {
                     console.log('ServiceWorker registration failed: ', err);
