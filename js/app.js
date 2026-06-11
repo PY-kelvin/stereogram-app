@@ -626,7 +626,7 @@ const Game = {
     hasStartedCurrentSession: false,
     uiTimeout: null,
 
-    getUnlockedStage1Count() {
+    getUnlockedImageCount() {
         const user = window.App.currentUser;
         if (!user) return 1;
         if (user.streak >= 24) return 5;
@@ -723,8 +723,8 @@ const Game = {
             }
             const images = this.stageImages[this.currentStage];
             let maxCount = images.length;
-            if (this.currentStage === 1) {
-                maxCount = this.getUnlockedStage1Count();
+            if (this.currentStage === 1 || this.currentStage === 2) {
+                maxCount = this.getUnlockedImageCount();
             }
             this.currentImageIndex = (this.currentImageIndex - 1 + maxCount) % maxCount;
             this.loadImage(this.currentStage);
@@ -737,8 +737,8 @@ const Game = {
             }
             const images = this.stageImages[this.currentStage];
             let maxCount = images.length;
-            if (this.currentStage === 1) {
-                maxCount = this.getUnlockedStage1Count();
+            if (this.currentStage === 1 || this.currentStage === 2) {
+                maxCount = this.getUnlockedImageCount();
                 if (maxCount < images.length && this.currentImageIndex === maxCount - 1) {
                     window.App.showNotification(`Next picture unlocks at ${maxCount * 6} days streak!`, "warning");
                 }
@@ -763,9 +763,9 @@ const Game = {
     startStage(stageNum) {
         this.currentStage = stageNum;
         this.currentImageIndex = 0; // Reset image to first one when entering a stage
-        if (stageNum === 1) {
+        if (stageNum === 1 || stageNum === 2) {
             // Ensure if we had a stored index that was higher than allowed, we don't crash
-            const maxCount = this.getUnlockedStage1Count();
+            const maxCount = this.getUnlockedImageCount();
             this.currentImageIndex = Math.min(this.currentImageIndex, maxCount - 1);
         }
         this.hasStartedCurrentSession = false;
