@@ -1253,11 +1253,6 @@ const ProgressReport = {
         document.getElementById('title-stat-month').innerText = `Times Done For The Month Of ${monthName}`;
         document.getElementById('stat-month').innerText = monthCount;
 
-        document.getElementById('title-stat-week').innerText = `Average Times Done Per Week For ${monthName}`;
-        
-        let displayWeekly = avgWeekly.replace('.0', '');
-        let percentCompliance = Math.round((parseFloat(avgWeekly) / 7) * 100);
-        document.getElementById('stat-week').innerText = `${displayWeekly} (${percentCompliance}%)`;
 
         document.getElementById('title-stat-duration').innerText = `Average Duration For ${monthName}`;
         document.getElementById('stat-freq').innerText = `${avgDuration} mins`;
