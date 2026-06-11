@@ -954,9 +954,21 @@ const Game = {
         ];
         const randomAnimal = animals[Math.floor(Math.random() * animals.length)];
         
-        document.getElementById('reward-animal').src = randomAnimal;
-        document.getElementById('reward-modal').classList.remove('hidden');
-        window.Confetti.start();
+        const modal = document.getElementById('reward-modal');
+        const animalImg = document.getElementById('reward-animal');
+        
+        if (modal && animalImg && window.Confetti) {
+            animalImg.src = randomAnimal;
+            modal.classList.remove('hidden');
+            window.Confetti.start();
+        } else {
+            // Fallback if HTML is cached and missing the modal
+            window.App.showNotification("Great job! Session completed.", "success");
+            setTimeout(() => {
+                window.App.showNotification("Please take an eye break and rest your eyes.", "warning");
+            }, 3000);
+            window.App.showScreen('screen-map');
+        }
     },
 
     stopGame() {
