@@ -947,7 +947,11 @@ const Game = {
             if (window.Progress) window.Progress.saveUser();
         }
         
-        const animals = ['reward_horse.png', 'reward_cow.png', 'reward_chicken.png', 'reward_duck.png'];
+        const animals = [
+            'reward_horse.png', 'reward_cow.png', 'reward_chicken.png', 
+            'reward_duck.png', 'reward_hamster.png', 'reward_capybara.png', 
+            'reward_squirrel.png', 'reward_penguin.png', 'reward_farmers.png'
+        ];
         const randomAnimal = animals[Math.floor(Math.random() * animals.length)];
         
         document.getElementById('reward-animal').src = randomAnimal;
