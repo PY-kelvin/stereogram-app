@@ -1233,7 +1233,7 @@ const ProgressReport = {
         document.getElementById('detail-times').innerText = daySessions.length;
         
         let totalMins = daySessions.reduce((sum, s) => sum + (s.durationMins || 10), 0);
-        document.getElementById('detail-duration').innerText = `${totalMins} min`;
+        document.getElementById('detail-duration').innerText = `${totalMins.toFixed(1)} min`;
     },
 
     renderSummary() {
@@ -1256,7 +1256,7 @@ const ProgressReport = {
 
         // 4.33 weeks in a month on average
         const avgWeekly = (monthCount / 4.33).toFixed(1);
-        const avgDuration = monthCount > 0 ? Math.round(totalMins / monthCount) : 0;
+        const avgDuration = monthCount > 0 ? (totalMins / monthCount).toFixed(1) : "0.0";
 
         document.getElementById('title-stat-month').innerText = `Times Done For The Month Of ${monthName}`;
         document.getElementById('stat-month').innerText = monthCount;
