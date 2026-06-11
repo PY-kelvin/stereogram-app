@@ -745,7 +745,7 @@ const Game = {
             }
             const images = this.stageImages[this.currentStage];
             let maxCount = images.length;
-            if (this.currentStage === 1 || this.currentStage === 2) {
+            if (this.currentStage >= 1 && this.currentStage <= 3) {
                 maxCount = this.getUnlockedImageCount();
             }
             this.currentImageIndex = (this.currentImageIndex - 1 + maxCount) % maxCount;
@@ -759,7 +759,7 @@ const Game = {
             }
             const images = this.stageImages[this.currentStage];
             let maxCount = images.length;
-            if (this.currentStage === 1 || this.currentStage === 2) {
+            if (this.currentStage >= 1 && this.currentStage <= 3) {
                 maxCount = this.getUnlockedImageCount();
                 if (maxCount < images.length && this.currentImageIndex === maxCount - 1) {
                     window.App.showNotification(`Next picture unlocks at ${maxCount * 6} days streak!`, "warning");
@@ -785,7 +785,7 @@ const Game = {
     startStage(stageNum) {
         this.currentStage = stageNum;
         this.currentImageIndex = 0; // Reset image to first one when entering a stage
-        if (stageNum === 1 || stageNum === 2) {
+        if (stageNum >= 1 && stageNum <= 3) {
             // Ensure if we had a stored index that was higher than allowed, we don't crash
             const maxCount = this.getUnlockedImageCount();
             this.currentImageIndex = Math.min(this.currentImageIndex, maxCount - 1);
