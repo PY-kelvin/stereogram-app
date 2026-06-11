@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="avatar_cat.png">
 
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=63">
+    <link rel="stylesheet" href="styles.css?v=64">
 </head>
 
 <body>
@@ -47,7 +47,7 @@
             <div class="modal-content" style="text-align: center;">
                 <h3 style="margin-bottom: 15px; color: #0d47a1;">Calibration</h3>
                 <p style="font-size: 1.1rem; color: #444; margin-bottom: 10px;">
-                    Place a reference card horizontally on your screen (e.g., a standard bank card or ID card, approximately 85.6 mm × 54.0 mm) for calibration.
+                    Turn your device to landscape mode. Place a standard-sized reference card (e.g., a bank card or ID card, 85.6 mm × 54.0 mm) horizontally on the screen, then adjust the calibration box until it matches the card's width exactly.
                 </p>
                 <p style="font-size: 1.1rem; color: #0d47a1; margin-bottom: 20px; font-weight: bold;">
                     👈 Pinch or stretch the screen with two fingers 👉<br>until the blue box exactly matches your card's width.
@@ -397,12 +397,12 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=63"></script>
+    <script src="js/app.js?v=64"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js?v=63').then(registration => {
+                navigator.serviceWorker.register('./sw.js?v=64').then(registration => {
                     console.log('ServiceWorker registration successful with scope: ', registration.scope);
                 }, err => {
                     console.log('ServiceWorker registration failed: ', err);
