@@ -1233,7 +1233,7 @@ const ProgressReport = {
         document.getElementById('detail-times').innerText = daySessions.length;
         
         let totalMins = daySessions.reduce((sum, s) => sum + (s.durationMins || 10), 0);
-        document.getElementById('detail-duration').innerText = `${totalMins.toFixed(1)} min`;
+        document.getElementById('detail-duration').innerText = `${totalMins.toFixed(1)} mins`;
     },
 
     renderSummary() {
