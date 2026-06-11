@@ -828,19 +828,20 @@ img.player-avatar {
 /* --- Bubble Menus --- */
 .bubble-container {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 30px;
     padding: 40px 20px;
     height: 100%;
-    flex-direction: column;
 }
 
-@media (min-width: 600px) {
-    .bubble-container {
-        flex-direction: row;
-    }
+.bubble-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
 }
 
 .bubble-link {
@@ -871,6 +872,25 @@ img.player-avatar {
     background: #ffb703;
 }
 
+.bubble-rect {
+    width: 90%;
+    max-width: 350px;
+    height: 120px;
+    border-radius: 20px;
+}
+
+.menu-bg-farm {
+    background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), url('farm_node.png');
+    background-size: cover;
+    background-position: center;
+}
+
+.menu-bg-city {
+    background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), url('city_node.png');
+    background-size: cover;
+    background-position: center;
+}
+
 .bubble-alt {
     background: #8ecae6;
 }
@@ -895,6 +915,12 @@ img.player-avatar {
 
 .bubble-small .bubble-text {
     font-size: 1.1rem;
+}
+
+.bubble-text-dark {
+    color: #000000;
+    font-weight: 900;
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.9);
 }
 
 /* Rotate Overlay */

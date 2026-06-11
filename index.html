@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="avatar_cat.png">
 
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=52">
+    <link rel="stylesheet" href="styles.css?v=53">
 </head>
 
 <body>
@@ -142,14 +142,16 @@
                 <button id="btn-logout-main" class="btn btn-small" style="position: absolute; right: 15px;">Logout</button>
             </header>
             <div class="bubble-container">
-                <button id="btn-menu-instructions" class="bubble-btn bg-farm">
-                    <span class="bubble-text">Instructions</span>
-                </button>
-                <button id="btn-menu-calibrate" class="bubble-btn" style="background-color: #bbdefb; color: #0d47a1;">
-                    <span class="bubble-text">Calibrate Screen</span>
-                </button>
-                <button id="btn-menu-start" class="bubble-btn bg-city">
-                    <span class="bubble-text">Start Game</span>
+                <div class="bubble-row">
+                    <button id="btn-menu-instructions" class="bubble-btn menu-bg-farm">
+                        <span class="bubble-text bubble-text-dark">Instructions</span>
+                    </button>
+                    <button id="btn-menu-calibrate" class="bubble-btn bubble-small" style="background-color: #bbdefb; color: #0d47a1;">
+                        <span class="bubble-text">Calibrate Screen</span>
+                    </button>
+                </div>
+                <button id="btn-menu-start" class="bubble-btn bubble-rect menu-bg-city">
+                    <span class="bubble-text bubble-text-dark">Start Game</span>
                 </button>
             </div>
         </section>
@@ -395,12 +397,12 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=52"></script>
+    <script src="js/app.js?v=53"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js?v=52').then(registration => {
+                navigator.serviceWorker.register('./sw.js?v=53').then(registration => {
                     console.log('ServiceWorker registration successful with scope: ', registration.scope);
                 }, err => {
                     console.log('ServiceWorker registration failed: ', err);
