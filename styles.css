@@ -890,7 +890,7 @@ img.player-avatar {
 }
 
 .menu-bg-calibrate {
-    background: url('calibrate_node_v4.png') no-repeat center center;
+    background: linear-gradient(rgba(227, 242, 253, 0.85), rgba(227, 242, 253, 0.85)), url('calibrate_node_v4.png') no-repeat center center;
     background-size: cover;
 }
 
