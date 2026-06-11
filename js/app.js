@@ -530,6 +530,16 @@ const Map = {
         };
     },
 
+    getUnlockedStage1Count() {
+        const user = window.App.currentUser;
+        if (!user) return 1;
+        if (user.streak >= 24) return 5;
+        if (user.streak >= 18) return 4;
+        if (user.streak >= 12) return 3;
+        if (user.streak >= 6) return 2;
+        return 1;
+    },
+
     animateStep(oldStreak, newStreak) {
         const user = window.App.currentUser;
         if (user && user.unlockedStages.includes(3) && oldStreak >= 60) {
@@ -711,7 +721,11 @@ const Game = {
                 return;
             }
             const images = this.stageImages[this.currentStage];
-            this.currentImageIndex = (this.currentImageIndex - 1 + images.length) % images.length;
+            let maxCount = images.length;
+            if (this.currentStage === 1) {
+                maxCount = this.getUnlockedStage1Count();
+            }
+            this.currentImageIndex = (this.currentImageIndex - 1 + maxCount) % maxCount;
             this.loadImage(this.currentStage);
         });
 
@@ -721,7 +735,14 @@ const Game = {
                 return;
             }
             const images = this.stageImages[this.currentStage];
-            this.currentImageIndex = (this.currentImageIndex + 1) % images.length;
+            let maxCount = images.length;
+            if (this.currentStage === 1) {
+                maxCount = this.getUnlockedStage1Count();
+                if (maxCount < images.length && this.currentImageIndex === maxCount - 1) {
+                    window.App.showNotification(`Next picture unlocks at ${maxCount * 6} days streak!`, "warning");
+                }
+            }
+            this.currentImageIndex = (this.currentImageIndex + 1) % maxCount;
             this.loadImage(this.currentStage);
         });
     },
@@ -741,6 +762,11 @@ const Game = {
     startStage(stageNum) {
         this.currentStage = stageNum;
         this.currentImageIndex = 0; // Reset image to first one when entering a stage
+        if (stageNum === 1) {
+            // Ensure if we had a stored index that was higher than allowed, we don't crash
+            const maxCount = this.getUnlockedStage1Count();
+            this.currentImageIndex = Math.min(this.currentImageIndex, maxCount - 1);
+        }
         this.hasStartedCurrentSession = false;
         
         const user = window.App.currentUser;
