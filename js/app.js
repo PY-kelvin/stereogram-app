@@ -455,63 +455,8 @@ const Map = {
         avatar.style.transform = 'translate(-50%, -50%)';
     },
 
-    moveToStage(stageNum, overrideStartRatio = null) {
-        const avatar = document.getElementById('player-avatar');
-        const user = window.App.currentUser;
-        
-        let targetRatio = 0;
-        if (stageNum === 1) targetRatio = 0;
-        else if (stageNum === 2) targetRatio = 0.5;
-        else if (stageNum === 3) targetRatio = 1;
-
-        let currentRatio = 0;
-        if (overrideStartRatio !== null) {
-            currentRatio = overrideStartRatio;
-        } else {
-            currentRatio = this.getAvatarRatio(user);
-        }
-
-        // If the avatar is acting as a progress tracker on the path (Next stage locked),
-        // and they click the current stage to play it, we shouldn't animate back.
-        if ((stageNum === 1 && !user.unlockedStages.includes(2) && currentRatio > 0) || 
-            (stageNum === 2 && !user.unlockedStages.includes(3) && currentRatio > 0.5)) {
-            setTimeout(() => {
-                if (window.Game) window.Game.startStage(stageNum);
-            }, 500);
-            return;
-        }
-
-        if (currentRatio === targetRatio) {
-            setTimeout(() => {
-                if (window.Game) window.Game.startStage(stageNum);
-            }, 500);
-            return;
-        }
-
-        const duration = 2000;
-        const start = performance.now();
-        avatar.style.transition = 'none';
-
-        const step = (now) => {
-            const elapsed = now - start;
-            const progress = Math.min(elapsed / duration, 1);
-            
-            const ease = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-            const animatedRatio = currentRatio + (targetRatio - currentRatio) * ease;
-            const pos = this.getPointCSS(animatedRatio);
-            
-            avatar.style.left = pos.left;
-            avatar.style.top = pos.top;
-
-            if (progress < 1) {
-                requestAnimationFrame(step);
-            } else {
-                setTimeout(() => {
-                    if (window.Game) window.Game.startStage(stageNum);
-                }, 500);
-            }
-        };
-        requestAnimationFrame(step);
+    moveToStage(stageNum) {
+        if (window.Game) window.Game.startStage(stageNum);
     },
 
     getAvatarRatio(user) {
@@ -594,6 +539,53 @@ const Map = {
         setTimeout(() => {
             node.style.transform = 'translate(-50%, calc(-50% - 15px))';
         }, 500);
+
+        // Perform round-trip avatar animation
+        const user = window.App.currentUser;
+        if (!user) return;
+        
+        let targetRatio = 0;
+        if (stageNum === 1) targetRatio = 0;
+        else if (stageNum === 2) targetRatio = 0.5;
+        else if (stageNum === 3) targetRatio = 1;
+
+        const originalRatio = this.getAvatarRatio(user);
+        
+        this.isAnimating = true;
+        const avatar = document.getElementById('player-avatar');
+        avatar.style.transition = 'none';
+
+        const animateSegment = (fromRatio, toRatio, duration, callback) => {
+            const start = performance.now();
+            const step = (now) => {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+                const ease = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+                const currentRatio = fromRatio + (toRatio - fromRatio) * ease;
+                const pos = this.getPointCSS(currentRatio);
+                avatar.style.left = pos.left;
+                avatar.style.top = pos.top;
+                avatar.style.transform = 'translate(-50%, -50%)';
+
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                } else {
+                    if (callback) callback();
+                }
+            };
+            requestAnimationFrame(step);
+        };
+
+        // 1. Animate to the unlocked stage
+        animateSegment(originalRatio, targetRatio, 2000, () => {
+            // 2. Pause at the unlocked stage
+            setTimeout(() => {
+                // 3. Animate back to original streak position
+                animateSegment(targetRatio, originalRatio, 2000, () => {
+                    this.isAnimating = false;
+                });
+            }, 1000); // 1 sec pause
+        });
     }
 };
 
