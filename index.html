@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="avatar_cat.png">
 
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=51">
+    <link rel="stylesheet" href="styles.css?v=52">
 </head>
 
 <body>
@@ -115,6 +115,10 @@
                     <button type="submit" class="btn btn-secondary">Create Account</button>
                 </form>
                 
+                <button class="btn btn-secondary btn-install-app hidden" style="margin-top: 15px; width: 100%; background: #4CAF50; color: white; border: none; font-weight: 600;">
+                    📲 Install App to Home Screen
+                </button>
+                
                 <div style="font-size: 0.75rem; color: #8d99ae; text-align: center; margin-top: 20px;">
                     &copy; SNEC Orthoptic Department. All rights reserved. Developed by Leung Poa Yin.
                 </div>
@@ -133,6 +137,7 @@
         <!-- MAIN MENU SCREEN -->
         <section id="screen-main-menu" class="screen">
             <header class="map-header" style="justify-content: center; position: relative;">
+                <button class="btn btn-small btn-install-app hidden" style="position: absolute; left: 15px; background: #4CAF50; border: none; font-weight: 600;">Install</button>
                 <h2>Main Menu</h2>
                 <button id="btn-logout-main" class="btn btn-small" style="position: absolute; right: 15px;">Logout</button>
             </header>
@@ -390,12 +395,12 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=51"></script>
+    <script src="js/app.js?v=52"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js?v=51').then(registration => {
+                navigator.serviceWorker.register('./sw.js?v=52').then(registration => {
                     console.log('ServiceWorker registration successful with scope: ', registration.scope);
                 }, err => {
                     console.log('ServiceWorker registration failed: ', err);

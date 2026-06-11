@@ -1,3 +1,37 @@
+// Global variable to store the install prompt event
+window.deferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent Chrome from showing the automatic mini-infobar
+    e.preventDefault();
+    // Stash the event so it can be triggered later.
+    window.deferredPrompt = e;
+    
+    // Reveal our custom install buttons
+    document.querySelectorAll('.btn-install-app').forEach(btn => {
+        btn.classList.remove('hidden');
+    });
+});
+
+// We need to wait for DOM to load before attaching click listeners to the buttons
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.btn-install-app').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            if (window.deferredPrompt) {
+                // Show the native browser install prompt
+                window.deferredPrompt.prompt();
+                // Wait for the user to respond
+                const { outcome } = await window.deferredPrompt.userChoice;
+                console.log(`User response to the install prompt: ${outcome}`);
+                // We've used the prompt, throw it away
+                window.deferredPrompt = null;
+                // Hide the buttons since it's installing!
+                document.querySelectorAll('.btn-install-app').forEach(b => b.classList.add('hidden'));
+            }
+        });
+    });
+});
+
 const Auth = {
     init() {
         this.bindEvents();
