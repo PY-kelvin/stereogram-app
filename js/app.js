@@ -263,7 +263,7 @@ const Progress = {
         this.updateUI();
         
         if (window.Map) {
-            window.Map.render();
+            window.Map.updateUI();
         }
     },
 
