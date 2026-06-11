@@ -530,15 +530,6 @@ const Map = {
         };
     },
 
-    getUnlockedStage1Count() {
-        const user = window.App.currentUser;
-        if (!user) return 1;
-        if (user.streak >= 24) return 5;
-        if (user.streak >= 18) return 4;
-        if (user.streak >= 12) return 3;
-        if (user.streak >= 6) return 2;
-        return 1;
-    },
 
     animateStep(oldStreak, newStreak) {
         const user = window.App.currentUser;
@@ -634,6 +625,16 @@ const Game = {
     currentImageIndex: 0,
     hasStartedCurrentSession: false,
     uiTimeout: null,
+
+    getUnlockedStage1Count() {
+        const user = window.App.currentUser;
+        if (!user) return 1;
+        if (user.streak >= 24) return 5;
+        if (user.streak >= 18) return 4;
+        if (user.streak >= 12) return 3;
+        if (user.streak >= 6) return 2;
+        return 1;
+    },
 
     init() {
         this.currentStage = 1;
