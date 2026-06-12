@@ -617,6 +617,26 @@ const Map = {
         
         const user = window.App.currentUser;
         if (!user.lastVisitedNode) user.lastVisitedNode = {};
+        
+        // Find current position to animate backwards
+        let currentNode = user.lastVisitedNode[fromLevel];
+        let currentPlays = 0;
+        if (currentNode) {
+            currentNode = currentNode.toLowerCase();
+            if (currentNode.endsWith('b')) currentPlays = 7;
+            else if (currentNode.startsWith('exit')) currentPlays = 14;
+        } else {
+            currentPlays = user.stagePlays[fromLevel] || 0;
+            if (currentPlays > 14) currentPlays = 14;
+        }
+        
+        // Animate backwards if not already at 0
+        if (currentPlays > 0) {
+            let duration = Math.max(1000, currentPlays * 150); // Speed up slightly for backwards
+            await this.animatePathProgress(fromLevel, currentPlays, 0, duration);
+            user.lastVisitedNode[fromLevel] = fromLevel + 'A';
+        }
+
         user.lastVisitedNode[fromLevel - 1] = 'exit' + (fromLevel - 1);
         if (window.Progress) window.Progress.saveUser();
         
