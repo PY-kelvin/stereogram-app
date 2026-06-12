@@ -400,6 +400,7 @@ const Map = {
     },
     
     handleNodeClick(nodeName, level, reqStreak) {
+        if (this.isAnimating) return;
         const user = window.App.currentUser;
         if (!user || !user.stagePlays) return;
 
@@ -417,42 +418,58 @@ const Map = {
         user.lastVisitedNode[level] = nodeName;
         if (window.Progress) window.Progress.saveUser();
         
-        // Move avatar to node instantly (could animate later if needed)
+        this.isAnimating = true;
+        const av = document.getElementById('player-avatar-' + level);
+        if (av) av.style.transition = 'left 0.5s ease-in-out, top 0.5s ease-in-out';
         this.positionAvatar();
 
-        // Passed checks, start game
-        window.Game.startStage(nodeName);
+        setTimeout(() => {
+            if (av) av.style.transition = 'none';
+            this.isAnimating = false;
+            // Passed checks, start game
+            window.Game.startStage(nodeName);
+        }, 500);
     },
     
     handleExitClick(exitNum) {
+        if (this.isAnimating) return;
         const user = window.App.currentUser;
         let reqStreak = exitNum * 14; 
         
         if (!user.lastVisitedNode) user.lastVisitedNode = {};
         user.lastVisitedNode[exitNum] = 'exit' + exitNum;
         if (window.Progress) window.Progress.saveUser();
+        
+        this.isAnimating = true;
+        const av = document.getElementById('player-avatar-' + exitNum);
+        if (av) av.style.transition = 'left 0.5s ease-in-out, top 0.5s ease-in-out';
         this.positionAvatar();
 
-        if (this.hasPasswordBypass(reqStreak)) {
-            if (exitNum === 3) {
-                window.App.showNotification("You have reached the final goal! Congratulations!", "success");
-            } else {
-                this.travelForward(exitNum);
-            }
-            return;
-        }
-        
-        if (exitNum === 3 && window.App.currentUser.stagePlays && window.App.currentUser.stagePlays[3] >= 14) {
-            window.App.showNotification("You have reached the final goal! Congratulations!", "success");
-            return;
-        }
+        setTimeout(() => {
+            if (av) av.style.transition = 'none';
+            this.isAnimating = false;
 
-        this.pwdTargetStage = exitNum;
-        const pwdMsg = document.querySelector('#password-modal p');
-        let nextMap = exitNum + 1;
-        if (pwdMsg) pwdMsg.innerText = `Enter password to unlock Stage ${nextMap}.`;
-        document.getElementById('password-modal').classList.remove('hidden');
-        document.getElementById('admin-password').value = '';
+            if (this.hasPasswordBypass(reqStreak)) {
+                if (exitNum === 3) {
+                    window.App.showNotification("You have reached the final goal! Congratulations!", "success");
+                } else {
+                    this.travelForward(exitNum);
+                }
+                return;
+            }
+            
+            if (exitNum === 3 && window.App.currentUser.stagePlays && window.App.currentUser.stagePlays[3] >= 14) {
+                window.App.showNotification("You have reached the final goal! Congratulations!", "success");
+                return;
+            }
+
+            this.pwdTargetStage = exitNum;
+            const pwdMsg = document.querySelector('#password-modal p');
+            let nextMap = exitNum + 1;
+            if (pwdMsg) pwdMsg.innerText = `Enter password to unlock Stage ${nextMap}.`;
+            document.getElementById('password-modal').classList.remove('hidden');
+            document.getElementById('admin-password').value = '';
+        }, 500);
     },
 
     hasPasswordBypass(reqStreak) {
