@@ -284,10 +284,11 @@ const Progress = {
         if (streakCounter) {
             const today = new Date().toDateString();
             let progressStr = "(0/1 today)";
-            if (user.lastActivityDate === today && user.dailyProgress >= 1) {
+            
+            if (user.sessionHistory && user.sessionHistory.some(s => s.dateStr === today && s.durationMins >= 10)) {
                 progressStr = "(Done today!)";
             }
-            streakCounter.innerText = `🔥 Times: ${user.streak}/30 ${progressStr}`;
+            streakCounter.innerText = `⭐ Counts: ${user.streak}/42 (All-time) ${progressStr}`;
         }
     }
 };
@@ -504,9 +505,14 @@ const Map = {
         const user = window.App.currentUser;
         if (!user) return;
         
-        document.getElementById('streak-counter-1').innerText = "⭐ Counts: " + user.streak;
-        document.getElementById('streak-counter-2').innerText = "⭐ Counts: " + user.streak;
-        document.getElementById('streak-counter-3').innerText = "⭐ Counts: " + user.streak;
+        const s = user.streak || 0;
+        let map1Count = Math.min(s, 14);
+        let map2Count = Math.max(0, Math.min(s - 14, 14));
+        let map3Count = Math.max(0, Math.min(s - 28, 14));
+
+        document.getElementById('streak-counter-1').innerText = "⭐ Counts: " + map1Count;
+        document.getElementById('streak-counter-2').innerText = "⭐ Counts: " + map2Count;
+        document.getElementById('streak-counter-3').innerText = "⭐ Counts: " + map3Count;
 
         // Set Avatars
         if (user.animal) {
@@ -1018,8 +1024,14 @@ const Game = {
         });
 
         if (!hasFullSessionToday) {
-            newStreak = oldStreak + 1;
-            user.streak = newStreak;
+            let maxAllowed = 42;
+            if (!window.Map.hasPasswordBypass(14)) maxAllowed = 14;
+            else if (!window.Map.hasPasswordBypass(28)) maxAllowed = 28;
+
+            if (oldStreak < maxAllowed) {
+                newStreak = oldStreak + 1;
+                user.streak = newStreak;
+            }
         }
 
         if (window.Progress) window.Progress.saveUser();
