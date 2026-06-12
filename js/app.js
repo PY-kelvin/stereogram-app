@@ -504,9 +504,9 @@ const Map = {
         const user = window.App.currentUser;
         if (!user) return;
         
-        document.getElementById('streak-counter-1').innerText = "🔥 Days: " + user.streak;
-        document.getElementById('streak-counter-2').innerText = "🔥 Days: " + user.streak;
-        document.getElementById('streak-counter-3').innerText = "🔥 Days: " + user.streak;
+        document.getElementById('streak-counter-1').innerText = "⭐ Counts: " + user.streak;
+        document.getElementById('streak-counter-2').innerText = "⭐ Counts: " + user.streak;
+        document.getElementById('streak-counter-3').innerText = "⭐ Counts: " + user.streak;
 
         // Set Avatars
         if (user.animal) {
