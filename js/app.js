@@ -572,13 +572,28 @@ const Map = {
                 av.style.opacity = '1';
                 let mapRatio = (l === targetLvl) ? ratio : 1;
                 
-                let pathId = mapRatio <= 0.5 ? 'path-line-' + l : 'path-line-' + l + 'b';
-                let localR = mapRatio <= 0.5 ? mapRatio * 2 : (mapRatio - 0.5) * 2;
-                const path = document.getElementById(pathId);
-                if (path) {
-                    const pt = path.getPointAtLength(localR * path.getTotalLength());
-                    av.style.left = `${pt.x}%`;
-                    av.style.top = `${pt.y}%`;
+                if (mapRatio === 1) {
+                    av.style.left = '85%';
+                    av.style.top = '50%';
+                } else if (mapRatio === 0.5) {
+                    av.style.left = '50%';
+                    av.style.top = '75%';
+                } else if (mapRatio === 0) {
+                    av.style.left = '15%';
+                    av.style.top = '50%';
+                } else {
+                    let pathId = mapRatio <= 0.5 ? 'path-line-' + l : 'path-line-' + l + 'b';
+                    let localR = mapRatio <= 0.5 ? mapRatio * 2 : (mapRatio - 0.5) * 2;
+                    const path = document.getElementById(pathId);
+                    if (path) {
+                        try {
+                            const pt = path.getPointAtLength(localR * path.getTotalLength());
+                            if (pt && !isNaN(pt.x) && pt.x !== 0) {
+                                av.style.left = `${pt.x}%`;
+                                av.style.top = `${pt.y}%`;
+                            }
+                        } catch (e) {}
+                    }
                 }
             }
         });
