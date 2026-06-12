@@ -1255,9 +1255,7 @@ const Game = {
         
         if (window.Map) {
             if (oldPlays < newPlays) {
-                window.Map.animateAvatarProgress(stageNum, oldPlays, newPlays).then(() => {
-                    window.Map.updateUI();
-                });
+                window.App.pendingAnimation = { stageNum, oldPlays, newPlays };
             } else {
                 window.Map.updateUI();
             }
@@ -1882,10 +1880,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const btnCloseReward = document.getElementById('btn-close-reward');
     if (btnCloseReward) {
-        btnCloseReward.addEventListener('click', () => {
+        btnCloseReward.addEventListener('click', async () => {
             document.getElementById('reward-modal').classList.add('hidden');
             window.Confetti.stop();
             window.App.showMapScreen(window.App.pendingRewardMap || null);
+            
+            if (window.App.pendingAnimation) {
+                const { stageNum, oldPlays, newPlays } = window.App.pendingAnimation;
+                window.App.pendingAnimation = null;
+                await new Promise(r => setTimeout(r, 100)); // wait for layout to catch up
+                await window.Map.animateAvatarProgress(stageNum, oldPlays, newPlays);
+                window.Map.updateUI();
+            }
         });
     }
 });
