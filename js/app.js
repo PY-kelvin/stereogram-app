@@ -1535,26 +1535,24 @@ const ProgressReport = {
         const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const monthName = monthNames[month];
         
-        let monthCount = 0;
         let totalMins = 0;
+        const uniqueDays = new Set();
 
         sessions.forEach(s => {
             const d = new Date(s.timestamp);
             if (d.getMonth() === month && d.getFullYear() === year) {
-                monthCount++;
+                uniqueDays.add(d.toDateString());
                 totalMins += (s.durationMins || 10);
             }
         });
 
-        // 4.33 weeks in a month on average
-        const avgWeekly = (monthCount / 4.33).toFixed(1);
+        const monthCount = uniqueDays.size;
         const avgDuration = monthCount > 0 ? (totalMins / monthCount).toFixed(1) : "0.0";
 
-        document.getElementById('title-stat-month').innerText = `Times Done For The Month Of ${monthName}`;
+        document.getElementById('title-stat-month').innerText = `Total number of days done in the month of ${monthName}`;
         document.getElementById('stat-month').innerText = monthCount;
 
-
-        document.getElementById('title-stat-duration').innerText = `Average Duration For ${monthName}`;
+        document.getElementById('title-stat-duration').innerText = `Average Duration`;
         document.getElementById('stat-freq').innerText = `${avgDuration} mins`;
     }
 };
