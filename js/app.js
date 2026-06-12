@@ -399,7 +399,7 @@ const Map = {
         });
     },
     
-    handleNodeClick(nodeName, level, reqStreak) {
+    async handleNodeClick(nodeName, level, reqStreak) {
         if (this.isAnimating) return;
         const user = window.App.currentUser;
         if (!user || !user.stagePlays) return;
@@ -413,63 +413,62 @@ const Map = {
             document.getElementById('admin-password').value = '';
             return;
         }
+
+        let oldNodeName = user.lastVisitedNode ? user.lastVisitedNode[level] : null;
+        let oldC = user.stagePlays[level] || 0;
+        if (oldNodeName === level + 'A') oldC = 0;
+        if (oldNodeName === level + 'B') oldC = 7;
+        if (oldNodeName === 'exit' + level) oldC = 14;
+
+        let newC = nodeName.endsWith('A') ? 0 : 7;
         
         if (!user.lastVisitedNode) user.lastVisitedNode = {};
         user.lastVisitedNode[level] = nodeName;
         if (window.Progress) window.Progress.saveUser();
         
-        this.isAnimating = true;
-        const av = document.getElementById('player-avatar-' + level);
-        if (av) av.style.transition = 'left 0.5s ease-in-out, top 0.5s ease-in-out';
-        this.positionAvatar();
-
-        setTimeout(() => {
-            if (av) av.style.transition = 'none';
-            this.isAnimating = false;
-            // Passed checks, start game
-            window.Game.startStage(nodeName);
-        }, 500);
+        await this.animateAvatarProgress(level, oldC, newC);
+        window.Game.startStage(nodeName);
     },
     
-    handleExitClick(exitNum) {
+    async handleExitClick(exitNum) {
         if (this.isAnimating) return;
         const user = window.App.currentUser;
         let reqStreak = exitNum * 14; 
+        
+        let oldNodeName = user.lastVisitedNode ? user.lastVisitedNode[exitNum] : null;
+        let oldC = user.stagePlays[exitNum] || 0;
+        if (oldNodeName === exitNum + 'A') oldC = 0;
+        if (oldNodeName === exitNum + 'B') oldC = 7;
+        if (oldNodeName === 'exit' + exitNum) oldC = 14;
+
+        let newC = 14;
         
         if (!user.lastVisitedNode) user.lastVisitedNode = {};
         user.lastVisitedNode[exitNum] = 'exit' + exitNum;
         if (window.Progress) window.Progress.saveUser();
         
-        this.isAnimating = true;
-        const av = document.getElementById('player-avatar-' + exitNum);
-        if (av) av.style.transition = 'left 0.5s ease-in-out, top 0.5s ease-in-out';
-        this.positionAvatar();
+        await this.animateAvatarProgress(exitNum, oldC, newC);
 
-        setTimeout(() => {
-            if (av) av.style.transition = 'none';
-            this.isAnimating = false;
-
-            if (this.hasPasswordBypass(reqStreak)) {
-                if (exitNum === 3) {
-                    window.App.showNotification("You have reached the final goal! Congratulations!", "success");
-                } else {
-                    this.travelForward(exitNum);
-                }
-                return;
-            }
-            
-            if (exitNum === 3 && window.App.currentUser.stagePlays && window.App.currentUser.stagePlays[3] >= 14) {
+        if (this.hasPasswordBypass(reqStreak)) {
+            if (exitNum === 3) {
                 window.App.showNotification("You have reached the final goal! Congratulations!", "success");
-                return;
+            } else {
+                this.travelForward(exitNum);
             }
+            return;
+        }
+        
+        if (exitNum === 3 && window.App.currentUser.stagePlays && window.App.currentUser.stagePlays[3] >= 14) {
+            window.App.showNotification("You have reached the final goal! Congratulations!", "success");
+            return;
+        }
 
-            this.pwdTargetStage = exitNum;
-            const pwdMsg = document.querySelector('#password-modal p');
-            let nextMap = exitNum + 1;
-            if (pwdMsg) pwdMsg.innerText = `Enter password to unlock Stage ${nextMap}.`;
-            document.getElementById('password-modal').classList.remove('hidden');
-            document.getElementById('admin-password').value = '';
-        }, 500);
+        this.pwdTargetStage = exitNum;
+        const pwdMsg = document.querySelector('#password-modal p');
+        let nextMap = exitNum + 1;
+        if (pwdMsg) pwdMsg.innerText = `Enter password to unlock Stage ${nextMap}.`;
+        document.getElementById('password-modal').classList.remove('hidden');
+        document.getElementById('admin-password').value = '';
     },
 
     hasPasswordBypass(reqStreak) {
@@ -790,7 +789,7 @@ const Map = {
 
     async animateAvatarProgress(mapNum, oldC, newC) {
         this.isAnimating = true;
-        let duration = Math.max(1000, (newC - oldC) * 300);
+        let duration = Math.max(1000, Math.abs(newC - oldC) * 300);
         await this.animatePathProgress(mapNum, oldC, newC, duration);
         this.isAnimating = false;
         this.positionAvatar(); // ensure exact final position
