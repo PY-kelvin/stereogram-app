@@ -992,10 +992,13 @@ const ProgressReport = {
     },
 
     bindEvents() {
-        document.getElementById('btn-progress').addEventListener('click', () => {
-            window.App.showScreen('screen-progress');
-            this.render();
-        });
+        const btnProgress = document.getElementById('btn-progress');
+        if (btnProgress) {
+            btnProgress.addEventListener('click', () => {
+                window.App.showScreen('screen-progress');
+                this.render();
+            });
+        }
 
         document.getElementById('btn-back-map-from-progress').addEventListener('click', () => {
             window.App.showMapScreen();
