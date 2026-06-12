@@ -1349,61 +1349,66 @@ const App = {
         const savedPpcm = localStorage.getItem('stereogram_calibration_ppcm');
         if (savedPpcm) {
             this.pixelsPerCm = parseFloat(savedPpcm);
-        }
-        
-        Auth.init();
+               Auth.init();
         Map.init();
         Game.init();
         Auth.checkSession(true);
 
-        document.addEventListener("visibilitychange", () => {
+        const handlePause = () => {
             const audio = document.getElementById('bgm-audio');
-            if (document.hidden) {
-                if (audio && !audio.paused) {
-                    audio.pause();
-                    window.App.bgmWasPlaying = true;
+            if (audio && !audio.paused) {
+                audio.pause();
+                window.App.bgmWasPlaying = true;
+            }
+            
+            if (window.Game && window.Game.isPlaying) {
+                window.Game.pauseTimer();
+                const btn = document.getElementById('btn-toggle-timer');
+                if (btn) {
+                    btn.innerText = "▶ ";
+                    btn.title = "Resume Exercise";
                 }
-                
-                if (window.Game && window.Game.isPlaying) {
-                    window.Game.pauseTimer();
-                    const btn = document.getElementById('btn-toggle-timer');
-                    if (btn) {
-                        btn.innerText = "▶";
-                        btn.title = "Resume Exercise";
-                    }
-                    window.Game.wasAutoPausedByVisibility = true;
-                }
-                
-                // SAVE SESSION just in case app gets killed
-                if (window.Game && window.Game.hasStartedCurrentSession) {
-                    const user = window.App.currentUser;
-                    if (user && window.Game.timeLeft > 0 && window.Game.timeLeft < 600) {
-                        user.savedSession = {
-                            stageNode: window.Game.currentStageNode,
-                            timeLeft: window.Game.timeLeft,
-                            sessionStartLeft: window.Game.sessionStartLeft,
-                            timestamp: new Date().getTime()
-                        };
-                        if (window.Progress) window.Progress.saveUser();
-                    }
-                }
-            } else {
-                if (window.App.bgmWasPlaying && audio && audio.paused) {
-                    audio.play().catch(e => console.log('Audio resume blocked', e));
-                    window.App.bgmWasPlaying = false;
-                }
-                
-                if (window.Game && window.Game.wasAutoPausedByVisibility) {
-                    window.Game.startTimer();
-                    const btn = document.getElementById('btn-toggle-timer');
-                    if (btn) {
-                        btn.innerText = "⏸";
-                        btn.title = "Pause Exercise";
-                    }
-                    window.Game.wasAutoPausedByVisibility = false;
+                window.Game.wasAutoPausedByVisibility = true;
+            }
+            
+            if (window.Game && window.Game.hasStartedCurrentSession) {
+                const user = window.App.currentUser;
+                if (user && window.Game.timeLeft > 0 && window.Game.timeLeft < 600) {
+                    user.savedSession = {
+                        stageNode: window.Game.currentStageNode,
+                        timeLeft: window.Game.timeLeft,
+                        sessionStartLeft: window.Game.sessionStartLeft,
+                        timestamp: new Date().getTime()
+                    };
+                    if (window.Progress) window.Progress.saveUser();
                 }
             }
+        };
+
+        const handleResume = () => {
+            const audio = document.getElementById('bgm-audio');
+            if (window.App.bgmWasPlaying && audio && audio.paused) {
+                audio.play().catch(e => console.log('Audio resume blocked', e));
+                window.App.bgmWasPlaying = false;
+            }
+            
+            if (window.Game && window.Game.wasAutoPausedByVisibility) {
+                window.Game.startTimer();
+                const btn = document.getElementById('btn-toggle-timer');
+                if (btn) {
+                    btn.innerText = "⏸";
+                    btn.title = "Pause Exercise";
+                }
+                window.Game.wasAutoPausedByVisibility = false;
+            }
+        };
+
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden) handlePause();
+            else handleResume();
         });
+        window.addEventListener("pagehide", handlePause);
+        window.addEventListener("pageshow", handleResume);
     },
 
     showScreen(screenId) {
