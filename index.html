@@ -38,11 +38,6 @@
 
         <!-- Global Background Music (Hidden) -->
         <audio id="bgm-audio" src="music/Stereogram music.mp4" loop preload="auto" style="display: none;"></audio>
-        
-        <!-- Global Mute Button -->
-        <button id="global-mute-btn" class="global-mute-btn" title="Toggle Music">
-            🔊
-        </button>
 
         <!-- Password Modal -->
         <div id="password-modal" class="modal hidden">
@@ -219,7 +214,10 @@
             <header class="map-header" style="justify-content: center; position: relative;">
                 <button class="btn btn-small btn-install-app hidden" style="position: absolute; left: 15px; background: #4CAF50; border: none; font-weight: 600;">Install</button>
                 <h2>Main Menu</h2>
-                <button id="btn-logout-main" class="btn btn-small" style="position: absolute; right: 15px;">Logout</button>
+                <div style="position: absolute; right: 15px; display: flex; gap: 10px; align-items: center;">
+                    <button class="btn-mute" title="Toggle Music">🔊</button>
+                    <button id="btn-logout-main" class="btn btn-small" style="margin: 0;">Logout</button>
+                </div>
             </header>
             <div class="bubble-container">
                 <div class="bubble-row">
@@ -345,9 +343,12 @@
                 <div class="header-center">
                     <span id="streak-counter-1" class="streak-counter">⭐ Counts: 0</span>
                 </div>
-                <div class="user-stats header-right" style="flex-direction: column; align-items: flex-end; gap: 5px;">
-                    <button class="btn btn-primary btn-small btn-progress" style="margin: 0; min-width: 95px;">Progress</button>
-                    <button class="btn btn-small btn-logout-map" style="margin: 0; min-width: 95px; background: #e8e8e8; color: #333;">Logout</button>
+                <div class="user-stats header-right" style="display: flex; align-items: center; gap: 15px;">
+                    <button class="btn-mute" title="Toggle Music">🔊</button>
+                    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
+                        <button class="btn btn-primary btn-small btn-progress" style="margin: 0; min-width: 95px;">Progress</button>
+                        <button class="btn btn-small btn-logout-map" style="margin: 0; min-width: 95px; background: #e8e8e8; color: #333;">Logout</button>
+                    </div>
                 </div>
             </header>
             <div class="map-container landscape-map">
@@ -384,9 +385,12 @@
                 <div class="header-center">
                     <span id="streak-counter-2" class="streak-counter">⭐ Counts: 0</span>
                 </div>
-                <div class="user-stats header-right" style="flex-direction: column; align-items: flex-end; gap: 5px;">
-                    <button class="btn btn-primary btn-small btn-progress" style="margin: 0; min-width: 95px;">Progress</button>
-                    <button class="btn btn-small btn-logout-map" style="margin: 0; min-width: 95px; background: #e8e8e8; color: #333;">Logout</button>
+                <div class="user-stats header-right" style="display: flex; align-items: center; gap: 15px;">
+                    <button class="btn-mute" title="Toggle Music">🔊</button>
+                    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
+                        <button class="btn btn-primary btn-small btn-progress" style="margin: 0; min-width: 95px;">Progress</button>
+                        <button class="btn btn-small btn-logout-map" style="margin: 0; min-width: 95px; background: #e8e8e8; color: #333;">Logout</button>
+                    </div>
                 </div>
             </header>
             <div class="map-container landscape-map">
@@ -424,9 +428,12 @@
                 <div class="header-center">
                     <span id="streak-counter-3" class="streak-counter">⭐ Counts: 0</span>
                 </div>
-                <div class="user-stats header-right" style="flex-direction: column; align-items: flex-end; gap: 5px;">
-                    <button class="btn btn-primary btn-small btn-progress" style="margin: 0; min-width: 95px;">Progress</button>
-                    <button class="btn btn-small btn-logout-map" style="margin: 0; min-width: 95px; background: #e8e8e8; color: #333;">Logout</button>
+                <div class="user-stats header-right" style="display: flex; align-items: center; gap: 15px;">
+                    <button class="btn-mute" title="Toggle Music">🔊</button>
+                    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
+                        <button class="btn btn-primary btn-small btn-progress" style="margin: 0; min-width: 95px;">Progress</button>
+                        <button class="btn btn-small btn-logout-map" style="margin: 0; min-width: 95px; background: #e8e8e8; color: #333;">Logout</button>
+                    </div>
                 </div>
             </header>
             <div class="map-container landscape-map">
@@ -460,8 +467,9 @@
                 <div class="timer-container" style="flex: 2; text-align: center;">
                     <span id="timer-display">10:00</span>
                 </div>
-                <div class="stage-info" style="flex: 1; display: flex; justify-content: flex-end; gap: 10px;">
-                    <span id="current-stage-title">Stage 1</span>
+                <div class="stage-info" style="flex: 1; display: flex; justify-content: flex-end; gap: 10px; align-items: center;">
+                    <button class="btn-mute" title="Toggle Music">🔊</button>
+                    <h2 id="current-stage-title" style="margin: 0; display: flex; align-items: center;">Stage 1A</h2>
                 </div>
             </header>
 
@@ -478,9 +486,12 @@
 
         <!-- PROGRESS REPORT SCREEN -->
         <section id="screen-progress" class="screen">
-            <header class="map-header">
-                <h2>Progress Report 📊</h2>
-                <button id="btn-back-map-from-progress" class="btn btn-small">⬅ Back to Map</button>
+            <header class="map-header" style="display: flex; align-items: center; justify-content: space-between;">
+                <h2 style="margin: 0;">Progress Report 📈</h2>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button class="btn-mute" title="Toggle Music">🔊</button>
+                    <button id="btn-back-map-from-progress" class="btn btn-small" style="margin: 0;">⬅ Back to Map</button>
+                </div>
             </header>
 
             <div class="progress-container">
@@ -549,7 +560,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=182"></script>
+    <script src="js/app.js?v=183"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
