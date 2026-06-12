@@ -588,6 +588,11 @@ const Map = {
         
         await this.shrinkAvatar(fromLevel);
         window.App.showScreen('screen-map-' + (fromLevel + 1));
+        
+        // Wait for layout to catch up, then position avatar BEFORE it grows
+        await new Promise(r => requestAnimationFrame(r));
+        this.positionAvatar();
+        
         await this.growAvatar(fromLevel + 1);
         this.isAnimating = false;
         this.updateUI();
@@ -604,6 +609,11 @@ const Map = {
         
         await this.shrinkAvatar(fromLevel);
         window.App.showScreen('screen-map-' + (fromLevel - 1));
+        
+        // Wait for layout to catch up, then position avatar BEFORE it grows
+        await new Promise(r => requestAnimationFrame(r));
+        this.positionAvatar();
+        
         await this.growAvatar(fromLevel - 1);
         this.isAnimating = false;
         this.updateUI();
