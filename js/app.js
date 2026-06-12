@@ -202,6 +202,35 @@ const Auth = {
             if (userStr) {
                 const user = JSON.parse(userStr);
                 
+                // Retroactively sync stagePlays with passwords
+                if (!user.stagePlays) user.stagePlays = { 1: 0, 2: 0, 3: 0 };
+                if (user.passwords && user.passwords.length > 0) {
+                    let maxLevel = 0;
+                    const pwdMap = [
+                        { level: 7, pwd: 'orthoptics' },
+                        { level: 14, pwd: 'orthoptics 1' },
+                        { level: 21, pwd: 'orthoptics 2' },
+                        { level: 28, pwd: 'orthoptics 3' },
+                        { level: 35, pwd: 'orthoptics 4' },
+                        { level: 42, pwd: 'orthoptics 5' }
+                    ];
+                    for (let p of pwdMap) {
+                        if (user.passwords.includes(p.pwd) && p.level > maxLevel) {
+                            maxLevel = p.level;
+                        }
+                    }
+                    if (maxLevel >= 14) user.stagePlays[1] = Math.max(user.stagePlays[1] || 0, 14);
+                    else if (maxLevel >= 7) user.stagePlays[1] = Math.max(user.stagePlays[1] || 0, 7);
+                    
+                    if (maxLevel >= 28) user.stagePlays[2] = Math.max(user.stagePlays[2] || 0, 14);
+                    else if (maxLevel >= 21) user.stagePlays[2] = Math.max(user.stagePlays[2] || 0, 7);
+                    
+                    if (maxLevel >= 42) user.stagePlays[3] = Math.max(user.stagePlays[3] || 0, 14);
+                    else if (maxLevel >= 35) user.stagePlays[3] = Math.max(user.stagePlays[3] || 0, 7);
+                    
+                    user.streak = Math.max(user.streak || 0, maxLevel);
+                }
+                
                 window.App.currentUser = user;
                 
                 const authScreen = document.getElementById('screen-auth');
@@ -512,6 +541,16 @@ const Map = {
         if (!user.passwords.includes(pwdName)) {
             user.passwords.push(pwdName);
         }
+
+        // Sync stagePlays
+        if (!user.stagePlays) user.stagePlays = { 1: 0, 2: 0, 3: 0 };
+        if (targetStreak >= 14) user.stagePlays[1] = Math.max(user.stagePlays[1] || 0, 14);
+        else if (targetStreak >= 7) user.stagePlays[1] = Math.max(user.stagePlays[1] || 0, 7);
+        if (targetStreak >= 28) user.stagePlays[2] = Math.max(user.stagePlays[2] || 0, 14);
+        else if (targetStreak >= 21) user.stagePlays[2] = Math.max(user.stagePlays[2] || 0, 7);
+        if (targetStreak >= 42) user.stagePlays[3] = Math.max(user.stagePlays[3] || 0, 14);
+        else if (targetStreak >= 35) user.stagePlays[3] = Math.max(user.stagePlays[3] || 0, 7);
+        user.streak = Math.max(user.streak || 0, targetStreak);
         
         if (window.Progress) window.Progress.saveUser();
         window.App.showNotification("Password Accepted!", "success");
@@ -535,6 +574,17 @@ const Map = {
         if (!user.passwords.includes(pwdName)) {
             user.passwords.push(pwdName);
         }
+        
+        // Sync stagePlays
+        if (!user.stagePlays) user.stagePlays = { 1: 0, 2: 0, 3: 0 };
+        if (targetStreak >= 14) user.stagePlays[1] = Math.max(user.stagePlays[1] || 0, 14);
+        else if (targetStreak >= 7) user.stagePlays[1] = Math.max(user.stagePlays[1] || 0, 7);
+        if (targetStreak >= 28) user.stagePlays[2] = Math.max(user.stagePlays[2] || 0, 14);
+        else if (targetStreak >= 21) user.stagePlays[2] = Math.max(user.stagePlays[2] || 0, 7);
+        if (targetStreak >= 42) user.stagePlays[3] = Math.max(user.stagePlays[3] || 0, 14);
+        else if (targetStreak >= 35) user.stagePlays[3] = Math.max(user.stagePlays[3] || 0, 7);
+        user.streak = Math.max(user.streak || 0, targetStreak);
+
         if (window.Progress) window.Progress.saveUser();
         document.getElementById('password-modal').classList.add('hidden');
         this.updateUI();
@@ -667,16 +717,17 @@ const Map = {
             if (!av) return;
             
             // Only hide avatars for locked maps
-            if (l === 2 && !this.hasPasswordBypass(14)) {
+            if (l === 2 && user.stagePlays[1] < 14 && !this.hasPasswordBypass(14)) {
                 av.style.opacity = '0';
                 return;
             }
-            if (l === 3 && !this.hasPasswordBypass(28)) {
+            if (l === 3 && user.stagePlays[2] < 14 && !this.hasPasswordBypass(28)) {
                 av.style.opacity = '0';
                 return;
             }
 
             av.style.opacity = '1';
+            av.style.transform = 'translate(-50%, -50%) scale(1)';
 
             let counts = user.stagePlays[l];
             if (mapOverride === l && countsOverride !== null) counts = countsOverride;
