@@ -138,6 +138,7 @@
                     <div class="input-group">
                         <label for="login-username">Username</label>
                         <input type="text" id="login-username" required placeholder="catlover">
+                        <small id="login-case-hint" style="display: none; color: #ff6b6b; font-size: 0.8em; margin-top: 5px;">Please note that username/password is case-sensitive.</small>
                     </div>
                     <div class="input-group">
                         <label for="login-password">Password</label>
@@ -542,7 +543,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=134"></script>
+    <script src="js/app.js?v=135"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {

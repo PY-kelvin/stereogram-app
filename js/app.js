@@ -89,6 +89,18 @@ const Auth = {
             this.login(username, password);
         });
 
+        const loginUsernameInput = document.getElementById('login-username');
+        const loginCaseHint = document.getElementById('login-case-hint');
+        if (loginUsernameInput && loginCaseHint) {
+            loginUsernameInput.addEventListener('input', (e) => {
+                if (e.target.value.trim().length > 0) {
+                    loginCaseHint.style.display = 'block';
+                } else {
+                    loginCaseHint.style.display = 'none';
+                }
+            });
+        }
+
         const btnLogout = document.getElementById('btn-logout');
         if (btnLogout) {
             btnLogout.addEventListener('click', () => {
