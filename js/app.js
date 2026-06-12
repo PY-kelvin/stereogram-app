@@ -681,7 +681,7 @@ const Map = {
                     if (targetNode) {
                         const nodeRect = targetNode.getBoundingClientRect();
                         av.style.left = (nodeRect.left - contentRect.left + nodeRect.width / 2) + 'px';
-                        av.style.top = (nodeRect.top - contentRect.top + nodeRect.height / 2 - 20) + 'px';
+                        av.style.top = (nodeRect.top - contentRect.top + nodeRect.height / 2) + 'px';
                     } else {
                         let pathId = 'path-line-' + l;
                         const path = document.getElementById(pathId);
