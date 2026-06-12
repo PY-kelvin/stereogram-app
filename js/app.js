@@ -959,12 +959,36 @@ const App = {
         document.getElementById(screenId).classList.add('active');
         if (screenId === 'screen-game') {
             Game.resizeCanvas();
-        } else if (screenId === 'screen-map') {
-            requestAnimationFrame(() => {
-                setTimeout(() => {
-                    if (window.Map) window.Map.updateUI();
-                }, 50);
-            });
+        }
+    },
+
+    showMapScreen() {
+        const user = this.currentUser || {};
+        let targetMap = 1;
+        const s = user.streak || 0;
+        
+        const hasBypass = (req) => {
+            if (!user.passwords) return false;
+            if (req === 7 && user.passwords.includes('orthoptics')) return true;
+            if (req === 14 && user.passwords.includes('orthoptics 1')) return true;
+            if (req === 21 && user.passwords.includes('orthoptics 2')) return true;
+            if (req === 28 && user.passwords.includes('orthoptics 3')) return true;
+            if (req === 35 && user.passwords.includes('orthoptics 4')) return true;
+            return false;
+        };
+
+        if (s < 14 || (s === 14 && !hasBypass(14))) {
+            targetMap = 1;
+        } else if (s < 28 || (s === 28 && !hasBypass(28))) {
+            targetMap = 2;
+        } else {
+            targetMap = 3;
+        }
+
+        this.showScreen('screen-map-' + targetMap);
+        
+        if (window.Map) {
+            window.Map.updateUI();
         }
     },
 
