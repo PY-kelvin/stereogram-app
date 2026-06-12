@@ -89,9 +89,12 @@ const Auth = {
             this.login(username, password);
         });
 
-        document.getElementById('btn-logout').addEventListener('click', () => {
-            this.logout();
-        });
+        const btnLogout = document.getElementById('btn-logout');
+        if (btnLogout) {
+            btnLogout.addEventListener('click', () => {
+                this.logout();
+            });
+        }
         
         const btnLogoutMain = document.getElementById('btn-logout-main');
         if (btnLogoutMain) {
@@ -1174,9 +1177,12 @@ const Menu = {
             window.App.showScreen('screen-main-menu');
         });
 
-        document.getElementById('btn-back-main-menu-from-map').addEventListener('click', () => {
-            window.App.showScreen('screen-main-menu');
-        });
+        const btnBackMap = document.getElementById('btn-back-main-menu-from-map');
+        if (btnBackMap) {
+            btnBackMap.addEventListener('click', () => {
+                window.App.showScreen('screen-main-menu');
+            });
+        }
 
         document.getElementById('btn-inst-dist').addEventListener('click', () => {
             document.getElementById('written-inst-title').innerText = "Cat Stereogram Exercise (Distance)";
