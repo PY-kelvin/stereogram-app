@@ -102,6 +102,12 @@ const Auth = {
                 this.logout();
             });
         }
+
+        document.querySelectorAll('.btn-logout-map').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.logout();
+            });
+        });
     },
 
     register(username, password, animal = 'cat') {
