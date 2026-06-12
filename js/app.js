@@ -595,6 +595,496 @@ const newGameCode = \`const Game = {
     }
 };
 
+window.Auth = Auth;
+window.Progress = Progress;
+window.Map = Map;
+window.Game = Game;
+
+const LOCAL_STORAGE_KEY = 'stereogram_app_data';
+
+const distContent = `
+<p><strong>Purpose:</strong> To improve relaxation of your eyes (ie. Divergence).</p>
+<ol style="margin-left: 20px; font-size: 1.1rem; line-height: 1.6;">
+    <li>Hold the card with the images facing you at arm's length at eye level.<br><br></li>
+    <li>Focus on a central object in the distance (at least 3m away) just above the card (or looking through the transparent card) while being aware of the images on your card.<br><br></li>
+    <li>Concentrate on this distant object until you are aware of a third fused (merged) image in the centre of the two images on your card. It is very important at this stage of the exercise NOT to look directly at the card or the exercise will not work - look continuously at the distant object.<br><br></li>
+    <li>You may notice 4 images at times - you can adjust the distance of the card slightly until you see the fused image.<br><br></li>
+    <li>4 images should become 3 images with the middle (fused) image appearing complete.<br><br></li>
+    <li>Once the middle image appears, try to keep the third image in focus for <u>10 seconds</u>. Do NOT look at the middle complete image as it will disappear immediately if you do. If the third image disappears, stop counting and refocus to get the third image to appear again.<br><br></li>
+    <li>Repeat.<br><br></li>
+</ol>
+<p><strong>Frequency:</strong> Perform for 10 to 15 minutes a day. This can be broken up into 2 or 3 sessions.</p>
+<div style="background: #fff3cd; padding: 15px; border-radius: 10px; border-left: 5px solid #ffc107; margin-top: 20px;">
+    <strong>At the end of your exercise session</strong> it is important to relax your eyes by looking out of a window at a faraway object OR by closing your eyes for a few minutes. <strong>Do not proceed to do near work immediately.</strong>
+</div>
+`;
+
+const nearContent = `
+<p><strong>Purpose:</strong> To improve control of your eyes and encourage convergence.</p>
+<ol style="margin-left: 20px; font-size: 1.1rem; line-height: 1.6;">
+    <li>Hold the card with the images facing you at arm's length at eye level.<br><br></li>
+    <li>Place a pen in front of the card and in between the two images.<br><br></li>
+    <li>Keep looking at the pen constantly. It is very important at this stage of the exercise NOT to look directly at the card or the exercise will not work - look continuously at the pen.<br><br></li>
+    <li>Whilst looking at the pen you should be aware of both the images becoming double, therefore you should see 4 images.<br><br></li>
+    <li>4 images should become 3 images with the middle (fused) image appearing complete.<br><br></li>
+    <li>Once the middle image appears, stop moving the pen and try to keep the third image in focus for <u>10 seconds</u>. Do NOT look at the middle complete image as it will disappear immediately if you do. If the third image disappears, stop counting and refocus to get the third image to appear again.<br><br></li>
+    <li>Repeat.<br><br></li>
+</ol>
+<p><strong>Frequency:</strong> Perform for 10 to 15 minutes a day. This can be broken up into 2 or 3 sessions.</p>
+<div style="background: #fff3cd; padding: 15px; border-radius: 10px; border-left: 5px solid #ffc107; margin-top: 20px;">
+    <strong>At the end of your exercise session</strong> it is important to relax your eyes by looking out of a window at a faraway object OR by closing your eyes for a few minutes. <strong>Do not proceed to do near work immediately.</strong>
+</div>
+`;
+
+const App = {
+    currentUser: null,
+    notificationTimeout: null,
+    pixelsPerCm: 37.795,
+
+    init() {
+        const savedPpcm = localStorage.getItem('stereogram_calibration_ppcm');
+        if (savedPpcm) {
+            this.pixelsPerCm = parseFloat(savedPpcm);
+        }
+        
+        Auth.init();
+        Map.init();
+        Game.init();
+        Auth.checkSession();
+
+        document.addEventListener("visibilitychange", () => {
+            const audio = document.getElementById('bgm-audio');
+            if (document.hidden) {
+                if (audio && !audio.paused) {
+                    audio.pause();
+                    window.App.bgmWasPlaying = true;
+                }
+                
+                if (window.Game && window.Game.isPlaying) {
+                    window.Game.pauseTimer();
+                    const btn = document.getElementById('btn-toggle-timer');
+                    if (btn) btn.innerText = "▶";
+                    window.Game.wasAutoPausedByVisibility = true;
+                }
+            } else {
+                if (window.App.bgmWasPlaying && audio && audio.paused) {
+                    audio.play().catch(e => console.log('Audio resume blocked', e));
+                    window.App.bgmWasPlaying = false;
+                }
+                
+                if (window.Game && window.Game.wasAutoPausedByVisibility) {
+                    window.Game.startTimer();
+                    const btn = document.getElementById('btn-toggle-timer');
+                    if (btn) btn.innerText = "⏸";
+                    window.Game.wasAutoPausedByVisibility = false;
+                }
+            }
+        });
+    },
+
+    showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+        if (screenId === 'screen-game') {
+            Game.resizeCanvas();
+        } else if (screenId === 'screen-map') {
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    if (window.Map) window.Map.updateUI();
+                }, 50);
+            });
+        }
+    },
+
+    showNotification(message, type = "success") {
+        const notif = document.getElementById('notification');
+        const notifMsg = document.getElementById('notification-message');
+
+        notifMsg.innerText = message;
+        notif.className = `notification ${type}`;
+        notif.classList.remove('hidden');
+
+        if (this.notificationTimeout) clearTimeout(this.notificationTimeout);
+
+        this.notificationTimeout = setTimeout(() => {
+            notif.classList.add('hidden');
+        }, 4000);
+    }
+};
+
+const ProgressReport = {
+    currentDate: new Date(),
+
+    init() {
+        this.bindEvents();
+    },
+
+    bindEvents() {
+        document.getElementById('btn-progress').addEventListener('click', () => {
+            window.App.showScreen('screen-progress');
+            this.render();
+        });
+
+        document.getElementById('btn-back-map-from-progress').addEventListener('click', () => {
+            window.App.showMapScreen();
+        });
+
+        document.getElementById('tab-calendar').addEventListener('click', () => {
+            this.switchTab('calendar');
+        });
+        document.getElementById('tab-summary').addEventListener('click', () => {
+            this.switchTab('summary');
+        });
+
+        document.getElementById('btn-prev-month').addEventListener('click', () => {
+            this.currentDate.setMonth(this.currentDate.getMonth() - 1);
+            this.renderCalendar();
+            this.renderSummary();
+        });
+        document.getElementById('btn-next-month').addEventListener('click', () => {
+            this.currentDate.setMonth(this.currentDate.getMonth() + 1);
+            this.renderCalendar();
+            this.renderSummary();
+        });
+    },
+
+    switchTab(tab) {
+        document.getElementById('tab-calendar').classList.toggle('active', tab === 'calendar');
+        document.getElementById('tab-summary').classList.toggle('active', tab === 'summary');
+        
+        document.getElementById('view-calendar').classList.toggle('hidden', tab !== 'calendar');
+        document.getElementById('view-summary').classList.toggle('hidden', tab !== 'summary');
+        document.getElementById('view-calendar').classList.toggle('active', tab === 'calendar');
+        document.getElementById('view-summary').classList.toggle('active', tab === 'summary');
+
+        if (tab === 'summary') {
+            this.renderSummary();
+        } else {
+            this.renderCalendar();
+        }
+    },
+
+    render() {
+        this.currentDate = new Date();
+        this.renderCalendar();
+        this.renderSummary();
+    },
+
+    getSessions() {
+        const user = window.App.currentUser;
+        if (!user) return [];
+        
+        if (!user.sessionHistory) {
+            user.sessionHistory = [];
+        }
+
+        // Legacy backfill removed to prevent password override from filling the calendar.
+        // The progress report will now only record when actually used.
+
+        return user.sessionHistory;
+    },
+
+    renderCalendar() {
+        const year = this.currentDate.getFullYear();
+        const month = this.currentDate.getMonth();
+        
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        document.getElementById('calendar-month-year').innerText = `${monthNames[month]} ${year}`;
+
+        const grid = document.querySelector('.calendar-grid');
+        Array.from(grid.children).forEach(child => {
+            if (!child.classList.contains('day-name')) {
+                grid.removeChild(child);
+            }
+        });
+
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        for (let i = 0; i < firstDay; i++) {
+            const empty = document.createElement('div');
+            empty.className = 'calendar-day empty';
+            grid.appendChild(empty);
+        }
+
+        const sessions = this.getSessions();
+        const sessionsByDate = {};
+        sessions.forEach(s => {
+            const dStr = new Date(s.timestamp).toDateString();
+            if (!sessionsByDate[dStr]) sessionsByDate[dStr] = [];
+            sessionsByDate[dStr].push(s);
+        });
+
+        for (let i = 1; i <= daysInMonth; i++) {
+            const dayDiv = document.createElement('div');
+            dayDiv.className = 'calendar-day';
+            dayDiv.innerText = i;
+
+            const iterDate = new Date(year, month, i);
+            const dStr = iterDate.toDateString();
+
+            if (sessionsByDate[dStr] && sessionsByDate[dStr].length > 0) {
+                dayDiv.classList.add('active-day');
+            }
+
+            dayDiv.addEventListener('click', () => {
+                document.querySelectorAll('.calendar-day').forEach(el => el.classList.remove('selected'));
+                dayDiv.classList.add('selected');
+                this.showDayDetails(iterDate, sessionsByDate[dStr] || []);
+            });
+
+            grid.appendChild(dayDiv);
+        }
+
+        document.getElementById('calendar-day-details').classList.add('hidden');
+    },
+
+    showDayDetails(date, daySessions) {
+        document.getElementById('calendar-day-details').classList.remove('hidden');
+        document.getElementById('detail-date').innerText = date.toDateString();
+        document.getElementById('detail-times').innerText = daySessions.length;
+        
+        let totalMins = daySessions.reduce((sum, s) => sum + (s.durationMins || 10), 0);
+        document.getElementById('detail-duration').innerText = `${totalMins.toFixed(1)} mins`;
+
+        let s1 = daySessions.filter(s => (s.stageNum || 1) === 1).reduce((sum, s) => sum + (s.durationMins || 10), 0);
+        let s2 = daySessions.filter(s => s.stageNum === 2).reduce((sum, s) => sum + (s.durationMins || 10), 0);
+        let s3 = daySessions.filter(s => s.stageNum === 3).reduce((sum, s) => sum + (s.durationMins || 10), 0);
+
+        document.getElementById('detail-duration-s1').innerText = `${s1.toFixed(1)} mins`;
+        document.getElementById('detail-duration-s2').innerText = `${s2.toFixed(1)} mins`;
+        document.getElementById('detail-duration-s3').innerText = `${s3.toFixed(1)} mins`;
+    },
+
+    renderSummary() {
+        const sessions = this.getSessions();
+        const year = this.currentDate.getFullYear();
+        const month = this.currentDate.getMonth();
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const monthName = monthNames[month];
+        
+        let monthCount = 0;
+        let totalMins = 0;
+
+        sessions.forEach(s => {
+            const d = new Date(s.timestamp);
+            if (d.getMonth() === month && d.getFullYear() === year) {
+                monthCount++;
+                totalMins += (s.durationMins || 10);
+            }
+        });
+
+        // 4.33 weeks in a month on average
+        const avgWeekly = (monthCount / 4.33).toFixed(1);
+        const avgDuration = monthCount > 0 ? (totalMins / monthCount).toFixed(1) : "0.0";
+
+        document.getElementById('title-stat-month').innerText = `Times Done For The Month Of ${monthName}`;
+        document.getElementById('stat-month').innerText = monthCount;
+
+
+        document.getElementById('title-stat-duration').innerText = `Average Duration For ${monthName}`;
+        document.getElementById('stat-freq').innerText = `${avgDuration} mins`;
+    }
+};
+
+const Menu = {
+    init() {
+        this.bindEvents();
+    },
+
+    bindEvents() {
+        document.getElementById('btn-menu-instructions').addEventListener('click', () => {
+            window.App.showScreen('screen-instructions');
+        });
+
+        document.getElementById('btn-menu-start').addEventListener('click', () => {
+            window.App.showMapScreen();
+        });
+
+        document.getElementById('btn-back-main-menu').addEventListener('click', () => {
+            window.App.showScreen('screen-main-menu');
+        });
+
+        document.getElementById('btn-back-main-menu-from-map').addEventListener('click', () => {
+            window.App.showScreen('screen-main-menu');
+        });
+
+        document.getElementById('btn-inst-dist').addEventListener('click', () => {
+            document.getElementById('written-inst-title').innerText = "Cat Stereogram Exercise (Distance)";
+            document.getElementById('written-inst-content').innerHTML = distContent;
+            window.App.showScreen('screen-written-instruction');
+        });
+
+        document.getElementById('btn-inst-near').addEventListener('click', () => {
+            document.getElementById('written-inst-title').innerText = "Cat Stereogram Exercise (Near)";
+            document.getElementById('written-inst-content').innerHTML = nearContent;
+            window.App.showScreen('screen-written-instruction');
+        });
+
+        document.getElementById('btn-back-instructions').addEventListener('click', () => {
+            window.App.showScreen('screen-instructions');
+        });
+
+        const btnCalibrate = document.getElementById('btn-menu-calibrate');
+        if (btnCalibrate) {
+            btnCalibrate.addEventListener('click', () => {
+                window.App.showScreen('screen-calibration');
+                // Show instructions modal
+                const calModal = document.getElementById('calibration-modal');
+                if (calModal) calModal.classList.remove('hidden');
+                
+                const card = document.getElementById('calibration-card');
+                window.App.currentCalibrationWidth = 8.56 * window.App.pixelsPerCm;
+                card.style.width = window.App.currentCalibrationWidth + 'px';
+            });
+        }
+        
+        const btnAlarm = document.getElementById('btn-menu-alarm');
+        const alarmModal = document.getElementById('alarm-modal');
+        if (btnAlarm && alarmModal) {
+            btnAlarm.addEventListener('click', () => {
+                alarmModal.classList.remove('hidden');
+            });
+            
+            document.getElementById('btn-cancel-alarm').addEventListener('click', () => {
+                alarmModal.classList.add('hidden');
+            });
+
+            document.getElementById('btn-confirm-alarm').addEventListener('click', () => {
+                const timeVal = document.getElementById('alarm-time').value; // "HH:MM"
+                const freqVal = document.getElementById('alarm-freq').value; // "DAILY" etc
+                const textVal = document.getElementById('alarm-text').value || "Eye Gym Exercise";
+                
+                const now = new Date();
+                const [hours, minutes] = timeVal.split(':');
+                
+                let alarmDate = new Date();
+                alarmDate.setHours(parseInt(hours, 10));
+                alarmDate.setMinutes(parseInt(minutes, 10));
+                alarmDate.setSeconds(0);
+                
+                // If the selected time is strictly in the past for today, schedule for tomorrow
+                if (alarmDate <= now) {
+                    alarmDate.setDate(alarmDate.getDate() + 1);
+                }
+                
+                const formatICSDate = (date) => {
+                    const pad = (n) => n < 10 ? '0' + n : n;
+                    return date.getUTCFullYear() + 
+                           pad(date.getUTCMonth() + 1) + 
+                           pad(date.getUTCDate()) + 'T' + 
+                           pad(date.getUTCHours()) + 
+                           pad(date.getUTCMinutes()) + 
+                           pad(date.getUTCSeconds()) + 'Z';
+                };
+                
+                const rruleLine = freqVal === "ONCE" ? "" : `\nRRULE:FREQ=${freqVal}`;
+                
+                const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//SNEC//Eye Gym Exercise//EN
+BEGIN:VEVENT
+UID:${now.getTime()}@eyegym.app
+DTSTAMP:${formatICSDate(now)}
+DTSTART:${formatICSDate(alarmDate)}${rruleLine}
+SUMMARY:Eye Gym Exercise
+DESCRIPTION:${textVal}
+BEGIN:VALARM
+TRIGGER:-PT0M
+ACTION:DISPLAY
+DESCRIPTION:Reminder
+END:VALARM
+END:VEVENT
+END:VCALENDAR`;
+                
+                const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'Eye_Gym_Reminder.ics';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                alarmModal.classList.add('hidden');
+                window.App.showNotification("Calendar reminder file generated! Please open it to add to your calendar.", "success");
+            });
+        }
+        
+        const btnCloseCalModal = document.getElementById('btn-close-calibration-modal');
+        if (btnCloseCalModal) {
+            btnCloseCalModal.addEventListener('click', () => {
+                document.getElementById('calibration-modal').classList.add('hidden');
+            });
+        }
+
+        const btnBackCalibrate = document.getElementById('btn-back-calibrate');
+        if (btnBackCalibrate) {
+            btnBackCalibrate.addEventListener('click', () => {
+                window.App.showScreen('screen-main-menu');
+            });
+        }
+
+        // Pinch to zoom logic for calibration
+        const calArea = document.getElementById('calibration-content-area');
+        const calCard = document.getElementById('calibration-card');
+        
+        let initialPinchDistance = null;
+        let initialCardWidth = null;
+
+        if (calArea) {
+            calArea.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 2) {
+                    initialPinchDistance = Math.hypot(
+                        e.touches[0].clientX - e.touches[1].clientX,
+                        e.touches[0].clientY - e.touches[1].clientY
+                    );
+                    initialCardWidth = window.App.currentCalibrationWidth;
+                }
+            });
+
+            calArea.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 2 && initialPinchDistance !== null) {
+                    // Prevent default scrolling during pinch
+                    e.preventDefault();
+                    const currentDistance = Math.hypot(
+                        e.touches[0].clientX - e.touches[1].clientX,
+                        e.touches[0].clientY - e.touches[1].clientY
+                    );
+                    const scale = currentDistance / initialPinchDistance;
+                    let newWidth = initialCardWidth * scale;
+                    // Clamp width logically
+                    if (newWidth < 50) newWidth = 50;
+                    if (newWidth > window.innerWidth * 2) newWidth = window.innerWidth * 2;
+                    
+                    window.App.currentCalibrationWidth = newWidth;
+                    calCard.style.width = newWidth + 'px';
+                }
+            }, { passive: false });
+
+            calArea.addEventListener('touchend', (e) => {
+                if (e.touches.length < 2) {
+                    initialPinchDistance = null;
+                }
+            });
+            
+            calArea.addEventListener('touchcancel', (e) => {
+                initialPinchDistance = null;
+            });
+        }
+
+        const btnSaveCalibration = document.getElementById('btn-save-calibration');
+        if (btnSaveCalibration) {
+            btnSaveCalibration.addEventListener('click', () => {
+                const ppcm = window.App.currentCalibrationWidth / 8.56;
+                window.App.pixelsPerCm = ppcm;
+                localStorage.setItem('stereogram_calibration_ppcm', ppcm);
+                window.App.showNotification("Calibration saved successfully!");
+                window.App.showScreen('screen-main-menu');
+            });
+        }
+    }
+};
+
 window.App = App;
 window.ProgressReport = ProgressReport;
 window.Menu = Menu;
