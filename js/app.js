@@ -560,7 +560,9 @@ const Map = {
             if (l) l.style.display = 'none';
         }
 
-        this.positionAvatar();
+        requestAnimationFrame(() => {
+            this.positionAvatar();
+        });
     },
     
     getStreakPosition(s) {
@@ -775,7 +777,13 @@ const Game = {
     bindEvents() {
         document.getElementById('btn-back-map').addEventListener('click', () => {
             this.stopGame();
-            window.App.showMapScreen();
+            let specificMap = null;
+            if (this.currentStageNode) {
+                if (this.currentStageNode.startsWith('1')) specificMap = 1;
+                else if (this.currentStageNode.startsWith('2')) specificMap = 2;
+                else if (this.currentStageNode.startsWith('3')) specificMap = 3;
+            }
+            window.App.showMapScreen(specificMap);
         });
 
         const resetUI = () => this.resetUITimer();
@@ -1119,7 +1127,7 @@ const App = {
         }
     },
 
-    showMapScreen() {
+    showMapScreen(specificMap = null) {
         const user = this.currentUser || {};
         let targetMap = 1;
         const s = user.streak || 0;
@@ -1135,12 +1143,16 @@ const App = {
             return false;
         };
 
-        if (s < 14 || (s === 14 && !hasBypass(14))) {
-            targetMap = 1;
-        } else if (s < 28 || (s === 28 && !hasBypass(28))) {
-            targetMap = 2;
+        if (specificMap !== null) {
+            targetMap = specificMap;
         } else {
-            targetMap = 3;
+            if (s < 14 || (s === 14 && !hasBypass(14))) {
+                targetMap = 1;
+            } else if (s < 28 || (s === 28 && !hasBypass(28))) {
+                targetMap = 2;
+            } else {
+                targetMap = 3;
+            }
         }
 
         this.showScreen('screen-map-' + targetMap);
