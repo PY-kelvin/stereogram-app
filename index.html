@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="avatar_cat.png">
 
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=92">
+    <link rel="stylesheet" href="styles.css?v=93">
 </head>
 
 <body>
@@ -446,7 +446,7 @@
         <!-- REWARD MODAL -->
         <div id="reward-modal" class="modal hidden" style="z-index: 9999;">
             <canvas id="confetti-canvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></canvas>
-            <div class="modal-content" style="text-align: center; background: rgba(255, 255, 255, 0.95); padding: 40px; border-radius: 20px;">
+            <div class="modal-content" style="text-align: center; background: #ffffff; padding: 40px; border-radius: 20px;">
                 <h1 style="color: #ff6b6b; font-size: 3rem; margin-bottom: 10px;">Well Done!</h1>
                 <p style="font-size: 1.2rem; color: #555; margin-bottom: 20px;">Remember to rest your eyes 😊</p>
                 <div style="height: 200px; display: flex; align-items: center; justify-content: center;">
@@ -459,12 +459,12 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=92"></script>
+    <script src="js/app.js?v=93"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js?v=92').then(registration => {
+                navigator.serviceWorker.register('./sw.js?v=93').then(registration => {
                     console.log('ServiceWorker registration successful with scope: ', registration.scope);
                 }, err => {
                     console.log('ServiceWorker registration failed: ', err);
