@@ -39,6 +39,11 @@ body {
     overflow: hidden;
 }
 
+@media screen and (orientation: portrait) {
+    #app.landscape-required > #rotate-overlay { display: flex !important; }
+    #app.landscape-required > .screen { display: none !important; }
+}
+
 /* Screens */
 .screen {
     position: absolute;
@@ -280,7 +285,7 @@ h1, h2, h3 {
     position: relative;
     width: 100%;
     height: 200%;
-    background: url('map_background.png') top center/cover repeat-y;
+    background: url('map_background.png') top center/200% auto repeat-y;
 }
 
 .map-path {
@@ -1002,22 +1007,24 @@ img.player-avatar {
     margin-bottom: 20px;
     animation: rotate 2s infinite linear;
 }
-@keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+.progress-container {
+    padding: 20px;
+    height: calc(100vh - 80px);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
-@media screen and (orientation: portrait) {
-    #screen-game #rotate-overlay { display: flex !important; }
-    #screen-game .game-header, 
-    #screen-game .canvas-container, 
-    #screen-game .controls-overlay { display: none !important; }
-}
 @media screen and (orientation: landscape) {
-    #screen-game #rotate-overlay { display: none !important; }
     #screen-game .game-header { top: 10px; }
     #screen-game .controls-overlay { bottom: 10px; transform: scale(0.9) translateX(-55%); }
     .timer-container { padding: 4px 15px; font-size: 1.2rem; }
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 

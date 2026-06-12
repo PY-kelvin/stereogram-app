@@ -1,9 +1,9 @@
-const CACHE_NAME = 'myeyegym-cache-v109';
+const CACHE_NAME = 'myeyegym-cache-v110';
 const urlsToCache = [
   './',
-  './index.html?v=109',
-  './styles.css?v=109',
-  './js/app.js?v=109',
+  './index.html?v=110',
+  './styles.css?v=110',
+  './js/app.js?v=110',
   './manifest.json',
   './app_icon.png',
   './avatar_cat.png',
