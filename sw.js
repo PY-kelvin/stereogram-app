@@ -1,9 +1,9 @@
-const CACHE_NAME = 'myeyegym-cache-v87';
+const CACHE_NAME = 'myeyegym-cache-v88';
 const urlsToCache = [
   './',
-  './index.html?v=87',
-  './styles.css?v=87',
-  './js/app.js?v=87',
+  './index.html?v=88',
+  './styles.css?v=88',
+  './js/app.js?v=88',
   './manifest.json',
   './avatar_cat.png',
   './avatar_cow.png',
@@ -61,7 +61,6 @@ self.addEventListener('activate', event => {
           }
         })
       );
-    })
+    }).then(() => self.clients.claim())
   );
-  return self.clients.claim(); // Ensure the new service worker takes control immediately
 });

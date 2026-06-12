@@ -751,7 +751,12 @@ const Game = {
             if (this.currentStage >= 1 && this.currentStage <= 3) {
                 maxCount = this.getUnlockedImageCount();
                 if (maxCount < images.length && this.currentImageIndex === maxCount - 1) {
-                    window.App.showNotification(`Next picture unlocks at ${maxCount * 6} days streak!`, "warning");
+                    const user = window.App.currentUser;
+                    const plays = user?.stagePlays?.[this.currentStage] || 0;
+                    const requiredPlays = maxCount * 6;
+                    const remaining = requiredPlays - plays;
+                    const s = remaining > 1 ? 's' : '';
+                    window.App.showNotification(`Next picture unlocks in ${remaining} more session${s}! 😄`, "warning");
                 }
             }
             this.currentImageIndex = (this.currentImageIndex + 1) % maxCount;
