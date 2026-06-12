@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="avatar_cat.png">
 
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=88">
+    <link rel="stylesheet" href="styles.css?v=89">
 </head>
 
 <body>
@@ -142,6 +142,10 @@
                                     alt="Capybara"></label>
                             <label><input type="radio" name="animal" value="dino"><img src="avatar_dino.png"
                                     alt="Dino"></label>
+                            <label><input type="radio" name="animal" value="otter"><img src="avatar_otter.png"
+                                    alt="Otter"></label>
+                            <label><input type="radio" name="animal" value="sheep"><img src="avatar_sheep.png"
+                                    alt="Sheep"></label>
                         </div>
                     </div>
                     <div class="input-group">
@@ -455,12 +459,12 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=88"></script>
+    <script src="js/app.js?v=89"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js?v=88').then(registration => {
+                navigator.serviceWorker.register('./sw.js?v=89').then(registration => {
                     console.log('ServiceWorker registration successful with scope: ', registration.scope);
                 }, err => {
                     console.log('ServiceWorker registration failed: ', err);
