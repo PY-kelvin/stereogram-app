@@ -369,6 +369,7 @@ const Map = {
         document.querySelectorAll('.btn-progress').forEach(btn => {
             btn.addEventListener('click', () => {
                 window.App.showScreen('screen-progress');
+                if (window.ProgressReport) window.ProgressReport.render();
             });
         });
 
