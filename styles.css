@@ -286,13 +286,12 @@ h1, h2, h3 {
     width: 100%;
     height: 200%;
     background-position: top center;
-    background-size: 200% auto;
     background-repeat: repeat-y;
 }
 
-#screen-map-1 .map-content { background-image: url('map_background.png'); }
-#screen-map-2 .map-content { background-image: url('map_2_background.png'); }
-#screen-map-3 .map-content { background-image: url('map_3_background.png'); }
+#screen-map-1 .map-content { background-image: url('map_background.png'); background-size: 200% auto; }
+#screen-map-2 .map-content { background-image: url('map_2_background.png'); background-size: 100% auto; }
+#screen-map-3 .map-content { background-image: url('map_3_background.png'); background-size: 100% auto; }
 
 .map-path {
     position: absolute;
