@@ -1102,28 +1102,6 @@ const Game = {
 
     stopGame() {
         this.pauseTimer();
-        
-        // Log partial session duration
-        if (this.hasStartedCurrentSession && this.timeLeft > 0) {
-            const spentSecs = this.sessionStartLeft - this.timeLeft;
-            const spentMins = Math.floor(spentSecs / 60);
-            
-            // Only log if they spent at least 1 minute
-            if (spentMins >= 1) {
-                const user = window.App.currentUser;
-                if (user) {
-                    user.sessionHistory = user.sessionHistory || [];
-                    user.sessionHistory.push({
-                        dateStr: new Date().toDateString(),
-                        timestamp: new Date().getTime(),
-                        durationMins: spentMins,
-                        stage: this.currentStageNode
-                    });
-                    if (window.Progress) window.Progress.saveUser();
-                }
-            }
-        }
-
         this.isPlaying = false;
         this.hasStartedCurrentSession = false;
         document.getElementById('screen-game').classList.remove('focus-mode');
@@ -1134,11 +1112,10 @@ const Game = {
         
         // Only mark session started if this is a fresh resume or start
         if (!this.isPlaying) {
-            this.sessionStartLeft = this.timeLeft;
+            this.hasStartedCurrentSession = true;
         }
-
+        
         this.isPlaying = true;
-        this.hasStartedCurrentSession = true;
         document.getElementById('screen-game').classList.add('focus-mode');
         this.resetUITimer();
 
@@ -1154,10 +1131,36 @@ const Game = {
     },
 
     pauseTimer() {
+        if (!this.isPlaying) return;
         this.isPlaying = false;
         clearInterval(this.timerInterval);
         document.getElementById('screen-game').classList.remove('focus-mode');
-        document.getElementById('btn-toggle-timer').innerText = "▶";
+        const btnToggle = document.getElementById('btn-toggle-timer');
+        if (btnToggle) btnToggle.innerText = "▶";
+
+        // Log duration when paused or stopped
+        if (this.hasStartedCurrentSession) {
+            const elapsedSecs = this.sessionStartLeft - this.timeLeft;
+            const spentMins = elapsedSecs / 60;
+            
+            // Only log if they spent at least 0.1 minutes (6 seconds)
+            if (spentMins >= 0.1) {
+                const user = window.App.currentUser;
+                if (user) {
+                    let stageNum = this.currentStageNode ? parseInt(this.currentStageNode[0]) : 1;
+                    user.sessionHistory = user.sessionHistory || [];
+                    user.sessionHistory.push({
+                        dateStr: new Date().toDateString(),
+                        timestamp: new Date().getTime(),
+                        durationMins: spentMins,
+                        stageNum: stageNum
+                    });
+                    if (window.Progress) window.Progress.saveUser();
+                }
+            }
+            // Reset start time so if they resume, we only track the new segment
+            this.sessionStartLeft = this.timeLeft;
+        }
     },
 
     updateTimerDisplay() {
@@ -1183,9 +1186,6 @@ const Game = {
     completeSession() {
         window.App.showNotification("Session Complete! Great Job!", "success");
         
-        // Temporarily clear hasStartedCurrentSession so stopGame doesn't log the partial time,
-        // since we are about to log the FULL 10-minute completion.
-        this.hasStartedCurrentSession = false;
         this.stopGame();
 
         const user = window.App.currentUser;
@@ -1193,19 +1193,6 @@ const Game = {
 
         const now = new Date();
         const dateStr = now.toDateString();
-
-        user.sessionHistory = user.sessionHistory || [];
-        const lastSession = user.sessionHistory[user.sessionHistory.length - 1];
-
-        const hasFullSessionToday = user.sessionHistory.some(s => s.dateStr === dateStr && s.durationMins >= 10);
-        
-        // Ensure 10 minutes is logged exactly once for completion
-        user.sessionHistory.push({
-            dateStr: dateStr,
-            timestamp: now.getTime(),
-            durationMins: 10,
-            stage: this.currentStageNode
-        });
 
         // Initialize structures
         if (!user.stagePlays) user.stagePlays = { 1: user.streak || 0, 2: 0, 3: 0 };
