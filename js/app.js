@@ -1143,8 +1143,7 @@ const Game = {
             const elapsedSecs = this.sessionStartLeft - this.timeLeft;
             const spentMins = elapsedSecs / 60;
             
-            // Only log if they spent at least 0.1 minutes (6 seconds)
-            if (spentMins >= 0.1) {
+            if (spentMins > 0) {
                 const user = window.App.currentUser;
                 if (user) {
                     let stageNum = this.currentStageNode ? parseInt(this.currentStageNode[0]) : 1;
