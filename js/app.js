@@ -236,6 +236,30 @@ const Auth = {
                 }
                 
                 window.App.currentUser = user;
+                document.getElementById('display-username').innerText = user.username;
+                
+                // Check for interrupted session (max 2 hours old)
+                if (isStartup && user.savedSession) {
+                    const now = new Date().getTime();
+                    const ageHours = (now - user.savedSession.timestamp) / (1000 * 60 * 60);
+                    if (ageHours < 2) {
+                        // Restore it
+                        window.Game.currentStageNode = user.savedSession.stageNode;
+                        window.Game.timeLeft = user.savedSession.timeLeft;
+                        window.Game.sessionStartLeft = user.savedSession.sessionStartLeft;
+                        window.Game.hasStartedCurrentSession = true;
+                        
+                        window.Game.loadImage(window.Game.currentStageNode);
+                        window.Game.updateTimerDisplay();
+                        
+                        window.App.showScreen('screen-game');
+                        
+                        // Delete saved session so it doesn't loop forever
+                        user.savedSession = null;
+                        if (window.Progress) window.Progress.saveUser();
+                        return true;
+                    }
+                }
                 
                 const authScreen = document.getElementById('screen-auth');
                 if (isStartup || (authScreen && authScreen.classList.contains('active'))) {
@@ -1041,10 +1065,6 @@ const Game = {
         });
 
         document.getElementById('btn-img-prev').addEventListener('click', () => {
-            if (this.hasStartedCurrentSession) {
-                window.App.showNotification("Cannot change picture after starting the timer.", "warning");
-                return;
-            }
             const images = this.stageImages[this.currentStageNode];
             let maxCount = images.length;
             this.currentImageIndex = (this.currentImageIndex - 1 + maxCount) % maxCount;
@@ -1052,10 +1072,6 @@ const Game = {
         });
 
         document.getElementById('btn-img-next').addEventListener('click', () => {
-            if (this.hasStartedCurrentSession) {
-                window.App.showNotification("Cannot change picture after starting the timer.", "warning");
-                return;
-            }
             const images = this.stageImages[this.currentStageNode];
             let maxCount = images.length;
             this.currentImageIndex = (this.currentImageIndex + 1) % maxCount;
@@ -1357,6 +1373,20 @@ const App = {
                         btn.title = "Resume Exercise";
                     }
                     window.Game.wasAutoPausedByVisibility = true;
+                }
+                
+                // SAVE SESSION just in case app gets killed
+                if (window.Game && window.Game.hasStartedCurrentSession) {
+                    const user = window.App.currentUser;
+                    if (user && window.Game.timeLeft > 0 && window.Game.timeLeft < 600) {
+                        user.savedSession = {
+                            stageNode: window.Game.currentStageNode,
+                            timeLeft: window.Game.timeLeft,
+                            sessionStartLeft: window.Game.sessionStartLeft,
+                            timestamp: new Date().getTime()
+                        };
+                        if (window.Progress) window.Progress.saveUser();
+                    }
                 }
             } else {
                 if (window.App.bgmWasPlaying && audio && audio.paused) {
