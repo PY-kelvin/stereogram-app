@@ -425,35 +425,38 @@ const Map = {
         if (user.streak < targetStreak) user.streak = targetStreak;
         if (window.Progress) window.Progress.saveUser();
         
-        // Start animation
-        const vehicle = document.getElementById('vehicle-' + vehicleId);
+        // Start animation: Avatar walks off screen
         const avatar = document.getElementById('player-avatar-' + fromLevel);
-        
-        vehicle.classList.remove('hidden');
-        vehicle.classList.add('drive-in');
-        
-        // Hide avatar halfway
-        setTimeout(() => {
+        if (avatar) {
+            avatar.style.transition = 'left 1.5s ease-in, opacity 1.5s ease-in';
+            avatar.style.left = '120%';
             avatar.style.opacity = '0';
-        }, 1000);
+        }
         
-        // Change maps after drive in
+        // Change maps after walk out
         setTimeout(() => {
-            vehicle.classList.remove('drive-in');
-            vehicle.classList.add('hidden');
             window.App.showScreen('screen-map-' + toLevel);
             this.updateUI();
             
-            // Drive out on new map
-            const newVehicle = document.getElementById('vehicle-' + (toLevel === 2 ? 'taxi' : 'bus'));
-            if (newVehicle && vehicleId === 'taxi') {
-                newVehicle.classList.remove('hidden');
-                newVehicle.classList.add('drive-out');
+            // Avatar walks in from left
+            const newAvatar = document.getElementById('player-avatar-' + toLevel);
+            if (newAvatar) {
+                const targetLeft = newAvatar.style.left;
+                newAvatar.style.transition = 'none';
+                newAvatar.style.left = '-20%';
+                newAvatar.style.opacity = '0';
+                
                 setTimeout(() => {
-                    document.getElementById('player-avatar-' + toLevel).style.opacity = '1';
-                }, 500);
+                    newAvatar.style.transition = 'left 1.5s ease-out, opacity 1.5s ease-out';
+                    newAvatar.style.left = targetLeft;
+                    newAvatar.style.opacity = '1';
+                    
+                    setTimeout(() => {
+                        newAvatar.style.transition = 'top 0.5s ease-in-out, left 0.5s ease-in-out';
+                    }, 1500);
+                }, 50);
             }
-        }, 2500);
+        }, 1500);
     },
 
     updateUI() {
