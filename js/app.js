@@ -647,10 +647,12 @@ const Map = {
                     try {
                         const pt = path.getPointAtLength(localR * path.getTotalLength());
                         const svgRect = path.closest('svg').getBoundingClientRect();
+                        const scaleX = svgRect.width / 100;
+                        const scaleY = svgRect.height / 100;
                         const dx = svgRect.left - contentRect.left;
                         const dy = svgRect.top - contentRect.top;
-                        av.style.left = (pt.x + dx) + 'px';
-                        av.style.top = (pt.y + dy) + 'px';
+                        av.style.left = (pt.x * scaleX + dx) + 'px';
+                        av.style.top = (pt.y * scaleY + dy) + 'px';
                     } catch(e) {}
                 }
             } else {
@@ -669,10 +671,12 @@ const Map = {
                         try {
                             const pt = path.getPointAtLength(localR * path.getTotalLength());
                             const svgRect = path.closest('svg').getBoundingClientRect();
+                            const scaleX = svgRect.width / 100;
+                            const scaleY = svgRect.height / 100;
                             const dx = svgRect.left - contentRect.left;
                             const dy = svgRect.top - contentRect.top;
-                            av.style.left = (pt.x + dx) + 'px';
-                            av.style.top = (pt.y + dy) + 'px';
+                            av.style.left = (pt.x * scaleX + dx) + 'px';
+                            av.style.top = (pt.y * scaleY + dy) + 'px';
                         } catch(e) {}
                     }
                 } else {
@@ -690,10 +694,12 @@ const Map = {
                             try {
                                 const pt = path.getPointAtLength(0);
                                 const svgRect = path.closest('svg').getBoundingClientRect();
+                                const scaleX = svgRect.width / 100;
+                                const scaleY = svgRect.height / 100;
                                 const dx = svgRect.left - contentRect.left;
                                 const dy = svgRect.top - contentRect.top;
-                                av.style.left = (pt.x + dx) + 'px';
-                                av.style.top = (pt.y + dy) + 'px';
+                                av.style.left = (pt.x * scaleX + dx) + 'px';
+                                av.style.top = (pt.y * scaleY + dy) + 'px';
                             } catch(e) {}
                         }
                     }
