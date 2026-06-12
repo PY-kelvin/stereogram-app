@@ -298,6 +298,8 @@ const Progress = {
 const Map = {
     isAnimating: false,
     pwdTargetStage: 0,
+    pendingNodeClick: null,
+    pendingExitClick: null,
 
     init() {
         this.bindEvents();
@@ -407,6 +409,8 @@ const Map = {
         if (nodeName.endsWith('B') && user.stagePlays[level] < 7 && !this.hasPasswordBypass(reqStreak)) {
             // Need password for 1B, 2B, 3B if not enough counts
             this.pwdTargetStage = level;
+            this.pendingNodeClick = { nodeName, level, reqStreak };
+            this.pendingExitClick = null;
             const pwdMsg = document.querySelector('#password-modal p');
             if (pwdMsg) pwdMsg.innerText = `Enter password to unlock Stage ${nodeName}.`;
             document.getElementById('password-modal').classList.remove('hidden');
@@ -435,6 +439,18 @@ const Map = {
         const user = window.App.currentUser;
         let reqStreak = exitNum * 14; 
         
+        if (!this.hasPasswordBypass(reqStreak) && !(exitNum === 3 && window.App.currentUser.stagePlays && window.App.currentUser.stagePlays[3] >= 14)) {
+            this.pwdTargetStage = exitNum;
+            this.pendingExitClick = exitNum;
+            this.pendingNodeClick = null;
+            const pwdMsg = document.querySelector('#password-modal p');
+            let nextMap = exitNum + 1;
+            if (pwdMsg) pwdMsg.innerText = `Enter password to unlock Stage ${nextMap}.`;
+            document.getElementById('password-modal').classList.remove('hidden');
+            document.getElementById('admin-password').value = '';
+            return;
+        }
+
         let oldNodeName = user.lastVisitedNode ? user.lastVisitedNode[exitNum] : null;
         let oldC = user.stagePlays[exitNum] || 0;
         if (oldNodeName === exitNum + 'A') oldC = 0;
@@ -449,26 +465,11 @@ const Map = {
         
         await this.animateAvatarProgress(exitNum, oldC, newC);
 
-        if (this.hasPasswordBypass(reqStreak)) {
-            if (exitNum === 3) {
-                window.App.showNotification("You have reached the final goal! Congratulations!", "success");
-            } else {
-                this.travelForward(exitNum);
-            }
-            return;
-        }
-        
-        if (exitNum === 3 && window.App.currentUser.stagePlays && window.App.currentUser.stagePlays[3] >= 14) {
+        if (exitNum === 3) {
             window.App.showNotification("You have reached the final goal! Congratulations!", "success");
-            return;
+        } else {
+            this.travelForward(exitNum);
         }
-
-        this.pwdTargetStage = exitNum;
-        const pwdMsg = document.querySelector('#password-modal p');
-        let nextMap = exitNum + 1;
-        if (pwdMsg) pwdMsg.innerText = `Enter password to unlock Stage ${nextMap}.`;
-        document.getElementById('password-modal').classList.remove('hidden');
-        document.getElementById('admin-password').value = '';
     },
 
     hasPasswordBypass(reqStreak) {
@@ -494,7 +495,7 @@ const Map = {
         return maxLevel >= reqStreak;
     },
 
-    fastForward(targetStreak, pwdName) {
+    async fastForward(targetStreak, pwdName) {
         const user = window.App.currentUser;
         if (!user) return;
         
@@ -505,24 +506,37 @@ const Map = {
         
         if (window.Progress) window.Progress.saveUser();
         window.App.showNotification("Password Accepted!", "success");
+        document.getElementById('password-modal').classList.add('hidden');
         this.updateUI();
+
+        if (this.pendingNodeClick) {
+            let p = this.pendingNodeClick;
+            this.pendingNodeClick = null;
+            await this.handleNodeClick(p.nodeName, p.level, p.reqStreak);
+        } else if (this.pendingExitClick !== null) {
+            let e = this.pendingExitClick;
+            this.pendingExitClick = null;
+            await this.handleExitClick(e);
+        }
     },
 
-    triggerCinematicTransition(fromMap, toMap, vehicleType, targetStreak, pwdName) {
+    async triggerCinematicTransition(fromMap, toMap, vehicleType, targetStreak, pwdName) {
         const user = window.App.currentUser;
-        if (!user) return;
-
         user.passwords = user.passwords || [];
         if (!user.passwords.includes(pwdName)) {
             user.passwords.push(pwdName);
         }
         if (window.Progress) window.Progress.saveUser();
-
         document.getElementById('password-modal').classList.add('hidden');
-        
-        // Skip broken cinematic and just go to the next map
         this.updateUI();
-        this.travelForward(fromMap);
+        
+        if (this.pendingExitClick === fromMap) {
+            let e = this.pendingExitClick;
+            this.pendingExitClick = null;
+            await this.handleExitClick(e);
+        } else {
+            this.travelForward(fromMap);
+        }
     },
 
     async travelForward(fromLevel) {
