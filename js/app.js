@@ -560,9 +560,10 @@ const Map = {
             if (l) l.style.display = 'none';
         }
 
-        requestAnimationFrame(() => {
+        // Use setTimeout to ensure browser layout is calculated before asking for SVG coordinates
+        setTimeout(() => {
             this.positionAvatar();
-        });
+        }, 50);
     },
     
     getStreakPosition(s) {
@@ -817,7 +818,14 @@ const Game = {
             if (window.Progress) window.Progress.saveUser();
             window.App.showNotification("Progress saved! You can resume within 12 hours.", "success");
             this.stopGame();
-            window.App.showMapScreen();
+            
+            let specificMap = null;
+            if (this.currentStageNode) {
+                if (this.currentStageNode.startsWith('1')) specificMap = 1;
+                else if (this.currentStageNode.startsWith('2')) specificMap = 2;
+                else if (this.currentStageNode.startsWith('3')) specificMap = 3;
+            }
+            window.App.showMapScreen(specificMap);
         });
 
         document.getElementById('btn-img-prev').addEventListener('click', () => {
@@ -1018,7 +1026,14 @@ const Game = {
 
         if (window.Progress) window.Progress.saveUser();
         
-        window.App.showMapScreen();
+        let specificMap = null;
+        if (this.currentStageNode) {
+            if (this.currentStageNode.startsWith('1')) specificMap = 1;
+            else if (this.currentStageNode.startsWith('2')) specificMap = 2;
+            else if (this.currentStageNode.startsWith('3')) specificMap = 3;
+        }
+        window.App.showMapScreen(specificMap);
+        
         if (window.Map) {
             if (oldStreak < newStreak) {
                 window.Map.animateAvatarToStreak(oldStreak, newStreak).then(() => {
