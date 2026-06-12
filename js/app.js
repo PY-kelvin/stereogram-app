@@ -310,14 +310,22 @@ const Map = {
         const btnBackL1 = document.getElementById('btn-back-level1');
         if (btnBackL1) {
             btnBackL1.addEventListener('click', () => {
-                window.App.showScreen('screen-map-1');
+                if (window.Map && window.Map.travelBackward) {
+                    window.Map.travelBackward(2);
+                } else {
+                    window.App.showScreen('screen-map-1');
+                }
             });
         }
 
         const btnBackL2 = document.getElementById('btn-back-level2');
         if (btnBackL2) {
             btnBackL2.addEventListener('click', () => {
-                window.App.showScreen('screen-map-2');
+                if (window.Map && window.Map.travelBackward) {
+                    window.Map.travelBackward(3);
+                } else {
+                    window.App.showScreen('screen-map-2');
+                }
             });
         }
 
@@ -423,12 +431,21 @@ const Map = {
         document.getElementById('password-modal').classList.add('hidden');
         user.passwords = user.passwords || [];
         if (!user.passwords.includes(pwdFlag)) user.passwords.push(pwdFlag);
-        if (user.streak < targetStreak) {
-            user.streak = targetStreak;
+        
+        let oldStreak = user.streak || 0;
+        let newStreak = Math.max(oldStreak, targetStreak);
+        
+        if (oldStreak < newStreak) {
+            user.streak = newStreak;
+            if (window.Progress) window.Progress.saveUser();
+            window.App.showNotification("Password Accepted!", "success");
+            this.animateAvatarToStreak(oldStreak, newStreak).then(() => {
+                this.updateUI();
+            });
+        } else {
+            window.App.showNotification("Password Accepted!", "success");
+            this.updateUI();
         }
-        if (window.Progress) window.Progress.saveUser();
-        window.App.showNotification("Password Accepted!", "success");
-        this.updateUI();
     },
 
     triggerCinematicTransition(fromLevel, toLevel, vehicleId, targetStreak, pwdFlag) {
@@ -436,41 +453,40 @@ const Map = {
         document.getElementById('password-modal').classList.add('hidden');
         user.passwords = user.passwords || [];
         if (!user.passwords.includes(pwdFlag)) user.passwords.push(pwdFlag);
-        if (user.streak < targetStreak) user.streak = targetStreak;
-        if (window.Progress) window.Progress.saveUser();
         
-        // Start animation: Avatar walks off screen
-        const avatar = document.getElementById('player-avatar-' + fromLevel);
-        if (avatar) {
-            avatar.style.transition = 'left 1.5s ease-in, opacity 1.5s ease-in';
-            avatar.style.left = '120%';
-            avatar.style.opacity = '0';
+        let oldStreak = user.streak || 0;
+        let newStreak = Math.max(oldStreak, targetStreak);
+        
+        if (oldStreak < newStreak) {
+            user.streak = newStreak;
+            if (window.Progress) window.Progress.saveUser();
+            this.animateAvatarToStreak(oldStreak, newStreak).then(() => {
+                this.updateUI();
+            });
+        } else {
+            // Already unlocked, so just transition map via animation
+            this.travelForward(fromLevel);
         }
-        
-        // Change maps after walk out
-        setTimeout(() => {
-            window.App.showScreen('screen-map-' + toLevel);
-            this.updateUI();
-            
-            // Avatar walks in from left
-            const newAvatar = document.getElementById('player-avatar-' + toLevel);
-            if (newAvatar) {
-                const targetLeft = newAvatar.style.left;
-                newAvatar.style.transition = 'none';
-                newAvatar.style.left = '-20%';
-                newAvatar.style.opacity = '0';
-                
-                setTimeout(() => {
-                    newAvatar.style.transition = 'left 1.5s ease-out, opacity 1.5s ease-out';
-                    newAvatar.style.left = targetLeft;
-                    newAvatar.style.opacity = '1';
-                    
-                    setTimeout(() => {
-                        newAvatar.style.transition = 'top 0.5s ease-in-out, left 0.5s ease-in-out';
-                    }, 1500);
-                }, 50);
-            }
-        }, 1500);
+    },
+
+    async travelForward(fromLevel) {
+        if (this.isAnimating) return;
+        this.isAnimating = true;
+        await this.shrinkAvatar(fromLevel);
+        window.App.showScreen('screen-map-' + (fromLevel + 1));
+        await this.growAvatar(fromLevel + 1);
+        this.isAnimating = false;
+        this.updateUI();
+    },
+
+    async travelBackward(fromLevel) {
+        if (this.isAnimating) return;
+        this.isAnimating = true;
+        await this.shrinkAvatar(fromLevel);
+        window.App.showScreen('screen-map-' + (fromLevel - 1));
+        await this.growAvatar(fromLevel - 1);
+        this.isAnimating = false;
+        this.updateUI();
     },
 
     updateUI() {
@@ -535,10 +551,7 @@ const Map = {
         this.positionAvatar();
     },
     
-    positionAvatar() {
-        const user = window.App.currentUser;
-        let s = user.streak;
-        
+    getStreakPosition(s) {
         let targetLvl = 1;
         let ratio = 0; // 0 to 1 for the 2 paths
         
@@ -561,6 +574,16 @@ const Map = {
         } else {
             targetLvl = 3; ratio = 1; // Final goal
         }
+        return { targetLvl, ratio };
+    },
+
+    positionAvatar(sOverride = null) {
+        const user = window.App.currentUser;
+        let s = sOverride !== null ? sOverride : user.streak;
+        
+        const pos = this.getStreakPosition(s);
+        let targetLvl = pos.targetLvl;
+        let ratio = pos.ratio;
         
         [1, 2, 3].forEach(l => {
             const av = document.getElementById('player-avatar-' + l);
@@ -597,6 +620,85 @@ const Map = {
                 }
             }
         });
+    },
+
+    shrinkAvatar(lvl) {
+        return new Promise(resolve => {
+            const av = document.getElementById('player-avatar-' + lvl);
+            if (!av) return resolve();
+            av.style.transition = 'transform 1s ease-in';
+            av.style.transform = 'translate(-50%, -50%) scale(0)';
+            setTimeout(() => {
+                av.style.transition = 'none';
+                resolve();
+            }, 1000);
+        });
+    },
+
+    growAvatar(lvl) {
+        return new Promise(resolve => {
+            const av = document.getElementById('player-avatar-' + lvl);
+            if (!av) return resolve();
+            av.style.transition = 'none';
+            av.style.transform = 'translate(-50%, -50%) scale(0)';
+            // force reflow
+            void av.offsetHeight;
+            av.style.transition = 'transform 1s ease-out';
+            av.style.transform = 'translate(-50%, -50%) scale(1)';
+            setTimeout(() => {
+                av.style.transition = 'none';
+                resolve();
+            }, 1000);
+        });
+    },
+
+    animatePathProgress(startS, endS, durationMs) {
+        return new Promise(resolve => {
+            if (startS === endS) return resolve();
+            const startTime = performance.now();
+            const step = (timestamp) => {
+                let elapsed = timestamp - startTime;
+                let progress = Math.min(elapsed / durationMs, 1);
+                let currentS = startS + (endS - startS) * progress;
+                this.positionAvatar(currentS);
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                } else {
+                    resolve();
+                }
+            };
+            requestAnimationFrame(step);
+        });
+    },
+
+    async animateAvatarToStreak(oldS, newS) {
+        this.isAnimating = true;
+        let currentS = oldS;
+        
+        while (currentS < newS) {
+            let startPos = this.getStreakPosition(currentS);
+            let endPos = this.getStreakPosition(newS);
+            
+            if (startPos.targetLvl === endPos.targetLvl) {
+                // Same map
+                let duration = Math.max(1000, (newS - currentS) * 300);
+                await this.animatePathProgress(currentS, newS, duration);
+                currentS = newS;
+            } else {
+                // Cross map boundary
+                let exitS = startPos.targetLvl * 14; 
+                let duration = Math.max(1000, (exitS - currentS) * 300);
+                await this.animatePathProgress(currentS, exitS, duration);
+                
+                await this.shrinkAvatar(startPos.targetLvl);
+                window.App.showScreen('screen-map-' + (startPos.targetLvl + 1));
+                await this.growAvatar(startPos.targetLvl + 1);
+                
+                currentS = exitS;
+            }
+        }
+        this.isAnimating = false;
+        this.positionAvatar(); // ensure exact final position
     },
 
     animateStep(oldStreak, newStreak) {
@@ -894,13 +996,26 @@ const Game = {
 
         // Add streak logic (max 1 per day)
         // It only increments STREAK when a FULL session is completed!
+        let oldStreak = user.streak || 0;
+        let newStreak = oldStreak;
+        
         if (!lastSession || lastSession.dateStr !== dateStr) {
-            user.streak = (user.streak || 0) + 1;
+            newStreak = oldStreak + 1;
+            user.streak = newStreak;
         }
 
         if (window.Progress) window.Progress.saveUser();
-        if (window.Map) window.Map.updateUI();
+        
         window.App.showMapScreen();
+        if (window.Map) {
+            if (oldStreak < newStreak) {
+                window.Map.animateAvatarToStreak(oldStreak, newStreak).then(() => {
+                    window.Map.updateUI();
+                });
+            } else {
+                window.Map.updateUI();
+            }
+        }
     },
 
     resizeCanvas() {
