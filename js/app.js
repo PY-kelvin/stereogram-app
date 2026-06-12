@@ -730,8 +730,8 @@ const Game = {
         '1B': ['stage 1/Stage 1D.png?v=4', 'stage 1/Stage 1E.png?v=4'],
         '2A': ['stage 2/stage 2A.png?v=2', 'stage 2/stage 2B.png?v=2', 'stage 2/stage 2C.png?v=2'],
         '2B': ['stage 2/stage 2D.png?v=2', 'stage 2/stage 2E.png?v=2'],
-        '3A': ['stage 3/Stage 3C.png?v=2', 'stage 3/Stage 3A.png?v=2', 'stage 3/Stage 3B.png?v=2'],
-        '3B': ['stage 3/Stage 3D.png?v=2', 'stage 3/Stage 3E.png?v=2']
+        '3A': ['stage 3/Stage 3C.png?v=2', 'stage 3/stage 3A.png?v=2', 'stage 3/stage 3B.png?v=2'],
+        '3B': ['stage 3/stage 3D.png?v=2', 'stage 3/stage 3E.png?v=2']
     },
 
     stageRatios: {
