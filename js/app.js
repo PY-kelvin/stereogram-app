@@ -562,7 +562,7 @@ const Map = {
         // Redraw immediately since fast forward handles big jumps
         this.updateUI();
     }
-;
+};
 
 const Game = {
     canvas: null,
@@ -865,8 +865,6 @@ const Game = {
     resizeCanvas() {
     }
 };
-
-\;
 
 window.Map = Map;
 window.Game = Game;
