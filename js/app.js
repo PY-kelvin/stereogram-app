@@ -282,7 +282,9 @@ const Progress = {
 };
 
 const Map = {');
-const mapEndStr = '};\n\nconst Game = {');
+const mapEndStr = '};
+
+const Game = {');
 const gameEndStr = 'window.App = App;';
 const gameEnd = appCode.indexOf(gameEndStr);
 
@@ -298,7 +300,8 @@ const newGameCode = \`const Game = {
     isPlaying: false,
     timerInterval: null,
     timeLeft: 600,
-    currentStageNode: '1A', // E.g., '1A', '1B', '2A', etc.
+    sessionStartLeft: 600,
+    currentStageNode: '1A',
     currentImageIndex: 0,
     hasStartedCurrentSession: false,
     uiTimeout: null,
@@ -359,7 +362,6 @@ const newGameCode = \`const Game = {
             window.App.showMapScreen();
         });
 
-        // UI Auto-Hide
         const resetUI = () => this.resetUITimer();
         document.getElementById('screen-game').addEventListener('click', resetUI);
         document.getElementById('screen-game').addEventListener('touchstart', resetUI);
@@ -422,6 +424,7 @@ const newGameCode = \`const Game = {
         this.currentImageIndex = 0;
         document.getElementById('current-stage-title').innerText = "Stage " + nodeName;
         this.timeLeft = 600;
+        this.sessionStartLeft = 600;
         this.hasStartedCurrentSession = false;
 
         const user = window.App.currentUser;
@@ -430,6 +433,7 @@ const newGameCode = \`const Game = {
             const twelveHours = 12 * 60 * 60 * 1000;
             if (now - user.savedSession.timestamp < twelveHours) {
                 this.timeLeft = user.savedSession.timeLeft;
+                this.sessionStartLeft = this.timeLeft;
                 window.App.showNotification("Resumed from previous save!", "success");
             }
             delete user.savedSession;
@@ -473,12 +477,41 @@ const newGameCode = \`const Game = {
 
     stopGame() {
         this.pauseTimer();
+        
+        // Log partial session duration
+        if (this.hasStartedCurrentSession && this.timeLeft > 0) {
+            const spentSecs = this.sessionStartLeft - this.timeLeft;
+            const spentMins = Math.floor(spentSecs / 60);
+            
+            // Only log if they spent at least 1 minute
+            if (spentMins >= 1) {
+                const user = window.App.currentUser;
+                if (user) {
+                    user.sessionHistory = user.sessionHistory || [];
+                    user.sessionHistory.push({
+                        dateStr: new Date().toDateString(),
+                        timestamp: new Date().getTime(),
+                        durationMins: spentMins,
+                        stage: this.currentStageNode
+                    });
+                    if (window.Progress) window.Progress.saveUser();
+                }
+            }
+        }
+
         this.isPlaying = false;
+        this.hasStartedCurrentSession = false;
         document.getElementById('screen-game').classList.remove('focus-mode');
     },
 
     startTimer() {
         if (this.isPlaying) return;
+        
+        // Only mark session started if this is a fresh resume or start
+        if (!this.isPlaying) {
+            this.sessionStartLeft = this.timeLeft;
+        }
+
         this.isPlaying = true;
         this.hasStartedCurrentSession = true;
         document.getElementById('screen-game').classList.add('focus-mode');
@@ -524,6 +557,10 @@ const newGameCode = \`const Game = {
 
     completeSession() {
         window.App.showNotification("Session Complete! Great Job!", "success");
+        
+        // Temporarily clear hasStartedCurrentSession so stopGame doesn't log the partial time,
+        // since we are about to log the FULL 10-minute completion.
+        this.hasStartedCurrentSession = false;
         this.stopGame();
 
         const user = window.App.currentUser;
@@ -535,6 +572,7 @@ const newGameCode = \`const Game = {
         user.sessionHistory = user.sessionHistory || [];
         const lastSession = user.sessionHistory[user.sessionHistory.length - 1];
 
+        // Ensure 10 minutes is logged exactly once for completion
         user.sessionHistory.push({
             dateStr: dateStr,
             timestamp: now.getTime(),
@@ -543,20 +581,19 @@ const newGameCode = \`const Game = {
         });
 
         // Add streak logic (max 1 per day)
-        if (!alreadyDoneToday) {
+        // It only increments STREAK when a FULL session is completed!
+        if (!lastSession || lastSession.dateStr !== dateStr) {
             user.streak = (user.streak || 0) + 1;
         }
 
         if (window.Progress) window.Progress.saveUser();
+        if (window.Map) window.Map.updateUI();
         window.App.showMapScreen();
     },
 
     resizeCanvas() {
-        // Unused in current logic
     }
 };
-
-\n\n\`
 
 window.App = App;
 window.ProgressReport = ProgressReport;
