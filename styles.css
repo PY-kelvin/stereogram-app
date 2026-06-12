@@ -331,22 +331,22 @@ h1, h2, h3 {
     font-weight: 600;
 }
 
-/* Positions for nodes based on background map */
-.stage-1 {
-    top: 17.5%;
-    left: 28%;
+/* Positions for nodes on horizontal 100x100 grid */
+.node-1a, .node-2a, .node-3a {
+    top: 50%;
+    left: 15%;
     transform: translate(-50%, calc(-50% - 15px));
 }
 
-.stage-2 {
+.node-1b, .node-2b, .node-3b {
     top: 50%;
     left: 50%;
     transform: translate(-50%, calc(-50% - 15px));
 }
 
-.stage-3 {
-    top: 95%;
-    left: 70%;
+.node-exit1, .node-exit2, .node-exit3 {
+    top: 50%;
+    left: 85%;
     transform: translate(-50%, calc(-50% - 15px));
 }
 
@@ -354,11 +354,42 @@ h1, h2, h3 {
     position: absolute;
     z-index: 3;
     font-size: 2.5rem;
-    top: calc(10% + 55px);
-    left: 50%;
+    top: 50%;
+    left: 15%;
     transform: translate(-50%, -50%);
-    transition: top 2s ease-in-out, left 2s ease-in-out;
+    transition: top 1s ease-in-out, left 1s ease-in-out;
 }
+
+.cinematic-vehicle {
+    position: absolute;
+    z-index: 4;
+    width: 60px;
+    height: auto;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.drive-in {
+    animation: driveInAnim 2s forwards;
+}
+
+.drive-out {
+    animation: driveOutAnim 2s forwards;
+}
+
+@keyframes driveInAnim {
+    0% { left: -20%; }
+    100% { left: 85%; }
+}
+
+@keyframes driveOutAnim {
+    0% { left: 85%; }
+    100% { left: 120%; }
+}
+
+.bg-sakura { background-color: #ffb7b2; background-size: cover; background-position: center; position: relative; }
+.bg-gate { background-color: #8b93a5; background-size: cover; background-position: center; position: relative; }
+.bg-bus { background-color: #ffd166; background-size: cover; background-position: center; position: relative; }
 
 /* Game Screen */
 #screen-game {
@@ -989,3 +1020,8 @@ img.player-avatar {
     .timer-container { padding: 4px 15px; font-size: 1.2rem; }
 }
 
+
+@keyframes bounce {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-20px); }
+}

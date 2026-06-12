@@ -1,9 +1,10 @@
 {
   "name": "MyEyeGym",
   "short_name": "MyEyeGym",
-  "start_url": "index.html",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#fdfbf7",
+  "orientation": "landscape",
+  "background_color": "#fffae3",
   "theme_color": "#2b2d42",
   "description": "Stereogram Training App",
   "icons": [

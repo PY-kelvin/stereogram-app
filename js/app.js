@@ -145,21 +145,7 @@ const Auth = {
         if (user.dailyProgress === undefined) user.dailyProgress = 0;
         if (user.lastActivityDate === undefined) user.lastActivityDate = user.lastSessionDate || null;
 
-        // --- SELF HEAL CORRUPTED PROFILES ---
-        // If the user's streak was artificially corrupted by the old override bug, 
-        // we can heal it by counting the true number of unique days played in sessionHistory.
-        if (user.sessionHistory && Array.isArray(user.sessionHistory)) {
-            const uniqueDays = new Set(user.sessionHistory.map(s => s.dateStr)).size;
-            // If they played today but history was wiped, ensure at least 1
-            const trueStreak = Math.max(uniqueDays, user.dailyProgress === 1 ? 1 : 0);
-            
-            // If streak is mathematically impossible, aggressively heal it
-            if (user.streak > trueStreak) {
-                user.streak = trueStreak;
-                localStorage.setItem(`user_${username}`, JSON.stringify(user));
-            }
-        }
-        // ------------------------------------
+        
 
         // Start BGM ONLY on successful login
         const audio = document.getElementById('bgm-audio');
@@ -195,17 +181,7 @@ const Auth = {
             if (userStr) {
                 const user = JSON.parse(userStr);
                 
-                // --- SELF HEAL CORRUPTED PROFILES ---
-                if (user.sessionHistory && Array.isArray(user.sessionHistory)) {
-                    const uniqueDays = new Set(user.sessionHistory.map(s => s.dateStr)).size;
-                    const trueStreak = Math.max(uniqueDays, user.dailyProgress === 1 ? 1 : 0);
-                    // If streak is corrupted (greater than mathematically possible), forcefully heal it
-                    if (user.streak > trueStreak) {
-                        user.streak = trueStreak;
-                        localStorage.setItem(`user_${username}`, JSON.stringify(user));
-                    }
-                }
-                // ------------------------------------
+                
 
                 window.App.currentUser = user;
                 window.App.showScreen('screen-welcome');
@@ -305,350 +281,69 @@ const Progress = {
     }
 };
 
-const Map = {
-    init() {
-        this.bindEvents();
-    },
+const Map = {');
+const mapEndStr = '};\n\nconst Game = {');
+const gameEndStr = 'window.App = App;';
+const gameEnd = appCode.indexOf(gameEndStr);
 
-    bindEvents() {
-        const node1 = document.getElementById('node-stage1');
-        const node2 = document.getElementById('node-stage2');
-        const node3 = document.getElementById('node-stage3');
+if (gameStart === -1 || gameEnd === -1) {
+    console.error('Game object not found.');
+    process.exit(1);
+}
 
-        node1.addEventListener('click', () => {
-            this.moveToStage(1);
-        });
-
-        node2.addEventListener('click', () => {
-            const user = window.App.currentUser;
-            if (user && user.unlockedStages.includes(2)) {
-                this.moveToStage(2);
-            } else {
-                this.pwdTargetStage = 2;
-                document.getElementById('password-modal').classList.remove('hidden');
-                document.getElementById('admin-password').value = '';
-            }
-        });
-
-        node3.addEventListener('click', () => {
-            const user = window.App.currentUser;
-            if (user && user.unlockedStages.includes(3)) {
-                this.moveToStage(3);
-            } else {
-                this.pwdTargetStage = 3;
-                document.getElementById('password-modal').classList.remove('hidden');
-                document.getElementById('admin-password').value = '';
-            }
-        });
-
-        document.getElementById('btn-cancel-pwd').addEventListener('click', () => {
-            document.getElementById('password-modal').classList.add('hidden');
-        });
-
-        document.getElementById('btn-submit-pwd').addEventListener('click', () => {
-            const rawPwd = document.getElementById('admin-password').value;
-            const pwd = rawPwd.trim().toLowerCase();
-            const user = window.App.currentUser;
-            
-            // Secret repair command to forcefully restore corrupted history
-            if (pwd.startsWith('repair ')) {
-                const daysToRestore = parseInt(pwd.replace('repair ', '').trim());
-                if (!isNaN(daysToRestore) && daysToRestore > 0) {
-                    user.streak = daysToRestore;
-                    user.sessionHistory = [];
-                    const now = new Date().getTime();
-                    // Backfill fake days
-                    for (let i = daysToRestore; i > 0; i--) {
-                        const fakeDate = new Date(now - (i * 24 * 60 * 60 * 1000));
-                        user.sessionHistory.push({
-                            dateStr: fakeDate.toDateString(),
-                            timestamp: fakeDate.getTime(),
-                            durationMins: 10
-                        });
-                    }
-                    if (window.Progress) window.Progress.saveUser();
-                    document.getElementById('password-modal').classList.add('hidden');
-                    window.App.showNotification(`Avatar physically repaired to ${daysToRestore} days!`, "success");
-                    this.updateUI();
-                    return;
-                }
-            }
-            
-            if (this.pwdTargetStage === 2) {
-                if (pwd === 'orthoptics') {
-                    document.getElementById('password-modal').classList.add('hidden');
-                    window.App.showNotification("Admin Override Successful! Stage 2 Unlocked.", "success");
-                    
-                    if (!user.unlockedStages.includes(2)) user.unlockedStages.push(2);
-                    
-                    if (window.Progress) window.Progress.saveUser();
-                    
-                    this.animateUnlockStage(2);
-                    // Do not artificially move the avatar to stage 2 permanently, just let it stay at true streak
-                    setTimeout(() => {
-                        window.App.showScreen('screen-map');
-                    }, 500);
-                } else {
-                    window.App.showNotification("Incorrect Password.", "warning");
-                }
-            } else if (this.pwdTargetStage === 3) {
-                if (pwd === 'orthoptics 123' || pwd === 'orthoptics123') {
-                    document.getElementById('password-modal').classList.add('hidden');
-                    window.App.showNotification("Admin Override Successful! Stage 3 Unlocked.", "success");
-                    
-                    if (!user.unlockedStages.includes(2)) user.unlockedStages.push(2);
-                    if (!user.unlockedStages.includes(3)) user.unlockedStages.push(3);
-                    
-                    if (window.Progress) window.Progress.saveUser();
-                    
-                    this.animateUnlockStage(2);
-                    this.animateUnlockStage(3);
-                    setTimeout(() => {
-                        window.App.showScreen('screen-map');
-                    }, 500);
-                } else {
-                    window.App.showNotification("Incorrect Password.", "warning");
-                }
-            }
-        });
-    },
-
-    updateUI() {
-        if (this.isAnimating) return;
-        const user = window.App.currentUser;
-        if (!user) return;
-
-        const node2 = document.getElementById('node-stage2');
-        const avatar = document.getElementById('player-avatar');
-
-        if (user.animal) {
-            avatar.src = `avatar_${user.animal}.png`;
-        }
-
-        if (user.unlockedStages.includes(2)) {
-            node2.classList.remove('locked');
-            const lock = node2.querySelector('.lock-overlay');
-            if (lock) lock.style.display = 'none';
-        } else {
-            node2.classList.add('locked');
-            const lock = node2.querySelector('.lock-overlay');
-            if (lock) lock.style.display = 'flex';
-        }
-
-        const node3 = document.getElementById('node-stage3');
-        if (user.unlockedStages.includes(3)) {
-            node3.classList.remove('locked');
-            const lock = node3.querySelector('.lock-overlay');
-            if (lock) lock.style.display = 'none';
-        } else {
-            node3.classList.add('locked');
-            const lock = node3.querySelector('.lock-overlay');
-            if (lock) lock.style.display = 'flex';
-        }
-
-        let ratio = this.getAvatarRatio(user);
-
-        const pos = this.getPointCSS(ratio);
-        avatar.style.transition = 'none';
-        avatar.style.left = pos.left;
-        avatar.style.top = pos.top;
-        avatar.style.transform = 'translate(-50%, -50%)';
-    },
-
-    moveToStage(stageNum) {
-        if (window.Game) window.Game.startStage(stageNum);
-    },
-
-    getAvatarRatio(user) {
-        if (!user) return 0;
-        let ratio = Math.min(user.streak / 60, 1);
-        
-        // Remove artificial snapping to stages. The avatar should always 
-        // return to its "true" streak position to accurately track progress!
-        
-        return ratio;
-    },
-
-    getPointCSS(ratio) {
-        let pathId = 'path-line-1';
-        let localRatio = ratio * 2; // maps 0-0.5 to 0-1
-        
-        if (ratio > 0.5) {
-            pathId = 'path-line-2';
-            localRatio = (ratio - 0.5) * 2; // maps 0.5-1 to 0-1
-        }
-        
-        const path = document.getElementById(pathId);
-        if (!path) return { left: '50%', top: '50%' };
-        
-        const pathLength = path.getTotalLength();
-        const pt = path.getPointAtLength(localRatio * pathLength);
-        
-        return {
-            left: `${pt.x}%`,
-            top: `${pt.y / 2}%`
-        };
-    },
-
-
-    animateStep(oldStreak, newStreak) {
-        const user = window.App.currentUser;
-        if (user && user.unlockedStages.includes(3) && oldStreak >= 60) {
-            return; // Once fully unlocked, the avatar roams freely and stops step animations.
-        }
-
-        this.isAnimating = true;
-        const avatar = document.getElementById('player-avatar');
-        const duration = 2000;
-        const start = performance.now();
-
-        const oldRatio = Math.min(oldStreak / 60, 1);
-        const newRatio = Math.min(newStreak / 60, 1);
-
-        avatar.style.transition = 'none';
-
-        const step = (now) => {
-            const elapsed = now - start;
-            const progress = Math.min(elapsed / duration, 1);
-            
-            const ease = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-            const currentRatio = oldRatio + (newRatio - oldRatio) * ease;
-            const pos = this.getPointCSS(currentRatio);
-            
-            avatar.style.left = pos.left;
-            avatar.style.top = pos.top;
-            avatar.style.transform = 'translate(-50%, -50%)';
-
-            if (progress < 1) {
-                requestAnimationFrame(step);
-            } else {
-                this.isAnimating = false;
-            }
-        };
-        requestAnimationFrame(step);
-    },
-
-    animateUnlockStage(stageNum) {
-        const node = document.getElementById(`node-stage${stageNum}`);
-        if (!node) return;
-        node.classList.remove('locked');
-        const lock = node.querySelector('.lock-overlay');
-        if (lock) lock.style.display = 'none';
-
-        node.style.transform = 'scale(1.3) translate(-50%, calc(-50% - 15px))';
-        setTimeout(() => {
-            node.style.transform = 'translate(-50%, calc(-50% - 15px))';
-        }, 500);
-
-        // Perform round-trip avatar animation
-        const user = window.App.currentUser;
-        if (!user) return;
-        
-        let targetRatio = 0;
-        if (stageNum === 1) targetRatio = 0;
-        else if (stageNum === 2) targetRatio = 0.5;
-        else if (stageNum === 3) targetRatio = 1;
-
-        const originalRatio = this.getAvatarRatio(user);
-        
-        this.isAnimating = true;
-        const avatar = document.getElementById('player-avatar');
-        avatar.style.transition = 'none';
-
-        const animateSegment = (fromRatio, toRatio, duration, callback) => {
-            const start = performance.now();
-            const step = (now) => {
-                const elapsed = now - start;
-                const progress = Math.min(elapsed / duration, 1);
-                const ease = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-                const currentRatio = fromRatio + (toRatio - fromRatio) * ease;
-                const pos = this.getPointCSS(currentRatio);
-                avatar.style.left = pos.left;
-                avatar.style.top = pos.top;
-                avatar.style.transform = 'translate(-50%, -50%)';
-
-                if (progress < 1) {
-                    requestAnimationFrame(step);
-                } else {
-                    if (callback) callback();
-                }
-            };
-            requestAnimationFrame(step);
-        };
-
-        // 1. Animate to the unlocked stage
-        animateSegment(originalRatio, targetRatio, 2000, () => {
-            // 2. Pause at the unlocked stage
-            setTimeout(() => {
-                // 3. Animate back to original streak position
-                animateSegment(targetRatio, originalRatio, 2000, () => {
-                    this.isAnimating = false;
-                });
-            }, 1000); // 1 sec pause
-        });
-    }
-};
-
-const Game = {
+const newGameCode = \`const Game = {
     canvas: null,
     ctx: null,
     animationId: null,
     isPlaying: false,
     timerInterval: null,
     timeLeft: 600,
-    currentStage: 1,
-    imageObj: null,
-    particles: [],
-    
-    stageImages: {
-        1: ['stage 1/stage 1A.png?v=4', 'stage 1/stage 1B.png?v=4', 'stage 1/stage 1C.png?v=4', 'stage 1/Stage 1D.png?v=4', 'stage 1/Stage 1E.png?v=4'],
-        2: ['stage 2/stage 2A.png?v=2', 'stage 2/stage 2B.png?v=2', 'stage 2/stage 2C.png?v=2', 'stage 2/stage 2D.png?v=2', 'stage 2/stage 2E.png?v=2'],
-        3: ['stage 3/Stage 3C.png?v=2', 'stage 3/Stage 3A.png?v=2', 'stage 3/Stage 3B.png?v=2', 'stage 3/Stage 3D.png?v=2', 'stage 3/Stage 3E.png?v=2']
-    },
-
-    stage1Ratios: {
-        'stage 1/Stage 1D.png?v=4': 0.3691,
-        'stage 1/Stage 1E.png?v=4': 0.3578,
-        'stage 1/stage 1A.png?v=4': 0.3778,
-        'stage 1/stage 1B.png?v=4': 0.3878,
-        'stage 1/stage 1C.png?v=4': 0.3856,
-    },
-    
-    stage2Ratios: {
-        'stage 2/stage 2A.png?v=2': 0.5185,
-        'stage 2/stage 2B.png?v=2': 0.5587,
-        'stage 2/stage 2C.png?v=2': 0.5620,
-        'stage 2/stage 2D.png?v=2': 0.5385,
-        'stage 2/stage 2E.png?v=2': 0.5826,
-    },
-    
-    stage3Ratios: {
-        'stage 3/stage 3A.png?v=2': 0.6257,
-        'stage 3/stage 3B.png?v=2': 0.6309,
-        'stage 3/Stage 3C.png?v=2': 0.5906,
-        'stage 3/stage 3D.png?v=2': 0.5910,
-        'stage 3/stage 3E.png?v=2': 0.6259,
-    },
+    currentStageNode: '1A', // E.g., '1A', '1B', '2A', etc.
     currentImageIndex: 0,
     hasStartedCurrentSession: false,
     uiTimeout: null,
+    
+    stageImages: {
+        '1A': ['stage 1/stage 1A.png?v=4', 'stage 1/stage 1B.png?v=4', 'stage 1/stage 1C.png?v=4'],
+        '1B': ['stage 1/Stage 1D.png?v=4', 'stage 1/Stage 1E.png?v=4'],
+        '2A': ['stage 2/stage 2A.png?v=2', 'stage 2/stage 2B.png?v=2', 'stage 2/stage 2C.png?v=2'],
+        '2B': ['stage 2/stage 2D.png?v=2', 'stage 2/stage 2E.png?v=2'],
+        '3A': ['stage 3/Stage 3C.png?v=2', 'stage 3/Stage 3A.png?v=2', 'stage 3/Stage 3B.png?v=2'],
+        '3B': ['stage 3/Stage 3D.png?v=2', 'stage 3/Stage 3E.png?v=2']
+    },
 
-    getUnlockedImageCount() {
-        const user = window.App.currentUser;
-        if (!user) return 1;
-        
-        user.stagePlays = user.stagePlays || { 1: user.streak || 0, 2: 0, 3: 0 };
-        const plays = user.stagePlays[this.currentStage] || 0;
-
-        if (plays >= 24) return 5;
-        if (plays >= 18) return 4;
-        if (plays >= 12) return 3;
-        if (plays >= 6) return 2;
-        return 1;
+    stageRatios: {
+        '1A': {
+            'stage 1/stage 1A.png?v=4': 0.3778,
+            'stage 1/stage 1B.png?v=4': 0.3878,
+            'stage 1/stage 1C.png?v=4': 0.3856,
+        },
+        '1B': {
+            'stage 1/Stage 1D.png?v=4': 0.3691,
+            'stage 1/Stage 1E.png?v=4': 0.3578,
+        },
+        '2A': {
+            'stage 2/stage 2A.png?v=2': 0.5185,
+            'stage 2/stage 2B.png?v=2': 0.5587,
+            'stage 2/stage 2C.png?v=2': 0.5620,
+        },
+        '2B': {
+            'stage 2/stage 2D.png?v=2': 0.5385,
+            'stage 2/stage 2E.png?v=2': 0.5826,
+        },
+        '3A': {
+            'stage 3/stage 3A.png?v=2': 0.6257,
+            'stage 3/stage 3B.png?v=2': 0.6309,
+            'stage 3/Stage 3C.png?v=2': 0.5906,
+        },
+        '3B': {
+            'stage 3/stage 3D.png?v=2': 0.5910,
+            'stage 3/stage 3E.png?v=2': 0.6259,
+        }
     },
 
     init() {
-        this.currentStage = 1;
+        this.currentStageNode = '1A';
         this.currentImageIndex = 0;
         this.bindEvents();
         window.addEventListener('beforeunload', () => {
@@ -661,15 +356,10 @@ const Game = {
     bindEvents() {
         document.getElementById('btn-back-map').addEventListener('click', () => {
             this.stopGame();
-            window.App.showScreen('screen-map');
+            window.App.showMapScreen();
         });
 
-        document.getElementById('btn-back-rotate').addEventListener('click', () => {
-            this.stopGame();
-            window.App.showScreen('screen-map');
-        });
-
-        // UI Auto-Hide on Interaction
+        // UI Auto-Hide
         const resetUI = () => this.resetUITimer();
         document.getElementById('screen-game').addEventListener('click', resetUI);
         document.getElementById('screen-game').addEventListener('touchstart', resetUI);
@@ -687,29 +377,6 @@ const Game = {
             }
         });
 
-        window.addEventListener('orientationchange', () => {
-            if (document.getElementById('screen-game').classList.contains('active')) {
-                setTimeout(() => {
-                    const isPortrait = window.innerHeight > window.innerWidth;
-                    if (isPortrait) {
-                        document.getElementById('rotate-overlay').style.display = 'flex';
-                        if (this.isPlaying) {
-                            this.wasAutoPaused = true;
-                            this.pauseTimer();
-                            document.getElementById('btn-toggle-timer').innerText = "▶";
-                        }
-                    } else {
-                        document.getElementById('rotate-overlay').style.display = 'none';
-                        if (this.wasAutoPaused) {
-                            this.wasAutoPaused = false;
-                            this.startTimer();
-                            document.getElementById('btn-toggle-timer').innerText = "⏸";
-                        }
-                    }
-                }, 300);
-            }
-        });
-
         document.getElementById('btn-save-rest').addEventListener('click', () => {
             if (!this.isPlaying && this.timeLeft === 600) {
                 window.App.showNotification("You haven't started yet!", "warning");
@@ -724,7 +391,7 @@ const Game = {
             if (window.Progress) window.Progress.saveUser();
             window.App.showNotification("Progress saved! You can resume within 12 hours.", "success");
             this.stopGame();
-            window.App.showScreen('screen-map');
+            window.App.showMapScreen();
         });
 
         document.getElementById('btn-img-prev').addEventListener('click', () => {
@@ -732,13 +399,10 @@ const Game = {
                 window.App.showNotification("Cannot change picture after starting the timer.", "warning");
                 return;
             }
-            const images = this.stageImages[this.currentStage];
+            const images = this.stageImages[this.currentStageNode];
             let maxCount = images.length;
-            if (this.currentStage >= 1 && this.currentStage <= 3) {
-                maxCount = this.getUnlockedImageCount();
-            }
             this.currentImageIndex = (this.currentImageIndex - 1 + maxCount) % maxCount;
-            this.loadImage(this.currentStage);
+            this.loadImage(this.currentStageNode);
         });
 
         document.getElementById('btn-img-next').addEventListener('click', () => {
@@ -746,129 +410,59 @@ const Game = {
                 window.App.showNotification("Cannot change picture after starting the timer.", "warning");
                 return;
             }
-            const images = this.stageImages[this.currentStage];
+            const images = this.stageImages[this.currentStageNode];
             let maxCount = images.length;
-            if (this.currentStage >= 1 && this.currentStage <= 3) {
-                maxCount = this.getUnlockedImageCount();
-                if (maxCount < images.length && this.currentImageIndex === maxCount - 1) {
-                    const user = window.App.currentUser;
-                    const plays = user?.stagePlays?.[this.currentStage] || 0;
-                    const requiredPlays = maxCount * 6;
-                    const remaining = requiredPlays - plays;
-                    const s = remaining > 1 ? 's' : '';
-                    window.App.showNotification(`Next picture unlocks in ${remaining} more session${s}! 😄`, "warning");
-                }
-            }
             this.currentImageIndex = (this.currentImageIndex + 1) % maxCount;
-            this.loadImage(this.currentStage);
+            this.loadImage(this.currentStageNode);
         });
     },
 
-    updateNavButtonsVisibility() {
-        const prevBtn = document.getElementById('btn-img-prev');
-        const nextBtn = document.getElementById('btn-img-next');
-        if (this.hasStartedCurrentSession) {
-            prevBtn.style.display = 'none';
-            nextBtn.style.display = 'none';
-        } else {
-            prevBtn.style.display = 'block';
-            nextBtn.style.display = 'block';
-        }
-    },
-
-    startStage(stageNum) {
-        this.currentStage = stageNum;
-        this.currentImageIndex = 0; // Reset image to first one when entering a stage
-        if (stageNum >= 1 && stageNum <= 3) {
-            // Ensure if we had a stored index that was higher than allowed, we don't crash
-            const maxCount = this.getUnlockedImageCount();
-            this.currentImageIndex = Math.min(this.currentImageIndex, maxCount - 1);
-        }
+    startStage(nodeName) {
+        this.currentStageNode = nodeName;
+        this.currentImageIndex = 0;
+        document.getElementById('current-stage-title').innerText = "Stage " + nodeName;
+        this.timeLeft = 600;
         this.hasStartedCurrentSession = false;
-        
+
         const user = window.App.currentUser;
-
-        if (user) {
-            user.currentMapNode = stageNum;
-            if (window.Progress) window.Progress.saveUser();
-        }
-
-        // Migrate legacy single session if present
         if (user && user.savedSession) {
-            user.savedSessions = user.savedSessions || {};
-            user.savedSessions[1] = user.savedSession;
-            delete user.savedSession;
-        }
-
-        if (user && user.savedSessions && user.savedSessions[stageNum]) {
-            const saved = user.savedSessions[stageNum];
             const now = new Date().getTime();
             const twelveHours = 12 * 60 * 60 * 1000;
-            if (now - saved.timestamp < twelveHours) {
-                this.timeLeft = saved.timeLeft;
-                window.App.showNotification(`Resuming saved Stage ${stageNum} session!`, "success");
-            } else {
-                this.timeLeft = 600;
-                window.App.showNotification("Saved session expired (>12 hours). Restarting!", "warning");
+            if (now - user.savedSession.timestamp < twelveHours) {
+                this.timeLeft = user.savedSession.timeLeft;
+                window.App.showNotification("Resumed from previous save!", "success");
             }
-            delete user.savedSessions[stageNum];
+            delete user.savedSession;
             if (window.Progress) window.Progress.saveUser();
-        } else {
-            this.timeLeft = 600; // 10 minutes default
         }
-        
+
         this.updateTimerDisplay();
-
-        document.getElementById('current-stage-title').innerText = `Stage ${stageNum}`;
-        document.getElementById('btn-toggle-timer').innerText = "▶";
-
-        this.loadImage(stageNum);
-
-        // Particles removed as requested
-
+        this.loadImage(nodeName);
         window.App.showScreen('screen-game');
     },
 
-    loadImage(stageNum) {
-        const images = this.stageImages[stageNum] || this.stageImages[1];
+    loadImage(nodeName) {
+        const images = this.stageImages[nodeName] || this.stageImages['1A'];
         const imgPath = images[this.currentImageIndex];
         const gameImageEl = document.getElementById('game-image');
         
         gameImageEl.src = imgPath;
 
-        // Force exactly 4.0 cm physical separation for Stage 1 images
-        if (stageNum === 1 && this.stage1Ratios[imgPath]) {
-            const ratio = this.stage1Ratios[imgPath];
-            // Use calibrated pixels per cm (fallback to standard CSS cm if none)
+        let cmValue = 4.0;
+        if (nodeName.startsWith('2')) cmValue = 5.0;
+        if (nodeName.startsWith('3')) cmValue = 6.0;
+
+        const ratios = this.stageRatios[nodeName];
+        if (ratios && ratios[imgPath]) {
+            const ratio = ratios[imgPath];
             const ppcm = window.App.pixelsPerCm || 37.795;
-            const targetWidthPx = (4.0 * ppcm) / ratio;
-            gameImageEl.style.width = targetWidthPx + 'px';
-            gameImageEl.style.height = 'auto';
-            // Override max-width/max-height to prevent CSS from squishing it smaller than 4cm
-            gameImageEl.style.maxWidth = 'none';
-            gameImageEl.style.maxHeight = 'none';
-            // Disable object-fit since we are explicitly sizing the image mathematically
-            gameImageEl.style.objectFit = 'fill';
-        } else if (stageNum === 2 && this.stage2Ratios[imgPath]) {
-            const ratio = this.stage2Ratios[imgPath];
-            const ppcm = window.App.pixelsPerCm || 37.795;
-            const targetWidthPx = (5.0 * ppcm) / ratio;
-            gameImageEl.style.width = targetWidthPx + 'px';
-            gameImageEl.style.height = 'auto';
-            gameImageEl.style.maxWidth = 'none';
-            gameImageEl.style.maxHeight = 'none';
-            gameImageEl.style.objectFit = 'fill';
-        } else if (stageNum === 3 && this.stage3Ratios[imgPath]) {
-            const ratio = this.stage3Ratios[imgPath];
-            const ppcm = window.App.pixelsPerCm || 37.795;
-            const targetWidthPx = (6.0 * ppcm) / ratio;
+            const targetWidthPx = (cmValue * ppcm) / ratio;
             gameImageEl.style.width = targetWidthPx + 'px';
             gameImageEl.style.height = 'auto';
             gameImageEl.style.maxWidth = 'none';
             gameImageEl.style.maxHeight = 'none';
             gameImageEl.style.objectFit = 'fill';
         } else {
-            // Revert back to standard sizing for other stages
             gameImageEl.style.width = '';
             gameImageEl.style.height = '';
             gameImageEl.style.maxWidth = '';
@@ -877,615 +471,92 @@ const Game = {
         }
     },
 
+    stopGame() {
+        this.pauseTimer();
+        this.isPlaying = false;
+        document.getElementById('screen-game').classList.remove('focus-mode');
+    },
+
     startTimer() {
-        try {
-            const isPortrait = window.innerHeight > window.innerWidth;
-            if (isPortrait) {
-                document.getElementById('rotate-overlay').style.display = 'flex';
-                this.wasAutoPaused = true;
-                return;
+        if (this.isPlaying) return;
+        this.isPlaying = true;
+        this.hasStartedCurrentSession = true;
+        document.getElementById('screen-game').classList.add('focus-mode');
+        this.resetUITimer();
+
+        this.timerInterval = setInterval(() => {
+            this.timeLeft--;
+            this.updateTimerDisplay();
+
+            if (this.timeLeft <= 0) {
+                this.pauseTimer();
+                this.completeSession();
             }
-
-            if (this.timeLeft === 600) {
-                window.Progress.recordPlayCount(this.currentStage);
-            }
-            this.currentStintStartTime = new Date().getTime();
-
-            this.isPlaying = true;
-            this.hasStartedCurrentSession = true;
-            this.updateNavButtonsVisibility();
-            this.resetUITimer();
-            this.timerInterval = setInterval(() => {
-                this.timeLeft--;
-                this.updateTimerDisplay();
-
-                if (this.timeLeft <= 0) {
-                    this.onSessionComplete();
-                }
-            }, 1000);
-        } catch (err) {
-            alert("Error in startTimer: " + err.message);
-            console.error(err);
-        }
+        }, 1000);
     },
 
     pauseTimer() {
-        if (this.isPlaying && this.currentStintStartTime) {
-            const stintMs = new Date().getTime() - this.currentStintStartTime;
-            const durationMins = stintMs / 1000 / 60;
-            if (window.Progress) window.Progress.recordTimeSpent(durationMins, this.currentStage);
-            this.currentStintStartTime = null;
-        }
-
         this.isPlaying = false;
-        if (this.timerInterval) clearInterval(this.timerInterval);
-        
-        // Show UI when paused
-        if (this.uiTimeout) clearTimeout(this.uiTimeout);
-        document.querySelectorAll('.game-ui').forEach(ui => ui.classList.remove('ui-hidden'));
-        
-        const user = window.App.currentUser;
-        if (user && this.timeLeft > 0 && this.timeLeft < 600) {
-            user.savedSessions = user.savedSessions || {};
-            user.savedSessions[this.currentStage] = {
-                timeLeft: this.timeLeft,
-                timestamp: new Date().getTime()
-            };
-            if (window.Progress) window.Progress.saveUser();
-        }
+        clearInterval(this.timerInterval);
+        document.getElementById('screen-game').classList.remove('focus-mode');
+        document.getElementById('btn-toggle-timer').innerText = "▶";
     },
 
     updateTimerDisplay() {
         const mins = Math.floor(this.timeLeft / 60);
         const secs = this.timeLeft % 60;
-        document.getElementById('timer-display').innerText =
-            `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        
-        this.updateNavButtonsVisibility();
-    },
-
-    onSessionComplete() {
-        this.pauseTimer();
-        const user = window.App.currentUser;
-        if (user && user.savedSessions) {
-            delete user.savedSessions[this.currentStage];
-            if (window.Progress) window.Progress.saveUser();
-        }
-        
-        const animals = [
-            'reward_horse.png', 'reward_cow.png', 'reward_chicken.png', 
-            'reward_duck.png', 'reward_hamster.png', 'reward_capybara.png', 
-            'reward_squirrel.png', 'reward_penguin.png', 'reward_farmers.png'
-        ];
-        const randomAnimal = animals[Math.floor(Math.random() * animals.length)];
-        
-        const modal = document.getElementById('reward-modal');
-        const animalImg = document.getElementById('reward-animal');
-        
-        if (modal && animalImg && window.Confetti) {
-            animalImg.src = randomAnimal;
-            modal.classList.remove('hidden');
-            window.Confetti.start();
-        } else {
-            // Fallback if HTML is cached and missing the modal
-            window.App.showNotification("Great job! Session completed.", "success");
-            setTimeout(() => {
-                window.App.showNotification("Please take an eye break and rest your eyes.", "warning");
-            }, 3000);
-            window.App.showScreen('screen-map');
-        }
-    },
-
-    stopGame() {
-        this.pauseTimer();
-        this.isPlaying = false;
-        // Turn off focus mode
-        document.getElementById('screen-game').classList.remove('focus-mode');
+        document.getElementById('timer-display').innerText = 
+            \`\${mins.toString().padStart(2, '0')}:\${secs.toString().padStart(2, '0')}\`;
     },
 
     resetUITimer() {
         const uis = document.querySelectorAll('.game-ui');
-        uis.forEach(ui => ui.classList.remove('ui-hidden'));
-
+        uis.forEach(ui => ui.style.opacity = '1');
+        
         if (this.uiTimeout) clearTimeout(this.uiTimeout);
-
+        
         if (this.isPlaying) {
             this.uiTimeout = setTimeout(() => {
-                uis.forEach(ui => ui.classList.add('ui-hidden'));
+                uis.forEach(ui => ui.style.opacity = '0');
             }, 3000);
         }
-    }
-};
-
-window.Auth = Auth;
-window.Progress = Progress;
-window.Map = Map;
-window.Game = Game;
-
-const LOCAL_STORAGE_KEY = 'stereogram_app_data';
-
-const distContent = `
-<p><strong>Purpose:</strong> To improve relaxation of your eyes (ie. Divergence).</p>
-<ol style="margin-left: 20px; font-size: 1.1rem; line-height: 1.6;">
-    <li>Hold the card with the images facing you at arm's length at eye level.<br><br></li>
-    <li>Focus on a central object in the distance (at least 3m away) just above the card (or looking through the transparent card) while being aware of the images on your card.<br><br></li>
-    <li>Concentrate on this distant object until you are aware of a third fused (merged) image in the centre of the two images on your card. It is very important at this stage of the exercise NOT to look directly at the card or the exercise will not work - look continuously at the distant object.<br><br></li>
-    <li>You may notice 4 images at times - you can adjust the distance of the card slightly until you see the fused image.<br><br></li>
-    <li>4 images should become 3 images with the middle (fused) image appearing complete.<br><br></li>
-    <li>Once the middle image appears, try to keep the third image in focus for <u>10 seconds</u>. Do NOT look at the middle complete image as it will disappear immediately if you do. If the third image disappears, stop counting and refocus to get the third image to appear again.<br><br></li>
-    <li>Repeat.<br><br></li>
-</ol>
-<p><strong>Frequency:</strong> Perform for 10 to 15 minutes a day. This can be broken up into 2 or 3 sessions.</p>
-<div style="background: #fff3cd; padding: 15px; border-radius: 10px; border-left: 5px solid #ffc107; margin-top: 20px;">
-    <strong>At the end of your exercise session</strong> it is important to relax your eyes by looking out of a window at a faraway object OR by closing your eyes for a few minutes. <strong>Do not proceed to do near work immediately.</strong>
-</div>
-`;
-
-const nearContent = `
-<p><strong>Purpose:</strong> To improve control of your eyes and encourage convergence.</p>
-<ol style="margin-left: 20px; font-size: 1.1rem; line-height: 1.6;">
-    <li>Hold the card with the images facing you at arm's length at eye level.<br><br></li>
-    <li>Place a pen in front of the card and in between the two images.<br><br></li>
-    <li>Keep looking at the pen constantly. It is very important at this stage of the exercise NOT to look directly at the card or the exercise will not work - look continuously at the pen.<br><br></li>
-    <li>Whilst looking at the pen you should be aware of both the images becoming double, therefore you should see 4 images.<br><br></li>
-    <li>4 images should become 3 images with the middle (fused) image appearing complete.<br><br></li>
-    <li>Once the middle image appears, stop moving the pen and try to keep the third image in focus for <u>10 seconds</u>. Do NOT look at the middle complete image as it will disappear immediately if you do. If the third image disappears, stop counting and refocus to get the third image to appear again.<br><br></li>
-    <li>Repeat.<br><br></li>
-</ol>
-<p><strong>Frequency:</strong> Perform for 10 to 15 minutes a day. This can be broken up into 2 or 3 sessions.</p>
-<div style="background: #fff3cd; padding: 15px; border-radius: 10px; border-left: 5px solid #ffc107; margin-top: 20px;">
-    <strong>At the end of your exercise session</strong> it is important to relax your eyes by looking out of a window at a faraway object OR by closing your eyes for a few minutes. <strong>Do not proceed to do near work immediately.</strong>
-</div>
-`;
-
-const App = {
-    currentUser: null,
-    notificationTimeout: null,
-    pixelsPerCm: 37.795,
-
-    init() {
-        const savedPpcm = localStorage.getItem('stereogram_calibration_ppcm');
-        if (savedPpcm) {
-            this.pixelsPerCm = parseFloat(savedPpcm);
-        }
-        
-        Auth.init();
-        Map.init();
-        Game.init();
-        Auth.checkSession();
-
-        document.addEventListener("visibilitychange", () => {
-            const audio = document.getElementById('bgm-audio');
-            if (document.hidden) {
-                if (audio && !audio.paused) {
-                    audio.pause();
-                    window.App.bgmWasPlaying = true;
-                }
-                
-                if (window.Game && window.Game.isPlaying) {
-                    window.Game.pauseTimer();
-                    const btn = document.getElementById('btn-toggle-timer');
-                    if (btn) btn.innerText = "▶";
-                    window.Game.wasAutoPausedByVisibility = true;
-                }
-            } else {
-                if (window.App.bgmWasPlaying && audio && audio.paused) {
-                    audio.play().catch(e => console.log('Audio resume blocked', e));
-                    window.App.bgmWasPlaying = false;
-                }
-                
-                if (window.Game && window.Game.wasAutoPausedByVisibility) {
-                    window.Game.startTimer();
-                    const btn = document.getElementById('btn-toggle-timer');
-                    if (btn) btn.innerText = "⏸";
-                    window.Game.wasAutoPausedByVisibility = false;
-                }
-            }
-        });
     },
 
-    showScreen(screenId) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(screenId).classList.add('active');
-        if (screenId === 'screen-game') {
-            Game.resizeCanvas();
-        } else if (screenId === 'screen-map') {
-            requestAnimationFrame(() => {
-                setTimeout(() => {
-                    if (window.Map) window.Map.updateUI();
-                }, 50);
-            });
-        }
-    },
+    completeSession() {
+        window.App.showNotification("Session Complete! Great Job!", "success");
+        this.stopGame();
 
-    showNotification(message, type = "success") {
-        const notif = document.getElementById('notification');
-        const notifMsg = document.getElementById('notification-message');
-
-        notifMsg.innerText = message;
-        notif.className = `notification ${type}`;
-        notif.classList.remove('hidden');
-
-        if (this.notificationTimeout) clearTimeout(this.notificationTimeout);
-
-        this.notificationTimeout = setTimeout(() => {
-            notif.classList.add('hidden');
-        }, 4000);
-    }
-};
-
-const ProgressReport = {
-    currentDate: new Date(),
-
-    init() {
-        this.bindEvents();
-    },
-
-    bindEvents() {
-        document.getElementById('btn-progress').addEventListener('click', () => {
-            window.App.showScreen('screen-progress');
-            this.render();
-        });
-
-        document.getElementById('btn-back-map-from-progress').addEventListener('click', () => {
-            window.App.showScreen('screen-map');
-        });
-
-        document.getElementById('tab-calendar').addEventListener('click', () => {
-            this.switchTab('calendar');
-        });
-        document.getElementById('tab-summary').addEventListener('click', () => {
-            this.switchTab('summary');
-        });
-
-        document.getElementById('btn-prev-month').addEventListener('click', () => {
-            this.currentDate.setMonth(this.currentDate.getMonth() - 1);
-            this.renderCalendar();
-            this.renderSummary();
-        });
-        document.getElementById('btn-next-month').addEventListener('click', () => {
-            this.currentDate.setMonth(this.currentDate.getMonth() + 1);
-            this.renderCalendar();
-            this.renderSummary();
-        });
-    },
-
-    switchTab(tab) {
-        document.getElementById('tab-calendar').classList.toggle('active', tab === 'calendar');
-        document.getElementById('tab-summary').classList.toggle('active', tab === 'summary');
-        
-        document.getElementById('view-calendar').classList.toggle('hidden', tab !== 'calendar');
-        document.getElementById('view-summary').classList.toggle('hidden', tab !== 'summary');
-        document.getElementById('view-calendar').classList.toggle('active', tab === 'calendar');
-        document.getElementById('view-summary').classList.toggle('active', tab === 'summary');
-
-        if (tab === 'summary') {
-            this.renderSummary();
-        } else {
-            this.renderCalendar();
-        }
-    },
-
-    render() {
-        this.currentDate = new Date();
-        this.renderCalendar();
-        this.renderSummary();
-    },
-
-    getSessions() {
         const user = window.App.currentUser;
-        if (!user) return [];
-        
-        if (!user.sessionHistory) {
-            user.sessionHistory = [];
-        }
+        if (!user) return;
 
-        // Legacy backfill removed to prevent password override from filling the calendar.
-        // The progress report will now only record when actually used.
+        const now = new Date();
+        const dateStr = now.toDateString();
 
-        return user.sessionHistory;
-    },
+        user.sessionHistory = user.sessionHistory || [];
+        const lastSession = user.sessionHistory[user.sessionHistory.length - 1];
 
-    renderCalendar() {
-        const year = this.currentDate.getFullYear();
-        const month = this.currentDate.getMonth();
-        
-        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        document.getElementById('calendar-month-year').innerText = `${monthNames[month]} ${year}`;
-
-        const grid = document.querySelector('.calendar-grid');
-        Array.from(grid.children).forEach(child => {
-            if (!child.classList.contains('day-name')) {
-                grid.removeChild(child);
-            }
+        user.sessionHistory.push({
+            dateStr: dateStr,
+            timestamp: now.getTime(),
+            durationMins: 10,
+            stage: this.currentStageNode
         });
 
-        const firstDay = new Date(year, month, 1).getDay();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-        for (let i = 0; i < firstDay; i++) {
-            const empty = document.createElement('div');
-            empty.className = 'calendar-day empty';
-            grid.appendChild(empty);
+        // Add streak logic (max 1 per day)
+        if (!alreadyDoneToday) {
+            user.streak = (user.streak || 0) + 1;
         }
 
-        const sessions = this.getSessions();
-        const sessionsByDate = {};
-        sessions.forEach(s => {
-            const dStr = new Date(s.timestamp).toDateString();
-            if (!sessionsByDate[dStr]) sessionsByDate[dStr] = [];
-            sessionsByDate[dStr].push(s);
-        });
-
-        for (let i = 1; i <= daysInMonth; i++) {
-            const dayDiv = document.createElement('div');
-            dayDiv.className = 'calendar-day';
-            dayDiv.innerText = i;
-
-            const iterDate = new Date(year, month, i);
-            const dStr = iterDate.toDateString();
-
-            if (sessionsByDate[dStr] && sessionsByDate[dStr].length > 0) {
-                dayDiv.classList.add('active-day');
-            }
-
-            dayDiv.addEventListener('click', () => {
-                document.querySelectorAll('.calendar-day').forEach(el => el.classList.remove('selected'));
-                dayDiv.classList.add('selected');
-                this.showDayDetails(iterDate, sessionsByDate[dStr] || []);
-            });
-
-            grid.appendChild(dayDiv);
-        }
-
-        document.getElementById('calendar-day-details').classList.add('hidden');
+        if (window.Progress) window.Progress.saveUser();
+        window.App.showMapScreen();
     },
 
-    showDayDetails(date, daySessions) {
-        document.getElementById('calendar-day-details').classList.remove('hidden');
-        document.getElementById('detail-date').innerText = date.toDateString();
-        document.getElementById('detail-times').innerText = daySessions.length;
-        
-        let totalMins = daySessions.reduce((sum, s) => sum + (s.durationMins || 10), 0);
-        document.getElementById('detail-duration').innerText = `${totalMins.toFixed(1)} mins`;
-
-        let s1 = daySessions.filter(s => (s.stageNum || 1) === 1).reduce((sum, s) => sum + (s.durationMins || 10), 0);
-        let s2 = daySessions.filter(s => s.stageNum === 2).reduce((sum, s) => sum + (s.durationMins || 10), 0);
-        let s3 = daySessions.filter(s => s.stageNum === 3).reduce((sum, s) => sum + (s.durationMins || 10), 0);
-
-        document.getElementById('detail-duration-s1').innerText = `${s1.toFixed(1)} mins`;
-        document.getElementById('detail-duration-s2').innerText = `${s2.toFixed(1)} mins`;
-        document.getElementById('detail-duration-s3').innerText = `${s3.toFixed(1)} mins`;
-    },
-
-    renderSummary() {
-        const sessions = this.getSessions();
-        const year = this.currentDate.getFullYear();
-        const month = this.currentDate.getMonth();
-        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        const monthName = monthNames[month];
-        
-        let monthCount = 0;
-        let totalMins = 0;
-
-        sessions.forEach(s => {
-            const d = new Date(s.timestamp);
-            if (d.getMonth() === month && d.getFullYear() === year) {
-                monthCount++;
-                totalMins += (s.durationMins || 10);
-            }
-        });
-
-        // 4.33 weeks in a month on average
-        const avgWeekly = (monthCount / 4.33).toFixed(1);
-        const avgDuration = monthCount > 0 ? (totalMins / monthCount).toFixed(1) : "0.0";
-
-        document.getElementById('title-stat-month').innerText = `Times Done For The Month Of ${monthName}`;
-        document.getElementById('stat-month').innerText = monthCount;
-
-
-        document.getElementById('title-stat-duration').innerText = `Average Duration For ${monthName}`;
-        document.getElementById('stat-freq').innerText = `${avgDuration} mins`;
+    resizeCanvas() {
+        // Unused in current logic
     }
 };
 
-const Menu = {
-    init() {
-        this.bindEvents();
-    },
-
-    bindEvents() {
-        document.getElementById('btn-menu-instructions').addEventListener('click', () => {
-            window.App.showScreen('screen-instructions');
-        });
-
-        document.getElementById('btn-menu-start').addEventListener('click', () => {
-            window.App.showScreen('screen-map');
-        });
-
-        document.getElementById('btn-back-main-menu').addEventListener('click', () => {
-            window.App.showScreen('screen-main-menu');
-        });
-
-        document.getElementById('btn-back-main-menu-from-map').addEventListener('click', () => {
-            window.App.showScreen('screen-main-menu');
-        });
-
-        document.getElementById('btn-inst-dist').addEventListener('click', () => {
-            document.getElementById('written-inst-title').innerText = "Cat Stereogram Exercise (Distance)";
-            document.getElementById('written-inst-content').innerHTML = distContent;
-            window.App.showScreen('screen-written-instruction');
-        });
-
-        document.getElementById('btn-inst-near').addEventListener('click', () => {
-            document.getElementById('written-inst-title').innerText = "Cat Stereogram Exercise (Near)";
-            document.getElementById('written-inst-content').innerHTML = nearContent;
-            window.App.showScreen('screen-written-instruction');
-        });
-
-        document.getElementById('btn-back-instructions').addEventListener('click', () => {
-            window.App.showScreen('screen-instructions');
-        });
-
-        const btnCalibrate = document.getElementById('btn-menu-calibrate');
-        if (btnCalibrate) {
-            btnCalibrate.addEventListener('click', () => {
-                window.App.showScreen('screen-calibration');
-                // Show instructions modal
-                const calModal = document.getElementById('calibration-modal');
-                if (calModal) calModal.classList.remove('hidden');
-                
-                const card = document.getElementById('calibration-card');
-                window.App.currentCalibrationWidth = 8.56 * window.App.pixelsPerCm;
-                card.style.width = window.App.currentCalibrationWidth + 'px';
-            });
-        }
-        
-        const btnAlarm = document.getElementById('btn-menu-alarm');
-        const alarmModal = document.getElementById('alarm-modal');
-        if (btnAlarm && alarmModal) {
-            btnAlarm.addEventListener('click', () => {
-                alarmModal.classList.remove('hidden');
-            });
-            
-            document.getElementById('btn-cancel-alarm').addEventListener('click', () => {
-                alarmModal.classList.add('hidden');
-            });
-
-            document.getElementById('btn-confirm-alarm').addEventListener('click', () => {
-                const timeVal = document.getElementById('alarm-time').value; // "HH:MM"
-                const freqVal = document.getElementById('alarm-freq').value; // "DAILY" etc
-                const textVal = document.getElementById('alarm-text').value || "Eye Gym Exercise";
-                
-                const now = new Date();
-                const [hours, minutes] = timeVal.split(':');
-                
-                let alarmDate = new Date();
-                alarmDate.setHours(parseInt(hours, 10));
-                alarmDate.setMinutes(parseInt(minutes, 10));
-                alarmDate.setSeconds(0);
-                
-                // If the selected time is strictly in the past for today, schedule for tomorrow
-                if (alarmDate <= now) {
-                    alarmDate.setDate(alarmDate.getDate() + 1);
-                }
-                
-                const formatICSDate = (date) => {
-                    const pad = (n) => n < 10 ? '0' + n : n;
-                    return date.getUTCFullYear() + 
-                           pad(date.getUTCMonth() + 1) + 
-                           pad(date.getUTCDate()) + 'T' + 
-                           pad(date.getUTCHours()) + 
-                           pad(date.getUTCMinutes()) + 
-                           pad(date.getUTCSeconds()) + 'Z';
-                };
-                
-                const rruleLine = freqVal === "ONCE" ? "" : `\nRRULE:FREQ=${freqVal}`;
-                
-                const icsContent = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//SNEC//Eye Gym Exercise//EN
-BEGIN:VEVENT
-UID:${now.getTime()}@eyegym.app
-DTSTAMP:${formatICSDate(now)}
-DTSTART:${formatICSDate(alarmDate)}${rruleLine}
-SUMMARY:Eye Gym Exercise
-DESCRIPTION:${textVal}
-BEGIN:VALARM
-TRIGGER:-PT0M
-ACTION:DISPLAY
-DESCRIPTION:Reminder
-END:VALARM
-END:VEVENT
-END:VCALENDAR`;
-                
-                const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = 'Eye_Gym_Reminder.ics';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                
-                alarmModal.classList.add('hidden');
-                window.App.showNotification("Calendar reminder file generated! Please open it to add to your calendar.", "success");
-            });
-        }
-        
-        const btnCloseCalModal = document.getElementById('btn-close-calibration-modal');
-        if (btnCloseCalModal) {
-            btnCloseCalModal.addEventListener('click', () => {
-                document.getElementById('calibration-modal').classList.add('hidden');
-            });
-        }
-
-        const btnBackCalibrate = document.getElementById('btn-back-calibrate');
-        if (btnBackCalibrate) {
-            btnBackCalibrate.addEventListener('click', () => {
-                window.App.showScreen('screen-main-menu');
-            });
-        }
-
-        // Pinch to zoom logic for calibration
-        const calArea = document.getElementById('calibration-content-area');
-        const calCard = document.getElementById('calibration-card');
-        
-        let initialPinchDistance = null;
-        let initialCardWidth = null;
-
-        if (calArea) {
-            calArea.addEventListener('touchstart', (e) => {
-                if (e.touches.length === 2) {
-                    initialPinchDistance = Math.hypot(
-                        e.touches[0].clientX - e.touches[1].clientX,
-                        e.touches[0].clientY - e.touches[1].clientY
-                    );
-                    initialCardWidth = window.App.currentCalibrationWidth;
-                }
-            });
-
-            calArea.addEventListener('touchmove', (e) => {
-                if (e.touches.length === 2 && initialPinchDistance !== null) {
-                    // Prevent default scrolling during pinch
-                    e.preventDefault();
-                    const currentDistance = Math.hypot(
-                        e.touches[0].clientX - e.touches[1].clientX,
-                        e.touches[0].clientY - e.touches[1].clientY
-                    );
-                    const scale = currentDistance / initialPinchDistance;
-                    let newWidth = initialCardWidth * scale;
-                    // Clamp width logically
-                    if (newWidth < 50) newWidth = 50;
-                    if (newWidth > window.innerWidth * 2) newWidth = window.innerWidth * 2;
-                    
-                    window.App.currentCalibrationWidth = newWidth;
-                    calCard.style.width = newWidth + 'px';
-                }
-            }, { passive: false });
-
-            calArea.addEventListener('touchend', (e) => {
-                if (e.touches.length < 2) {
-                    initialPinchDistance = null;
-                }
-            });
-            
-            calArea.addEventListener('touchcancel', (e) => {
-                initialPinchDistance = null;
-            });
-        }
-
-        const btnSaveCalibration = document.getElementById('btn-save-calibration');
-        if (btnSaveCalibration) {
-            btnSaveCalibration.addEventListener('click', () => {
-                const ppcm = window.App.currentCalibrationWidth / 8.56;
-                window.App.pixelsPerCm = ppcm;
-                localStorage.setItem('stereogram_calibration_ppcm', ppcm);
-                window.App.showNotification("Calibration saved successfully!");
-                window.App.showScreen('screen-main-menu');
-            });
-        }
-    }
-};
+\n\n\`
 
 window.App = App;
 window.ProgressReport = ProgressReport;
@@ -1578,7 +649,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btnCloseReward.addEventListener('click', () => {
             document.getElementById('reward-modal').classList.add('hidden');
             window.Confetti.stop();
-            window.App.showScreen('screen-map');
+            window.App.showMapScreen();
         });
     }
 });

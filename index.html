@@ -27,6 +27,14 @@
 <body>
     <!-- App Container -->
     <div id="app">
+        <!-- Global Rotate Overlay -->
+        <div id="rotate-overlay" style="z-index: 99999; display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center;">
+            <div class="rotate-content">
+                <span class="rotate-icon" style="font-size: 4rem;">🔄</span>
+                <h2>Please rotate your device to landscape mode!</h2>
+            </div>
+        </div>
+
         <!-- Global Background Music (Hidden) -->
         <audio id="bgm-audio" src="music/Stereogram music.mp4" loop preload="auto" style="display: none;"></audio>
 
@@ -56,6 +64,20 @@
                 <div class="modal-actions" style="justify-content: center;">
                     <button id="btn-close-calibration-modal" class="btn btn-primary">Got it!</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- End Game Hug Modal -->
+        <div id="hug-modal" class="modal hidden">
+            <div class="modal-content" style="text-align: center; background: radial-gradient(circle, #fff0f5, #ffb6c1); border: 5px solid #ff69b4;">
+                <h2 style="font-size: 2.5rem; color: #d81b60; margin-bottom: 20px;">Congratulations! 🎉</h2>
+                <div id="hug-animation-container" style="display: flex; justify-content: center; align-items: center; gap: 20px; margin: 20px 0;">
+                    <img id="hug-avatar-1" src="" style="width: 120px; height: 120px; animation: bounce 1s infinite alternate;">
+                    <span style="font-size: 3rem;">❤️</span>
+                    <img id="hug-avatar-2" src="" style="width: 120px; height: 120px; animation: bounce 1s infinite alternate-reverse;">
+                </div>
+                <p style="font-size: 1.2rem; font-weight: bold; color: #333;">You have reached the final goal!</p>
+                <button id="btn-close-hug" class="btn btn-primary" style="margin-top: 20px;">Yay!</button>
             </div>
         </div>
 
@@ -306,69 +328,121 @@
             </div>
         </section>
 
-        <!-- MAP SCREEN -->
-        <section id="screen-map" class="screen">
+        <!-- LEVEL 1 MAP SCREEN -->
+        <section id="screen-map-1" class="screen map-level">
             <header class="map-header">
                 <div class="header-left" style="display: flex; align-items: center; gap: 10px;">
-                    <button id="btn-back-main-menu-from-map" class="btn btn-secondary btn-small">⬅ Back</button>
-                    <h2 style="margin: 0;">Level Map 🗺️</h2>
+                    <button id="btn-back-main-menu-from-map-1" class="btn btn-secondary btn-small">⬅ Menu</button>
+                    <h2 style="margin: 0;">Farm Map 🗺️</h2>
                 </div>
                 <div class="header-center">
-                    <span id="streak-counter">🔥 Times: 0/30</span>
+                    <span id="streak-counter-1" class="streak-counter">🔥 Days: 0</span>
                 </div>
                 <div class="user-stats header-right">
-                    <div class="header-buttons-stacked">
-                        <button id="btn-progress" class="btn btn-primary btn-small">Progress</button>
-                        <button id="btn-logout" class="btn btn-small">Logout</button>
-                    </div>
+                    <button class="btn btn-primary btn-small btn-progress">Progress</button>
                 </div>
             </header>
-
-            <div class="map-container">
+            <div class="map-container landscape-map">
                 <div class="map-content">
-                    <!-- SVG path for the dotted line -->
-                    <svg class="map-path" id="map-svg" viewBox="0 0 100 200" preserveAspectRatio="none">
-                        <path id="path-line-1" d="M 28 35 C 90 45, 90 70, 50 100" fill="none" stroke="#2b2d42"
-                            stroke-width="4" stroke-dasharray="16, 8" vector-effect="non-scaling-stroke" />
-                        <path id="path-line-2" d="M 50 100 C 10 130, 10 170, 70 190" fill="none" stroke="#2b2d42"
-                            stroke-width="4" stroke-dasharray="16, 8" vector-effect="non-scaling-stroke" />
+                    <svg class="map-path" viewBox="0 0 100 100" preserveAspectRatio="none">
+                        <path id="path-line-1" d="M 15 50 Q 32 30, 50 50" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
+                        <path id="path-line-1b" d="M 50 50 Q 67 70, 85 50" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
                     </svg>
-
-                    <div class="stage-node stage-1" id="node-stage1">
-                        <span class="stage-label">Stage 1</span>
+                    <div class="stage-node node-1a" id="node-1a">
+                        <span class="stage-label">Stage 1A</span>
                         <div class="node-icon bg-farm"></div>
                     </div>
-
-                    <div class="stage-node stage-2 locked" id="node-stage2">
-                        <span class="stage-label">Stage 2</span>
-                        <div class="node-icon bg-city">
-                            <div class="lock-overlay">🔒</div>
-                        </div>
+                    <div class="stage-node node-1b locked" id="node-1b">
+                        <span class="stage-label">Stage 1B</span>
+                        <div class="node-icon bg-farm"><div class="lock-overlay">🔒</div></div>
                     </div>
-
-                    <div class="stage-node stage-3 locked" id="node-stage3">
-                        <span class="stage-label">Stage 3</span>
-                        <div class="node-icon bg-castle">
-                            <div class="lock-overlay">🔒</div>
-                        </div>
+                    <div class="stage-node node-exit1 locked" id="node-exit1">
+                        <span class="stage-label">Bus Stop</span>
+                        <div class="node-icon bg-bus"><div class="lock-overlay">🔒</div></div>
                     </div>
+                    <img id="player-avatar-1" class="player-avatar" src="avatar_cat.png" alt="Player">
+                    <img id="vehicle-bus" class="cinematic-vehicle hidden" src="bus.png" alt="Bus">
+                </div>
+            </div>
+        </section>
 
-                    <!-- The Cat avatar that moves -->
-                    <img id="player-avatar" class="player-avatar" src="avatar_cat.png" alt="Player">
+        <!-- LEVEL 2 MAP SCREEN -->
+        <section id="screen-map-2" class="screen map-level">
+            <header class="map-header">
+                <div class="header-left" style="display: flex; align-items: center; gap: 10px;">
+                    <button id="btn-back-level1" class="btn btn-secondary btn-small">⬅ Farm</button>
+                    <h2 style="margin: 0;">Sakura Road 🌸</h2>
+                </div>
+                <div class="header-center">
+                    <span id="streak-counter-2" class="streak-counter">🔥 Days: 0</span>
+                </div>
+                <div class="user-stats header-right">
+                    <button class="btn btn-primary btn-small btn-progress">Progress</button>
+                </div>
+            </header>
+            <div class="map-container landscape-map">
+                <div class="map-content">
+                    <svg class="map-path" viewBox="0 0 100 100" preserveAspectRatio="none">
+                        <path id="path-line-2" d="M 15 50 Q 32 70, 50 50" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
+                        <path id="path-line-2b" d="M 50 50 Q 67 30, 85 50" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
+                    </svg>
+                    <div class="stage-node node-2a" id="node-2a">
+                        <span class="stage-label">Stage 2A</span>
+                        <div class="node-icon bg-sakura"></div>
+                    </div>
+                    <div class="stage-node node-2b locked" id="node-2b">
+                        <span class="stage-label">Stage 2B</span>
+                        <div class="node-icon bg-sakura"><div class="lock-overlay">🔒</div></div>
+                    </div>
+                    <div class="stage-node node-exit2 locked" id="node-exit2">
+                        <span class="stage-label">City Gate</span>
+                        <div class="node-icon bg-gate"><div class="lock-overlay">🔒</div></div>
+                    </div>
+                    <img id="player-avatar-2" class="player-avatar" src="avatar_cat.png" alt="Player">
+                    <img id="vehicle-taxi" class="cinematic-vehicle hidden" src="taxi.png" alt="Taxi">
+                </div>
+            </div>
+        </section>
+
+        <!-- LEVEL 3 MAP SCREEN -->
+        <section id="screen-map-3" class="screen map-level">
+            <header class="map-header">
+                <div class="header-left" style="display: flex; align-items: center; gap: 10px;">
+                    <button id="btn-back-level2" class="btn btn-secondary btn-small">⬅ Sakura</button>
+                    <h2 style="margin: 0;">City Center 🏙️</h2>
+                </div>
+                <div class="header-center">
+                    <span id="streak-counter-3" class="streak-counter">🔥 Days: 0</span>
+                </div>
+                <div class="user-stats header-right">
+                    <button class="btn btn-primary btn-small btn-progress">Progress</button>
+                </div>
+            </header>
+            <div class="map-container landscape-map">
+                <div class="map-content">
+                    <svg class="map-path" viewBox="0 0 100 100" preserveAspectRatio="none">
+                        <path id="path-line-3" d="M 15 50 Q 32 30, 50 50" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
+                        <path id="path-line-3b" d="M 50 50 Q 67 70, 85 50" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
+                    </svg>
+                    <div class="stage-node node-3a" id="node-3a">
+                        <span class="stage-label">Stage 3A</span>
+                        <div class="node-icon bg-city"></div>
+                    </div>
+                    <div class="stage-node node-3b locked" id="node-3b">
+                        <span class="stage-label">Stage 3B</span>
+                        <div class="node-icon bg-city"><div class="lock-overlay">🔒</div></div>
+                    </div>
+                    <div class="stage-node node-exit3 locked" id="node-exit3">
+                        <span class="stage-label">Final Goal</span>
+                        <div class="node-icon bg-castle"><div class="lock-overlay">🔒</div></div>
+                    </div>
+                    <img id="player-avatar-3" class="player-avatar" src="avatar_cat.png" alt="Player">
                 </div>
             </div>
         </section>
 
         <!-- GAME SCREEN -->
         <section id="screen-game" class="screen" style="background: #ffffff;">
-
-            <div id="rotate-overlay" style="z-index: 9999; display: none;">
-                <div class="rotate-content">
-                    <span class="rotate-icon">🔄</span>
-                    <h2>Please turn the device to landscape mode to start</h2>
-                    <button id="btn-back-rotate" class="btn btn-secondary" style="margin-top: 20px; font-size: 1.2rem; padding: 10px 20px; pointer-events: auto;">⬅ Back to Map</button>
-                </div>
-            </div>
 
             <header class="game-header game-ui">
                 <button id="btn-back-map" class="btn btn-small btn-back" style="flex: 1;">⬅ Back</button>
