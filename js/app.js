@@ -372,28 +372,7 @@ const Map = {
             });
         });
 
-        document.querySelectorAll('.btn-show-progress').forEach(btn => {
-            btn.addEventListener('click', async (e) => {
-                const user = window.App.currentUser;
-                if (!user || !user.stagePlays) return;
 
-                let targetMap = 1;
-                if (user.stagePlays[3] > 0 || user.stagePlays[2] >= 14) {
-                    targetMap = 3;
-                } else if (user.stagePlays[2] > 0 || user.stagePlays[1] >= 14) {
-                    targetMap = 2;
-                }
-
-                window.App.showScreen('screen-map-' + targetMap);
-
-                if (!user.lastVisitedNode) user.lastVisitedNode = {};
-                user.lastVisitedNode[targetMap] = 'PROGRESS';
-                if (window.Progress) window.Progress.saveUser();
-                
-                // Animate to progress
-                await window.Map.animateAvatarProgress(targetMap, 0, user.stagePlays[targetMap] || 0);
-            });
-        });
 
         // Stage clicks
         document.getElementById('node-1a').addEventListener('click', () => this.handleNodeClick('1A', 1, 0));
