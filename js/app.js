@@ -1697,6 +1697,7 @@ END:VCALENDAR`;
 window.App = App;
 window.ProgressReport = ProgressReport;
 window.Menu = Menu;
+window.Progress = Progress;
 
 const Confetti = {
     particles: [],
