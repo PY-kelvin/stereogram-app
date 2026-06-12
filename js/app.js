@@ -341,6 +341,20 @@ const Map = {
             });
         });
 
+        document.querySelectorAll('.btn-show-progress').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const mapId = parseInt(e.target.getAttribute('data-map'));
+                const user = window.App.currentUser;
+                if (user && user.stagePlays) {
+                    if (!user.lastVisitedNode) user.lastVisitedNode = {};
+                    user.lastVisitedNode[mapId] = 'PROGRESS';
+                    window.App.saveUser(user);
+                    // Animate to progress
+                    await window.Map.animateAvatarProgress(mapId, 0, user.stagePlays[mapId] || 0);
+                }
+            });
+        });
+
         // Stage clicks
         document.getElementById('node-1a').addEventListener('click', () => this.handleNodeClick('1A', 1, 0));
         document.getElementById('node-1b').addEventListener('click', () => this.handleNodeClick('1B', 1, 7));
@@ -397,6 +411,13 @@ const Map = {
             return;
         }
         
+        if (!user.lastVisitedNode) user.lastVisitedNode = {};
+        user.lastVisitedNode[level] = nodeName;
+        window.App.saveUser(user);
+        
+        // Move avatar to node instantly (could animate later if needed)
+        this.positionAvatar();
+
         // Passed checks, start game
         window.Game.startStage(nodeName);
     },
@@ -405,6 +426,11 @@ const Map = {
         const user = window.App.currentUser;
         let reqStreak = exitNum * 14; 
         
+        if (!user.lastVisitedNode) user.lastVisitedNode = {};
+        user.lastVisitedNode[exitNum] = 'exit' + exitNum;
+        window.App.saveUser(user);
+        this.positionAvatar();
+
         if (this.hasPasswordBypass(reqStreak)) {
             if (exitNum === 3) {
                 window.App.showNotification("You have reached the final goal! Congratulations!", "success");
@@ -599,29 +625,72 @@ const Map = {
 
             av.style.opacity = '1';
 
-            let counts = user.stagePlays[l];
-            if (mapOverride === l && countsOverride !== null) counts = countsOverride;
-
-            let ratio = this.getMapPosition(counts);
-            let pathId = ratio < 0.5 ? 'path-line-' + l : 'path-line-' + l + 'b';
-            let localR = ratio < 0.5 ? ratio * 2 : (ratio - 0.5) * 2;
-            if (ratio === 1) { pathId = 'path-line-' + l + 'b'; localR = 1; }
-              
-            const path = document.getElementById(pathId);
-            if (path) {
-                try {
-                    const pt = path.getPointAtLength(localR * path.getTotalLength());
+            if (mapOverride === l && countsOverride !== null) {
+                let counts = countsOverride;
+                let ratio = this.getMapPosition(counts);
+                let pathId = ratio < 0.5 ? 'path-line-' + l : 'path-line-' + l + 'b';
+                let localR = ratio < 0.5 ? ratio * 2 : (ratio - 0.5) * 2;
+                if (ratio === 1) { pathId = 'path-line-' + l + 'b'; localR = 1; }
+                  
+                const path = document.getElementById(pathId);
+                if (path) {
+                    try {
+                        const pt = path.getPointAtLength(localR * path.getTotalLength());
+                        const svgRect = path.closest('svg').getBoundingClientRect();
+                        const containerRect = path.closest('.map-container').getBoundingClientRect();
+                        const dx = svgRect.left - containerRect.left;
+                        const dy = svgRect.top - containerRect.top;
+                        av.style.left = (pt.x + dx) + 'px';
+                        av.style.top = (pt.y + dy) + 'px';
+                    } catch(e) {}
+                }
+            } else {
+                const lastNodeName = (user.lastVisitedNode && user.lastVisitedNode[l]) ? user.lastVisitedNode[l] : (l + 'a');
+                
+                if (lastNodeName === 'PROGRESS') {
+                    // Park at progress point!
+                    let counts = user.stagePlays[l] || 0;
+                    let ratio = this.getMapPosition(counts);
+                    let pathId = ratio < 0.5 ? 'path-line-' + l : 'path-line-' + l + 'b';
+                    let localR = ratio < 0.5 ? ratio * 2 : (ratio - 0.5) * 2;
+                    if (ratio === 1) { pathId = 'path-line-' + l + 'b'; localR = 1; }
                     
-                    // Add bounding box offsets
-                    const svgRect = path.closest('svg').getBoundingClientRect();
-                    const containerRect = path.closest('.map-container').getBoundingClientRect();
-                    
-                    const dx = svgRect.left - containerRect.left;
-                    const dy = svgRect.top - containerRect.top;
-                    
-                    av.style.left = (pt.x + dx) + 'px';
-                    av.style.top = (pt.y + dy) + 'px';
-                } catch(e) {}
+                    const path = document.getElementById(pathId);
+                    if (path) {
+                        try {
+                            const pt = path.getPointAtLength(localR * path.getTotalLength());
+                            const svgRect = path.closest('svg').getBoundingClientRect();
+                            const containerRect = path.closest('.map-container').getBoundingClientRect();
+                            const dx = svgRect.left - containerRect.left;
+                            const dy = svgRect.top - containerRect.top;
+                            av.style.left = (pt.x + dx) + 'px';
+                            av.style.top = (pt.y + dy) + 'px';
+                        } catch(e) {}
+                    }
+                } else {
+                    let targetId = 'node-' + lastNodeName.toLowerCase();
+                    const targetNode = document.getElementById(targetId);
+                    if (targetNode) {
+                        const nodeRect = targetNode.getBoundingClientRect();
+                        const containerRect = targetNode.closest('.map-container').getBoundingClientRect();
+                        av.style.left = (nodeRect.left - containerRect.left + nodeRect.width / 2) + 'px';
+                        av.style.top = (nodeRect.top - containerRect.top + nodeRect.height / 2 - 20) + 'px';
+                    } else {
+                        let pathId = 'path-line-' + l;
+                        const path = document.getElementById(pathId);
+                        if (path) {
+                            try {
+                                const pt = path.getPointAtLength(0);
+                                const svgRect = path.closest('svg').getBoundingClientRect();
+                                const containerRect = path.closest('.map-container').getBoundingClientRect();
+                                const dx = svgRect.left - containerRect.left;
+                                const dy = svgRect.top - containerRect.top;
+                                av.style.left = (pt.x + dx) + 'px';
+                                av.style.top = (pt.y + dy) + 'px';
+                            } catch(e) {}
+                        }
+                    }
+                }
             }
         });
     },
