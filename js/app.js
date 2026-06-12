@@ -1415,7 +1415,7 @@ const App = {
         }
     },
 
-    showMapScreen(specificMap = null) {
+    async showMapScreen(specificMap = null) {
         const user = this.currentUser || {};
         let targetMap = 1;
         
@@ -1445,6 +1445,7 @@ const App = {
         this.showScreen('screen-map-' + targetMap);
         
         if (window.Map) {
+            await new Promise(r => setTimeout(r, 50));
             window.Map.updateUI();
         }
     },
