@@ -504,11 +504,9 @@ const Map = {
 
         document.getElementById('password-modal').classList.add('hidden');
         
-        // Setup cinematic
-        const cinematic = document.getElementById('cinematic-transition');
-        cinematic.className = 'cinematic-overlay';
-        cinematic.classList.remove('hidden'); 
+        // Skip broken cinematic and just go to the next map
         this.updateUI();
+        this.travelForward(fromMap);
     },
 
     async travelForward(fromLevel) {
