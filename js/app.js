@@ -279,17 +279,7 @@ const Progress = {
         const user = window.App.currentUser;
         if (!user) return;
 
-        const streakCounter = document.getElementById('streak-counter');
-        if (streakCounter) {
-            const today = new Date().toDateString();
-            let progressStr = "(0/1 today)";
-            
-            let totalCounts = 0;
-            if (user.stagePlays) {
-                totalCounts = (user.stagePlays[1] || 0) + (user.stagePlays[2] || 0) + (user.stagePlays[3] || 0);
-            }
-            streakCounter.innerText = `⭐ Counts: ${totalCounts}/42 (All-time) ${progressStr}`;
-        }
+        // Removed total streak counter as requested
     }
 };
 
