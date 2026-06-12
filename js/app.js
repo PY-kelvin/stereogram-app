@@ -450,7 +450,7 @@ const Map = {
         this.pwdTargetStage = exitNum;
         const pwdMsg = document.querySelector('#password-modal p');
         let nextMap = exitNum + 1;
-        if (pwdMsg) pwdMsg.innerText = `Enter password to unlock Bus/Taxi to Map ${nextMap}.`;
+        if (pwdMsg) pwdMsg.innerText = `Enter password to unlock Stage ${nextMap}.`;
         document.getElementById('password-modal').classList.remove('hidden');
         document.getElementById('admin-password').value = '';
     },
@@ -458,13 +458,24 @@ const Map = {
     hasPasswordBypass(reqStreak) {
         const user = window.App.currentUser;
         user.passwords = user.passwords || [];
-        if (reqStreak === 7 && user.passwords.includes('orthoptics')) return true;
-        if (reqStreak === 14 && user.passwords.includes('orthoptics 1')) return true;
-        if (reqStreak === 21 && user.passwords.includes('orthoptics 2')) return true;
-        if (reqStreak === 28 && user.passwords.includes('orthoptics 3')) return true;
-        if (reqStreak === 35 && user.passwords.includes('orthoptics 4')) return true;
-        if (reqStreak === 42 && user.passwords.includes('orthoptics 5')) return true;
-        return false;
+        
+        const pwdMap = [
+            { level: 7, pwd: 'orthoptics' },
+            { level: 14, pwd: 'orthoptics 1' },
+            { level: 21, pwd: 'orthoptics 2' },
+            { level: 28, pwd: 'orthoptics 3' },
+            { level: 35, pwd: 'orthoptics 4' },
+            { level: 42, pwd: 'orthoptics 5' }
+        ];
+
+        let maxLevel = 0;
+        for (let p of pwdMap) {
+            if (user.passwords.includes(p.pwd) && p.level > maxLevel) {
+                maxLevel = p.level;
+            }
+        }
+        
+        return maxLevel >= reqStreak;
     },
 
     fastForward(targetStreak, pwdName) {
