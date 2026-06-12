@@ -243,9 +243,9 @@ const Auth = {
                     const ageHours = (now - user.savedSession.timestamp) / (1000 * 60 * 60);
                     if (ageHours < 2) {
                         // Restore it
-                        window.Game.currentStageNode = user.savedSession.stageNode;
-                        window.Game.timeLeft = user.savedSession.timeLeft;
-                        window.Game.sessionStartLeft = user.savedSession.sessionStartLeft;
+                        window.Game.currentStageNode = user.savedSession.stageNode || '1A';
+                        window.Game.timeLeft = user.savedSession.timeLeft || 600;
+                        window.Game.sessionStartLeft = user.savedSession.sessionStartLeft || 600;
                         window.Game.hasStartedCurrentSession = true;
                         
                         window.Game.loadImage(window.Game.currentStageNode);
