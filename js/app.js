@@ -219,15 +219,6 @@ const Auth = {
                             maxLevel = p.level;
                         }
                     }
-                    if (maxLevel >= 14) user.stagePlays[1] = Math.max(user.stagePlays[1] || 0, 14);
-                    else if (maxLevel >= 7) user.stagePlays[1] = Math.max(user.stagePlays[1] || 0, 7);
-                    
-                    if (maxLevel >= 28) user.stagePlays[2] = Math.max(user.stagePlays[2] || 0, 14);
-                    else if (maxLevel >= 21) user.stagePlays[2] = Math.max(user.stagePlays[2] || 0, 7);
-                    
-                    if (maxLevel >= 42) user.stagePlays[3] = Math.max(user.stagePlays[3] || 0, 14);
-                    else if (maxLevel >= 35) user.stagePlays[3] = Math.max(user.stagePlays[3] || 0, 7);
-                    
                     user.streak = Math.max(user.streak || 0, maxLevel);
                 }
                 
@@ -269,7 +260,7 @@ const Progress = {
                 user.stageDailyProgress = { 1: 0, 2: 0, 3: 0 };
             }
 
-            user.stagePlays = user.stagePlays || { 1: user.streak || 0, 2: 0, 3: 0 };
+            user.stagePlays = user.stagePlays || { 1: 0, 2: 0, 3: 0 };
             user.stageDailyProgress = user.stageDailyProgress || { 1: 0, 2: 0, 3: 0 };
 
             let isExtraSession = false;
@@ -524,12 +515,6 @@ const Map = {
 
         // Sync stagePlays
         if (!user.stagePlays) user.stagePlays = { 1: 0, 2: 0, 3: 0 };
-        if (targetStreak >= 14) user.stagePlays[1] = Math.max(user.stagePlays[1] || 0, 14);
-        else if (targetStreak >= 7) user.stagePlays[1] = Math.max(user.stagePlays[1] || 0, 7);
-        if (targetStreak >= 28) user.stagePlays[2] = Math.max(user.stagePlays[2] || 0, 14);
-        else if (targetStreak >= 21) user.stagePlays[2] = Math.max(user.stagePlays[2] || 0, 7);
-        if (targetStreak >= 42) user.stagePlays[3] = Math.max(user.stagePlays[3] || 0, 14);
-        else if (targetStreak >= 35) user.stagePlays[3] = Math.max(user.stagePlays[3] || 0, 7);
         user.streak = Math.max(user.streak || 0, targetStreak);
         
         if (window.Progress) window.Progress.saveUser();
@@ -557,12 +542,6 @@ const Map = {
         
         // Sync stagePlays
         if (!user.stagePlays) user.stagePlays = { 1: 0, 2: 0, 3: 0 };
-        if (targetStreak >= 14) user.stagePlays[1] = Math.max(user.stagePlays[1] || 0, 14);
-        else if (targetStreak >= 7) user.stagePlays[1] = Math.max(user.stagePlays[1] || 0, 7);
-        if (targetStreak >= 28) user.stagePlays[2] = Math.max(user.stagePlays[2] || 0, 14);
-        else if (targetStreak >= 21) user.stagePlays[2] = Math.max(user.stagePlays[2] || 0, 7);
-        if (targetStreak >= 42) user.stagePlays[3] = Math.max(user.stagePlays[3] || 0, 14);
-        else if (targetStreak >= 35) user.stagePlays[3] = Math.max(user.stagePlays[3] || 0, 7);
         user.streak = Math.max(user.streak || 0, targetStreak);
 
         if (window.Progress) window.Progress.saveUser();
@@ -640,7 +619,7 @@ const Map = {
         if (this.isAnimating) return;        const user = window.App.currentUser;
         if (!user) return;
         
-        if (!user.stagePlays) user.stagePlays = { 1: user.streak || 0, 2: 0, 3: 0 };
+        if (!user.stagePlays) user.stagePlays = { 1: 0, 2: 0, 3: 0 };
         const p1 = user.stagePlays[1];
         const p2 = user.stagePlays[2];
         const p3 = user.stagePlays[3];
@@ -1195,7 +1174,7 @@ const Game = {
         const dateStr = now.toDateString();
 
         // Initialize structures
-        if (!user.stagePlays) user.stagePlays = { 1: user.streak || 0, 2: 0, 3: 0 };
+        if (!user.stagePlays) user.stagePlays = { 1: 0, 2: 0, 3: 0 };
         if (!user.stageDailyProgress) user.stageDailyProgress = { 1: 0, 2: 0, 3: 0 };
 
         // Reset daily progress if new day
