@@ -1957,4 +1957,25 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Global Audio Mute Logic
+    const audio = document.getElementById('bgm-audio');
+    const muteBtn = document.getElementById('global-mute-btn');
+    if (audio && muteBtn) {
+        let isMuted = localStorage.getItem('stereogram_is_muted') === 'true';
+        audio.muted = isMuted;
+        muteBtn.innerText = isMuted ? "🔇" : "🔊";
+
+        muteBtn.addEventListener('click', () => {
+            isMuted = !isMuted;
+            audio.muted = isMuted;
+            localStorage.setItem('stereogram_is_muted', isMuted);
+            muteBtn.innerText = isMuted ? "🔇" : "🔊";
+            
+            // Auto-play if unmuted and user is active
+            if (!isMuted && window.App.currentUser) {
+                audio.play().catch(e => console.log('Audio autoplay blocked', e));
+            }
+        });
+    }
 });
