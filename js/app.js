@@ -460,7 +460,7 @@ const Map = {
         if (user.animal) {
             ['1', '2', '3'].forEach(l => {
                 const img = document.getElementById('player-avatar-' + l);
-                if (img) img.src = \`avatar_\${user.animal}.png\`;
+                if (img) img.src = `avatar_${user.animal}.png`;
             });
         }
         
@@ -552,8 +552,8 @@ const Map = {
             const path = document.getElementById(pathId);
             if (path) {
                 const pt = path.getPointAtLength(localR * path.getTotalLength());
-                av.style.left = \`\${pt.x}%\`;
-                av.style.top = \`\${pt.y}%\`;
+                av.style.left = `${pt.x}%`;
+                av.style.top = `${pt.y}%`;
             }
         }
     },
@@ -810,7 +810,7 @@ const Game = {
         const mins = Math.floor(this.timeLeft / 60);
         const secs = this.timeLeft % 60;
         document.getElementById('timer-display').innerText = 
-            \`\${mins.toString().padStart(2, '0')}:\${secs.toString().padStart(2, '0')}\`;
+            `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     },
 
     resetUITimer() {
