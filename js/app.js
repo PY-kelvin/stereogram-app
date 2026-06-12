@@ -865,10 +865,13 @@ const Map = {
         this.isAnimating = true;
         const av = document.getElementById('player-avatar-' + mapNum);
         if (av) av.style.transition = 'none'; // Ensure no CSS transition interference
-        console.log(`[v146] Animating map ${mapNum} from counts ${oldC} to ${newC} along SVG curve`);
+        console.log(`[v152] Animating map ${mapNum} from counts ${oldC} to ${newC} along SVG curve`);
         let duration = Math.max(1000, Math.abs(newC - oldC) * 300);
         await this.animatePathProgress(mapNum, oldC, newC, duration);
         this.isAnimating = false;
+        
+        // Wait 1 frame for CSS layout to catch up if we just switched screens
+        await new Promise(r => requestAnimationFrame(r));
         this.positionAvatar(); // ensure exact final position
     },
 
