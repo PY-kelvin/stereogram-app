@@ -401,27 +401,25 @@ const Map = {
     
     handleExitClick(exitNum) {
         const user = window.App.currentUser;
+        let reqStreak = exitNum * 14; 
         
-        if (exitNum === 1) {
-            if (user.streak >= 14 || this.hasPasswordBypass(14)) {
-                this.triggerCinematicTransition(1, 2, 'bus', 14, "orthoptics 1");
-                return;
-            }
-        } else if (exitNum === 2) {
-            if (user.streak >= 28 || this.hasPasswordBypass(28)) {
-                this.triggerCinematicTransition(2, 3, 'taxi', 28, "orthoptics 3");
-                return;
-            }
-        } else if (exitNum === 3) {
-            if (user.streak >= 42 || this.hasPasswordBypass(42)) {
+        if (this.hasPasswordBypass(reqStreak)) {
+            if (exitNum === 3) {
                 window.App.showNotification("You have reached the final goal! Congratulations!", "success");
-                return;
+            } else {
+                this.travelForward(exitNum);
             }
+            return;
+        }
+        
+        if (exitNum === 3 && user.streak >= 42) {
+            window.App.showNotification("You have reached the final goal! Congratulations!", "success");
+            return;
         }
 
         this.pwdTargetStage = exitNum;
-        document.getElementById('admin-password').value = '';
         document.getElementById('password-modal').classList.remove('hidden');
+        document.getElementById('admin-password').value = '';
     },
 
     hasPasswordBypass(reqStreak) {
@@ -574,13 +572,13 @@ const Map = {
             targetLvl = 1; ratio = (s / 7) * 0.5; // Path 1a
         } else if (s < 14) {
             targetLvl = 1; ratio = 0.5 + ((s - 7) / 7) * 0.5; // Path 1b
-        } else if (s === 14 && !this.hasPasswordBypass(14)) {
+        } else if (!this.hasPasswordBypass(14)) {
             targetLvl = 1; ratio = 1; // Stuck at bus
         } else if (s < 21) {
             targetLvl = 2; ratio = ((s - 14) / 7) * 0.5; // Path 2a
         } else if (s < 28) {
             targetLvl = 2; ratio = 0.5 + ((s - 21) / 7) * 0.5; // Path 2b
-        } else if (s === 28 && !this.hasPasswordBypass(28)) {
+        } else if (!this.hasPasswordBypass(28)) {
             targetLvl = 2; ratio = 1; // Stuck at gate
         } else if (s < 35) {
             targetLvl = 3; ratio = ((s - 28) / 7) * 0.5; // Path 3a
@@ -1161,9 +1159,9 @@ const App = {
         if (specificMap !== null) {
             targetMap = specificMap;
         } else {
-            if (s < 14 || (s === 14 && !hasBypass(14))) {
+            if (!hasBypass(14)) {
                 targetMap = 1;
-            } else if (s < 28 || (s === 28 && !hasBypass(28))) {
+            } else if (!hasBypass(28)) {
                 targetMap = 2;
             } else {
                 targetMap = 3;
