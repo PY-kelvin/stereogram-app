@@ -539,14 +539,6 @@ const Map = {
         const user = window.App.currentUser;
         let s = user.streak;
         
-        ['1', '2', '3'].forEach(l => {
-            const av = document.getElementById('player-avatar-' + l);
-            if (av) {
-                av.style.opacity = '0';
-                av.style.left = '15%'; // Default off-screen or start
-            }
-        });
-        
         let targetLvl = 1;
         let ratio = 0; // 0 to 1 for the 2 paths
         
@@ -570,18 +562,26 @@ const Map = {
             targetLvl = 3; ratio = 1; // Final goal
         }
         
-        const av = document.getElementById('player-avatar-' + targetLvl);
-        if (av) {
-            av.style.opacity = '1';
-            let pathId = ratio <= 0.5 ? 'path-line-' + targetLvl : 'path-line-' + targetLvl + 'b';
-            let localR = ratio <= 0.5 ? ratio * 2 : (ratio - 0.5) * 2;
-            const path = document.getElementById(pathId);
-            if (path) {
-                const pt = path.getPointAtLength(localR * path.getTotalLength());
-                av.style.left = `${pt.x}%`;
-                av.style.top = `${pt.y}%`;
+        [1, 2, 3].forEach(l => {
+            const av = document.getElementById('player-avatar-' + l);
+            if (!av) return;
+            
+            if (l > targetLvl) {
+                av.style.opacity = '0';
+            } else {
+                av.style.opacity = '1';
+                let mapRatio = (l === targetLvl) ? ratio : 1;
+                
+                let pathId = mapRatio <= 0.5 ? 'path-line-' + l : 'path-line-' + l + 'b';
+                let localR = mapRatio <= 0.5 ? mapRatio * 2 : (mapRatio - 0.5) * 2;
+                const path = document.getElementById(pathId);
+                if (path) {
+                    const pt = path.getPointAtLength(localR * path.getTotalLength());
+                    av.style.left = `${pt.x}%`;
+                    av.style.top = `${pt.y}%`;
+                }
             }
-        }
+        });
     },
 
     animateStep(oldStreak, newStreak) {
