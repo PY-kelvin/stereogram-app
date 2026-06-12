@@ -956,12 +956,31 @@ const Game = {
         window.addEventListener('beforeunload', () => {
             if (this.isPlaying || (this.timeLeft > 0 && this.timeLeft < 600)) {
                 this.pauseTimer();
+                const user = window.App.currentUser;
+                if (user) {
+                    user.savedSession = {
+                        timeLeft: this.timeLeft,
+                        timestamp: new Date().getTime()
+                    };
+                    if (window.Progress) window.Progress.saveUser();
+                }
             }
         });
     },
 
     bindEvents() {
         document.getElementById('btn-back-map').addEventListener('click', () => {
+            if (this.isPlaying || (this.timeLeft > 0 && this.timeLeft < 600)) {
+                this.pauseTimer();
+                const user = window.App.currentUser;
+                if (user) {
+                    user.savedSession = {
+                        timeLeft: this.timeLeft,
+                        timestamp: new Date().getTime()
+                    };
+                    if (window.Progress) window.Progress.saveUser();
+                }
+            }
             this.stopGame();
             let specificMap = null;
             if (this.currentStageNode) {
@@ -981,36 +1000,14 @@ const Game = {
             if (this.isPlaying) {
                 this.pauseTimer();
                 e.target.innerText = "▶";
+                e.target.title = "Resume Exercise";
             } else {
                 this.startTimer();
                 if (this.isPlaying) {
                     e.target.innerText = "⏸";
+                    e.target.title = "Pause Exercise";
                 }
             }
-        });
-
-        document.getElementById('btn-save-rest').addEventListener('click', () => {
-            if (!this.isPlaying && this.timeLeft === 600) {
-                window.App.showNotification("You haven't started yet!", "warning");
-                return;
-            }
-            this.pauseTimer();
-            const user = window.App.currentUser;
-            user.savedSession = {
-                timeLeft: this.timeLeft,
-                timestamp: new Date().getTime()
-            };
-            if (window.Progress) window.Progress.saveUser();
-            window.App.showNotification("Progress saved! You can resume within 12 hours.", "success");
-            this.stopGame();
-            
-            let specificMap = null;
-            if (this.currentStageNode) {
-                if (this.currentStageNode.startsWith('1')) specificMap = 1;
-                else if (this.currentStageNode.startsWith('2')) specificMap = 2;
-                else if (this.currentStageNode.startsWith('3')) specificMap = 3;
-            }
-            window.App.showMapScreen(specificMap);
         });
 
         document.getElementById('btn-img-prev').addEventListener('click', () => {
@@ -1059,6 +1056,15 @@ const Game = {
 
         this.updateTimerDisplay();
         this.loadImage(nodeName);
+        
+        const btnToggle = document.getElementById('btn-toggle-timer');
+        if (btnToggle) {
+            btnToggle.innerText = "⏸";
+            btnToggle.title = "Pause Exercise";
+        }
+        
+        // Auto-start the timer upon entering the stage
+        this.startTimer();
         window.App.showScreen('screen-game');
     },
 
@@ -1128,7 +1134,10 @@ const Game = {
         clearInterval(this.timerInterval);
         document.getElementById('screen-game').classList.remove('focus-mode');
         const btnToggle = document.getElementById('btn-toggle-timer');
-        if (btnToggle) btnToggle.innerText = "▶";
+        if (btnToggle) {
+            btnToggle.innerText = "▶";
+            btnToggle.title = "Resume Exercise";
+        }
 
         // Log duration when paused or stopped
         if (this.hasStartedCurrentSession) {
@@ -1304,7 +1313,10 @@ const App = {
                 if (window.Game && window.Game.isPlaying) {
                     window.Game.pauseTimer();
                     const btn = document.getElementById('btn-toggle-timer');
-                    if (btn) btn.innerText = "▶";
+                    if (btn) {
+                        btn.innerText = "▶";
+                        btn.title = "Resume Exercise";
+                    }
                     window.Game.wasAutoPausedByVisibility = true;
                 }
             } else {
@@ -1316,7 +1328,10 @@ const App = {
                 if (window.Game && window.Game.wasAutoPausedByVisibility) {
                     window.Game.startTimer();
                     const btn = document.getElementById('btn-toggle-timer');
-                    if (btn) btn.innerText = "⏸";
+                    if (btn) {
+                        btn.innerText = "⏸";
+                        btn.title = "Pause Exercise";
+                    }
                     window.Game.wasAutoPausedByVisibility = false;
                 }
             }
