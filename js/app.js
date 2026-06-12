@@ -475,19 +475,9 @@ const Map = {
             return;
         }
 
-        let oldNodeName = user.lastVisitedNode ? user.lastVisitedNode[level] : null;
-        let oldC = user.stagePlays[level] || 0;
-        if (oldNodeName === level + 'A') oldC = 0;
-        if (oldNodeName === level + 'B') oldC = 7;
-        if (oldNodeName === 'exit' + level) oldC = 14;
-
-        let newC = nodeName.endsWith('A') ? 0 : 7;
-        
-        if (!user.lastVisitedNode) user.lastVisitedNode = {};
         user.lastVisitedNode[level] = nodeName;
         if (window.Progress) window.Progress.saveUser();
-        
-        await this.animateAvatarProgress(level, oldC, newC);
+
         window.Game.startStage(nodeName);
     },
     
@@ -508,20 +498,9 @@ const Map = {
             return;
         }
 
-        let oldNodeName = user.lastVisitedNode ? user.lastVisitedNode[exitNum] : null;
-        let oldC = user.stagePlays[exitNum] || 0;
-        if (oldNodeName === exitNum + 'A') oldC = 0;
-        if (oldNodeName === exitNum + 'B') oldC = 7;
-        if (oldNodeName === 'exit' + exitNum) oldC = 14;
-
-        let newC = 14;
-        
-        if (!user.lastVisitedNode) user.lastVisitedNode = {};
         user.lastVisitedNode[exitNum] = 'exit' + exitNum;
         if (window.Progress) window.Progress.saveUser();
         
-        await this.animateAvatarProgress(exitNum, oldC, newC);
-
         if (exitNum === 3) {
             this.showFinalGoalHug();
         } else {
