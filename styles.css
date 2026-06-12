@@ -39,7 +39,7 @@ body {
     overflow: hidden;
 }
 
-@media screen and (orientation: portrait) {
+@media screen and (orientation: portrait) and (pointer: coarse) {
     #app.landscape-required > #rotate-overlay { display: flex !important; }
     #app.landscape-required > .screen { display: none !important; }
 }
