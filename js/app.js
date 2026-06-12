@@ -202,8 +202,21 @@ const Auth = {
             if (userStr) {
                 const user = JSON.parse(userStr);
                 
-                // Retroactively sync stagePlays with passwords
-                if (!user.stagePlays) user.stagePlays = { 1: 0, 2: 0, 3: 0 };
+                // Recalibrate stagePlays based strictly on true history
+                user.stagePlays = { 1: 0, 2: 0, 3: 0 };
+                if (user.sessionHistory) {
+                    const daysPlayed = { 1: new Set(), 2: new Set(), 3: new Set() };
+                    user.sessionHistory.forEach(s => {
+                        const sNum = s.stageNum || 1;
+                        if (daysPlayed[sNum]) {
+                            daysPlayed[sNum].add(s.dateStr);
+                        }
+                    });
+                    user.stagePlays[1] = daysPlayed[1].size;
+                    user.stagePlays[2] = daysPlayed[2].size;
+                    user.stagePlays[3] = daysPlayed[3].size;
+                }
+
                 if (user.passwords && user.passwords.length > 0) {
                     let maxLevel = 0;
                     const pwdMap = [
