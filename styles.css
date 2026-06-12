@@ -39,9 +39,9 @@ body {
     overflow: hidden;
 }
 
-@media screen and (orientation: portrait) and (pointer: coarse) {
-    #app.landscape-required > #rotate-overlay { display: flex !important; }
-    #app.landscape-required > .screen { display: none !important; }
+@media screen and (orientation: portrait) {
+    body.is-mobile #app.landscape-required > #rotate-overlay { display: flex !important; }
+    body.is-mobile #app.landscape-required > .screen { display: none !important; }
 }
 
 /* Screens */
@@ -924,6 +924,8 @@ img.player-avatar {
     padding: 20px;
     position: relative;
     overflow: hidden;
+    pointer-events: auto;
+    z-index: 100;
 }
 
 .bubble-small {

@@ -1925,6 +1925,12 @@ const Confetti = {
 window.Confetti = Confetti;
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Detect mobile device
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    if (isMobile) {
+        document.body.classList.add('is-mobile');
+    }
+
     App.init();
     ProgressReport.init();
     Menu.init();
