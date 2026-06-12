@@ -560,9 +560,9 @@ const Map = {
         
         // Animate hug after a small delay
         setTimeout(() => {
-            // Move them to center
-            avatarImg.style.left = '35%';
-            partnerImg.style.right = '35%';
+            // Move them to center but side-by-side (not stacking)
+            avatarImg.style.left = '22%';
+            partnerImg.style.right = '22%';
             
             // Wait for movement, then "hug"
             setTimeout(() => {
