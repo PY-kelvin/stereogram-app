@@ -580,6 +580,12 @@ const Map = {
     async travelForward(fromLevel) {
         if (this.isAnimating) return;
         this.isAnimating = true;
+        
+        const user = window.App.currentUser;
+        if (!user.lastVisitedNode) user.lastVisitedNode = {};
+        user.lastVisitedNode[fromLevel + 1] = (fromLevel + 1) + 'A';
+        if (window.Progress) window.Progress.saveUser();
+        
         await this.shrinkAvatar(fromLevel);
         window.App.showScreen('screen-map-' + (fromLevel + 1));
         await this.growAvatar(fromLevel + 1);
@@ -590,6 +596,12 @@ const Map = {
     async travelBackward(fromLevel) {
         if (this.isAnimating) return;
         this.isAnimating = true;
+        
+        const user = window.App.currentUser;
+        if (!user.lastVisitedNode) user.lastVisitedNode = {};
+        user.lastVisitedNode[fromLevel - 1] = 'exit' + (fromLevel - 1);
+        if (window.Progress) window.Progress.saveUser();
+        
         await this.shrinkAvatar(fromLevel);
         window.App.showScreen('screen-map-' + (fromLevel - 1));
         await this.growAvatar(fromLevel - 1);
