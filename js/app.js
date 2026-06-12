@@ -1228,7 +1228,19 @@ const Game = {
             else if (this.currentStageNode.startsWith('2')) specificMap = 2;
             else if (this.currentStageNode.startsWith('3')) specificMap = 3;
         }
-        window.App.showMapScreen(specificMap);
+        window.App.pendingRewardMap = specificMap;
+        
+        const rewardAnimals = [
+            'reward_capybara.png', 'reward_chicken.png', 'reward_cow.png',
+            'reward_duck.png', 'reward_farmers.png', 'reward_hamster.png',
+            'reward_horse.png', 'reward_penguin.png', 'reward_squirrel.png'
+        ];
+        const randomAnimal = rewardAnimals[Math.floor(Math.random() * rewardAnimals.length)];
+        const rewardImg = document.getElementById('reward-animal');
+        if (rewardImg) rewardImg.src = randomAnimal;
+        
+        document.getElementById('reward-modal').classList.remove('hidden');
+        if (window.Confetti) window.Confetti.start();
         
         if (window.Map) {
             if (oldPlays < newPlays) {
@@ -1863,7 +1875,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btnCloseReward.addEventListener('click', () => {
             document.getElementById('reward-modal').classList.add('hidden');
             window.Confetti.stop();
-            window.App.showMapScreen();
+            window.App.showMapScreen(window.App.pendingRewardMap || null);
         });
     }
 });
