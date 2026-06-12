@@ -1349,7 +1349,9 @@ const App = {
         const savedPpcm = localStorage.getItem('stereogram_calibration_ppcm');
         if (savedPpcm) {
             this.pixelsPerCm = parseFloat(savedPpcm);
-               Auth.init();
+        }
+        
+        Auth.init();
         Map.init();
         Game.init();
         Auth.checkSession(true);
