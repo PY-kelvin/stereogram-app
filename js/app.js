@@ -1539,7 +1539,6 @@ const ProgressReport = {
     showDayDetails(date, daySessions) {
         document.getElementById('calendar-day-details').classList.remove('hidden');
         document.getElementById('detail-date').innerText = date.toDateString();
-        document.getElementById('detail-times').innerText = daySessions.length;
         
         let totalMins = daySessions.reduce((sum, s) => sum + (s.durationMins || 10), 0);
         document.getElementById('detail-duration').innerText = `${totalMins.toFixed(1)} mins`;
