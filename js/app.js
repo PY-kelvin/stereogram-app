@@ -625,8 +625,18 @@ const Map = {
 
             av.style.opacity = '1';
 
+            let counts = user.stagePlays[l];
+            if (mapOverride === l && countsOverride !== null) counts = countsOverride;
+
+            const mapContent = av.closest('.map-content');
+            if (!mapContent) return;
+            const contentRect = mapContent.getBoundingClientRect();
+            if (contentRect.width === 0 || contentRect.height === 0) {
+                // Map is hidden, don't update position
+                return;
+            }
+
             if (mapOverride === l && countsOverride !== null) {
-                let counts = countsOverride;
                 let ratio = this.getMapPosition(counts);
                 let pathId = ratio < 0.5 ? 'path-line-' + l : 'path-line-' + l + 'b';
                 let localR = ratio < 0.5 ? ratio * 2 : (ratio - 0.5) * 2;
@@ -637,9 +647,8 @@ const Map = {
                     try {
                         const pt = path.getPointAtLength(localR * path.getTotalLength());
                         const svgRect = path.closest('svg').getBoundingClientRect();
-                        const containerRect = path.closest('.map-container').getBoundingClientRect();
-                        const dx = svgRect.left - containerRect.left;
-                        const dy = svgRect.top - containerRect.top;
+                        const dx = svgRect.left - contentRect.left;
+                        const dy = svgRect.top - contentRect.top;
                         av.style.left = (pt.x + dx) + 'px';
                         av.style.top = (pt.y + dy) + 'px';
                     } catch(e) {}
@@ -649,8 +658,8 @@ const Map = {
                 
                 if (lastNodeName === 'PROGRESS') {
                     // Park at progress point!
-                    let counts = user.stagePlays[l] || 0;
-                    let ratio = this.getMapPosition(counts);
+                    let progressCounts = user.stagePlays[l] || 0;
+                    let ratio = this.getMapPosition(progressCounts);
                     let pathId = ratio < 0.5 ? 'path-line-' + l : 'path-line-' + l + 'b';
                     let localR = ratio < 0.5 ? ratio * 2 : (ratio - 0.5) * 2;
                     if (ratio === 1) { pathId = 'path-line-' + l + 'b'; localR = 1; }
@@ -660,9 +669,8 @@ const Map = {
                         try {
                             const pt = path.getPointAtLength(localR * path.getTotalLength());
                             const svgRect = path.closest('svg').getBoundingClientRect();
-                            const containerRect = path.closest('.map-container').getBoundingClientRect();
-                            const dx = svgRect.left - containerRect.left;
-                            const dy = svgRect.top - containerRect.top;
+                            const dx = svgRect.left - contentRect.left;
+                            const dy = svgRect.top - contentRect.top;
                             av.style.left = (pt.x + dx) + 'px';
                             av.style.top = (pt.y + dy) + 'px';
                         } catch(e) {}
@@ -672,9 +680,8 @@ const Map = {
                     const targetNode = document.getElementById(targetId);
                     if (targetNode) {
                         const nodeRect = targetNode.getBoundingClientRect();
-                        const containerRect = targetNode.closest('.map-container').getBoundingClientRect();
-                        av.style.left = (nodeRect.left - containerRect.left + nodeRect.width / 2) + 'px';
-                        av.style.top = (nodeRect.top - containerRect.top + nodeRect.height / 2 - 20) + 'px';
+                        av.style.left = (nodeRect.left - contentRect.left + nodeRect.width / 2) + 'px';
+                        av.style.top = (nodeRect.top - contentRect.top + nodeRect.height / 2 - 20) + 'px';
                     } else {
                         let pathId = 'path-line-' + l;
                         const path = document.getElementById(pathId);
@@ -682,9 +689,8 @@ const Map = {
                             try {
                                 const pt = path.getPointAtLength(0);
                                 const svgRect = path.closest('svg').getBoundingClientRect();
-                                const containerRect = path.closest('.map-container').getBoundingClientRect();
-                                const dx = svgRect.left - containerRect.left;
-                                const dy = svgRect.top - containerRect.top;
+                                const dx = svgRect.left - contentRect.left;
+                                const dy = svgRect.top - contentRect.top;
                                 av.style.left = (pt.x + dx) + 'px';
                                 av.style.top = (pt.y + dy) + 'px';
                             } catch(e) {}
