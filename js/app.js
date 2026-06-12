@@ -340,9 +340,21 @@ const Map = {
 
     bindEvents() {
         // Back buttons for 3 maps
-        const btnMenu = document.getElementById('btn-back-main-menu-from-map-1');
-        if (btnMenu) {
-            btnMenu.addEventListener('click', () => {
+        const btnMenu1 = document.getElementById('btn-back-main-menu-from-map-1');
+        if (btnMenu1) {
+            btnMenu1.addEventListener('click', () => {
+                window.App.showScreen('screen-main-menu');
+            });
+        }
+        const btnMenu2 = document.getElementById('btn-back-main-menu-from-map-2');
+        if (btnMenu2) {
+            btnMenu2.addEventListener('click', () => {
+                window.App.showScreen('screen-main-menu');
+            });
+        }
+        const btnMenu3 = document.getElementById('btn-back-main-menu-from-map-3');
+        if (btnMenu3) {
+            btnMenu3.addEventListener('click', () => {
                 window.App.showScreen('screen-main-menu');
             });
         }
@@ -803,9 +815,8 @@ const Map = {
                     let targetId = 'node-' + lastNodeName.toLowerCase();
                     const targetNode = document.getElementById(targetId);
                     if (targetNode) {
-                        const computedStyle = window.getComputedStyle(targetNode);
-                        av.style.left = computedStyle.left;
-                        av.style.top = computedStyle.top;
+                        av.style.left = targetNode.style.left;
+                        av.style.top = targetNode.style.top;
                     } else {
                         let pathId = 'path-line-' + l;
                         const path = document.getElementById(pathId);

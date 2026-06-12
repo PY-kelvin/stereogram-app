@@ -134,7 +134,13 @@
                     <button id="tab-register" class="tab-btn">Register</button>
                 </div>
 
-                <!-- Login Form -->
+                <div id="landscape-prompt" class="landscape-prompt">
+        <div style="font-size: 4rem; margin-bottom: 20px;">🔄📱</div>
+        <h2 style="color: white; margin-bottom: 15px;">Please Rotate Your Device</h2>
+        <p style="font-size: 1.2rem;">This app is designed to be used in Landscape mode.</p>
+    </div>
+
+    <!-- Login Screen -->
                 <form id="form-login" class="auth-form">
                     <div class="input-group">
                         <label for="login-username">Username</label>
@@ -351,7 +357,7 @@
                         <path id="path-line-1" d="M 15 50 Q 32 30, 50 50" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
                         <path id="path-line-1b" d="M 50 50 Q 67 70, 85 50" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
                     </svg>
-                    <div class="stage-node node-1a" id="node-1a">
+                    <div class="stage-node node-1a" id="node-1a" style="left: 15%; top: 50%;">
                         <span class="stage-label">Stage 1A</span>
                         <div class="node-icon bg-farm"></div>
                     </div>
@@ -373,6 +379,7 @@
             <header class="map-header">
                 <div class="header-left" style="display: flex; align-items: center; gap: 10px;">
                     <button id="btn-back-level1" class="btn btn-secondary btn-small">⬅ Farm</button>
+                    <button id="btn-back-main-menu-from-map-2" class="btn btn-secondary btn-small">⬅ Menu</button>
                     <h2 style="margin: 0;">Sakura Road 🌸</h2>
                 </div>
                 <div class="header-center">
@@ -389,7 +396,7 @@
                         <path id="path-line-2" d="M 15 50 C 25 20, 40 100, 50 75" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
                         <path id="path-line-2b" d="M 50 75 C 60 100, 75 20, 85 50" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
                     </svg>
-                    <div class="stage-node node-2a" id="node-2a">
+                    <div class="stage-node node-2a" id="node-2a" style="left: 15%; top: 50%;">
                         <span class="stage-label">Stage 2A</span>
                         <div class="node-icon bg-sakura"></div>
                     </div>
@@ -412,6 +419,7 @@
             <header class="map-header">
                 <div class="header-left" style="display: flex; align-items: center; gap: 10px;">
                     <button id="btn-back-level2" class="btn btn-secondary btn-small">⬅ Sakura</button>
+                    <button id="btn-back-main-menu-from-map-3" class="btn btn-secondary btn-small">⬅ Menu</button>
                     <h2 style="margin: 0;">City Center 🏙️</h2>
                 </div>
                 <div class="header-center">
@@ -428,7 +436,7 @@
                         <path id="path-line-3" d="M 15 50 Q 32 30, 50 50" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
                         <path id="path-line-3b" d="M 50 50 Q 67 70, 85 50" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
                     </svg>
-                    <div class="stage-node node-3a" id="node-3a">
+                    <div class="stage-node node-3a" id="node-3a" style="left: 15%; top: 50%;">
                         <span class="stage-label">Stage 3A</span>
                         <div class="node-icon bg-city"></div>
                     </div>
@@ -542,7 +550,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=167"></script>
+    <script src="js/app.js?v=168"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
