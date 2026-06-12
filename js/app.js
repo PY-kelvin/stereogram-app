@@ -236,7 +236,6 @@ const Auth = {
                 }
                 
                 window.App.currentUser = user;
-                document.getElementById('display-username').innerText = user.username;
                 
                 // Check for interrupted session (max 2 hours old)
                 if (isStartup && user.savedSession) {
