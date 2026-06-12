@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clear Cache</title>
+</head>
+<body>
+    <h1>Clearing Cache...</h1>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister();
+                }
+                alert("Service Worker Unregistered! The cache is now broken.\n\nPlease close this tab, and reopen your main index.html file.");
+            }).catch(function(err) {
+                alert("Error unregistering: " + err);
+            });
+        } else {
+            alert("No service worker found.");
+        }
+    </script>
+</body>
+</html>
