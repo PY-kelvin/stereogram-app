@@ -281,19 +281,290 @@ const Progress = {
     }
 };
 
-const Map = {');
-const mapEndStr = '};
+const Map = {
+    isAnimating: false,
+    pwdTargetStage: 0,
 
-const Game = {');
-const gameEndStr = 'window.App = App;';
-const gameEnd = appCode.indexOf(gameEndStr);
+    init() {
+        this.bindEvents();
+    },
 
-if (gameStart === -1 || gameEnd === -1) {
-    console.error('Game object not found.');
-    process.exit(1);
-}
+    bindEvents() {
+        // Back buttons for 3 maps
+        const btnMenu = document.getElementById('btn-back-main-menu-from-map-1');
+        if (btnMenu) {
+            btnMenu.addEventListener('click', () => {
+                window.App.showScreen('screen-main-menu');
+            });
+        }
+        
+        const btnBackL1 = document.getElementById('btn-back-level1');
+        if (btnBackL1) {
+            btnBackL1.addEventListener('click', () => {
+                window.App.showScreen('screen-map-1');
+            });
+        }
 
-const newGameCode = \`const Game = {
+        const btnBackL2 = document.getElementById('btn-back-level2');
+        if (btnBackL2) {
+            btnBackL2.addEventListener('click', () => {
+                window.App.showScreen('screen-map-2');
+            });
+        }
+
+        // Progress buttons
+        document.querySelectorAll('.btn-progress').forEach(btn => {
+            btn.addEventListener('click', () => {
+                window.App.showScreen('screen-progress');
+            });
+        });
+
+        // Stage clicks
+        document.getElementById('node-1a').addEventListener('click', () => this.handleNodeClick('1A', 1, 0));
+        document.getElementById('node-1b').addEventListener('click', () => this.handleNodeClick('1B', 1, 7));
+        document.getElementById('node-2a').addEventListener('click', () => this.handleNodeClick('2A', 2, 14));
+        document.getElementById('node-2b').addEventListener('click', () => this.handleNodeClick('2B', 2, 21));
+        document.getElementById('node-3a').addEventListener('click', () => this.handleNodeClick('3A', 3, 28));
+        document.getElementById('node-3b').addEventListener('click', () => this.handleNodeClick('3B', 3, 35));
+
+        // Exits
+        document.getElementById('node-exit1').addEventListener('click', () => this.handleExitClick(1));
+        document.getElementById('node-exit2').addEventListener('click', () => this.handleExitClick(2));
+        document.getElementById('node-exit3').addEventListener('click', () => this.handleExitClick(3));
+
+        document.getElementById('btn-cancel-pwd').addEventListener('click', () => {
+            document.getElementById('password-modal').classList.add('hidden');
+        });
+
+        document.getElementById('btn-submit-pwd').addEventListener('click', () => {
+            const rawPwd = document.getElementById('admin-password').value;
+            const pwd = rawPwd.trim().toLowerCase();
+            const user = window.App.currentUser;
+            
+            // Fast forwards
+            if (pwd === 'orthoptics') {
+                this.fastForward(7, "orthoptics");
+            } else if (pwd === 'orthoptics 1') {
+                this.triggerCinematicTransition(1, 2, 'bus', 14, "orthoptics 1");
+            } else if (pwd === 'orthoptics 2') {
+                this.fastForward(21, "orthoptics 2");
+            } else if (pwd === 'orthoptics 3') {
+                this.triggerCinematicTransition(2, 3, 'taxi', 28, "orthoptics 3");
+            } else if (pwd === 'test20') {
+                window.runSimulation();
+                document.getElementById('password-modal').classList.add('hidden');
+            } else if (pwd === 'orthoptics 4') {
+                this.fastForward(35, "orthoptics 4");
+            } else {
+                window.App.showNotification("Incorrect Password.", "warning");
+            }
+        });
+    },
+    
+    handleNodeClick(nodeName, level, reqStreak) {
+        const user = window.App.currentUser;
+        if (user.streak < reqStreak && !this.hasPasswordBypass(reqStreak)) {
+            // Need password for 1B, 2B, 3B if not enough days
+            if (nodeName.endsWith('B')) {
+                this.pwdTargetStage = level;
+                document.getElementById('admin-password').value = '';
+                document.getElementById('password-modal').classList.remove('hidden');
+            } else {
+                window.App.showNotification("You haven't reached this stage yet!", "warning");
+            }
+            return;
+        }
+        // Passed checks, start game
+        window.Game.startStage(nodeName);
+    },
+    
+    handleExitClick(exitNum) {
+        this.pwdTargetStage = exitNum;
+        document.getElementById('admin-password').value = '';
+        document.getElementById('password-modal').classList.remove('hidden');
+    },
+
+    hasPasswordBypass(reqStreak) {
+        const user = window.App.currentUser;
+        user.passwords = user.passwords || [];
+        if (reqStreak === 7 && user.passwords.includes('orthoptics')) return true;
+        if (reqStreak === 14 && user.passwords.includes('orthoptics 1')) return true;
+        if (reqStreak === 21 && user.passwords.includes('orthoptics 2')) return true;
+        if (reqStreak === 28 && user.passwords.includes('orthoptics 3')) return true;
+        if (reqStreak === 35 && user.passwords.includes('orthoptics 4')) return true;
+        return false;
+    },
+
+    fastForward(targetStreak, pwdFlag) {
+        const user = window.App.currentUser;
+        document.getElementById('password-modal').classList.add('hidden');
+        user.passwords = user.passwords || [];
+        if (!user.passwords.includes(pwdFlag)) user.passwords.push(pwdFlag);
+        if (user.streak < targetStreak) {
+            user.streak = targetStreak;
+        }
+        if (window.Progress) window.Progress.saveUser();
+        window.App.showNotification("Password Accepted!", "success");
+        this.updateUI();
+    },
+
+    triggerCinematicTransition(fromLevel, toLevel, vehicleId, targetStreak, pwdFlag) {
+        const user = window.App.currentUser;
+        document.getElementById('password-modal').classList.add('hidden');
+        user.passwords = user.passwords || [];
+        if (!user.passwords.includes(pwdFlag)) user.passwords.push(pwdFlag);
+        if (user.streak < targetStreak) user.streak = targetStreak;
+        if (window.Progress) window.Progress.saveUser();
+        
+        // Start animation
+        const vehicle = document.getElementById('vehicle-' + vehicleId);
+        const avatar = document.getElementById('player-avatar-' + fromLevel);
+        
+        vehicle.classList.remove('hidden');
+        vehicle.classList.add('drive-in');
+        
+        // Hide avatar halfway
+        setTimeout(() => {
+            avatar.style.opacity = '0';
+        }, 1000);
+        
+        // Change maps after drive in
+        setTimeout(() => {
+            vehicle.classList.remove('drive-in');
+            vehicle.classList.add('hidden');
+            window.App.showScreen('screen-map-' + toLevel);
+            this.updateUI();
+            
+            // Drive out on new map
+            const newVehicle = document.getElementById('vehicle-' + (toLevel === 2 ? 'taxi' : 'bus'));
+            if (newVehicle && vehicleId === 'taxi') {
+                newVehicle.classList.remove('hidden');
+                newVehicle.classList.add('drive-out');
+                setTimeout(() => {
+                    document.getElementById('player-avatar-' + toLevel).style.opacity = '1';
+                }, 500);
+            }
+        }, 2500);
+    },
+
+    updateUI() {
+        if (this.isAnimating) return;
+        const user = window.App.currentUser;
+        if (!user) return;
+        
+        document.getElementById('streak-counter-1').innerText = "🔥 Days: " + user.streak;
+        document.getElementById('streak-counter-2').innerText = "🔥 Days: " + user.streak;
+        document.getElementById('streak-counter-3').innerText = "🔥 Days: " + user.streak;
+
+        // Set Avatars
+        if (user.animal) {
+            ['1', '2', '3'].forEach(l => {
+                const img = document.getElementById('player-avatar-' + l);
+                if (img) img.src = \`avatar_\${user.animal}.png\`;
+            });
+        }
+        
+        // Unlock 1B
+        if (user.streak >= 7 || this.hasPasswordBypass(7)) {
+            document.getElementById('node-1b').classList.remove('locked');
+            const l = document.getElementById('node-1b').querySelector('.lock-overlay');
+            if (l) l.style.display = 'none';
+        }
+
+        // Unlock Exit 1
+        if (user.streak >= 14 || this.hasPasswordBypass(14)) {
+            document.getElementById('node-exit1').classList.remove('locked');
+            const l = document.getElementById('node-exit1').querySelector('.lock-overlay');
+            if (l) l.style.display = 'none';
+        }
+
+        // Unlock 2B
+        if (user.streak >= 21 || this.hasPasswordBypass(21)) {
+            document.getElementById('node-2b').classList.remove('locked');
+            const l = document.getElementById('node-2b').querySelector('.lock-overlay');
+            if (l) l.style.display = 'none';
+        }
+
+        // Unlock Exit 2
+        if (user.streak >= 28 || this.hasPasswordBypass(28)) {
+            document.getElementById('node-exit2').classList.remove('locked');
+            const l = document.getElementById('node-exit2').querySelector('.lock-overlay');
+            if (l) l.style.display = 'none';
+        }
+        
+        // Unlock 3B
+        if (user.streak >= 35 || this.hasPasswordBypass(35)) {
+            document.getElementById('node-3b').classList.remove('locked');
+            const l = document.getElementById('node-3b').querySelector('.lock-overlay');
+            if (l) l.style.display = 'none';
+        }
+
+        // Unlock Exit 3
+        if (user.streak >= 42 || this.hasPasswordBypass(42)) {
+            document.getElementById('node-exit3').classList.remove('locked');
+            const l = document.getElementById('node-exit3').querySelector('.lock-overlay');
+            if (l) l.style.display = 'none';
+        }
+
+        this.positionAvatar();
+    },
+    
+    positionAvatar() {
+        const user = window.App.currentUser;
+        let s = user.streak;
+        
+        ['1', '2', '3'].forEach(l => {
+            const av = document.getElementById('player-avatar-' + l);
+            if (av) {
+                av.style.opacity = '0';
+                av.style.left = '15%'; // Default off-screen or start
+            }
+        });
+        
+        let targetLvl = 1;
+        let ratio = 0; // 0 to 1 for the 2 paths
+        
+        if (s < 7) {
+            targetLvl = 1; ratio = (s / 7) * 0.5; // Path 1a
+        } else if (s < 14) {
+            targetLvl = 1; ratio = 0.5 + ((s - 7) / 7) * 0.5; // Path 1b
+        } else if (s === 14 && !this.hasPasswordBypass(14)) {
+            targetLvl = 1; ratio = 1; // Stuck at bus
+        } else if (s < 21) {
+            targetLvl = 2; ratio = ((s - 14) / 7) * 0.5; // Path 2a
+        } else if (s < 28) {
+            targetLvl = 2; ratio = 0.5 + ((s - 21) / 7) * 0.5; // Path 2b
+        } else if (s === 28 && !this.hasPasswordBypass(28)) {
+            targetLvl = 2; ratio = 1; // Stuck at gate
+        } else if (s < 35) {
+            targetLvl = 3; ratio = ((s - 28) / 7) * 0.5; // Path 3a
+        } else if (s < 42) {
+            targetLvl = 3; ratio = 0.5 + ((s - 35) / 7) * 0.5; // Path 3b
+        } else {
+            targetLvl = 3; ratio = 1; // Final goal
+        }
+        
+        const av = document.getElementById('player-avatar-' + targetLvl);
+        if (av) {
+            av.style.opacity = '1';
+            let pathId = ratio <= 0.5 ? 'path-line-' + targetLvl : 'path-line-' + targetLvl + 'b';
+            let localR = ratio <= 0.5 ? ratio * 2 : (ratio - 0.5) * 2;
+            const path = document.getElementById(pathId);
+            if (path) {
+                const pt = path.getPointAtLength(localR * path.getTotalLength());
+                av.style.left = \`\${pt.x}%\`;
+                av.style.top = \`\${pt.y}%\`;
+            }
+        }
+    },
+
+    animateStep(oldStreak, newStreak) {
+        // Redraw immediately since fast forward handles big jumps
+        this.updateUI();
+    }
+;
+
+const Game = {
     canvas: null,
     ctx: null,
     animationId: null,
@@ -595,8 +866,8 @@ const newGameCode = \`const Game = {
     }
 };
 
-window.Auth = Auth;
-window.Progress = Progress;
+\;
+
 window.Map = Map;
 window.Game = Game;
 
