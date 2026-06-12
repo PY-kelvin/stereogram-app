@@ -349,9 +349,9 @@ const Map = {
                 if (!user || !user.stagePlays) return;
 
                 let targetMap = 1;
-                if (user.stagePlays[3] > 0 || window.Map.hasPasswordBypass(28)) {
+                if (user.stagePlays[3] > 0 || user.stagePlays[2] >= 14) {
                     targetMap = 3;
-                } else if (user.stagePlays[2] > 0 || window.Map.hasPasswordBypass(14)) {
+                } else if (user.stagePlays[2] > 0 || user.stagePlays[1] >= 14) {
                     targetMap = 2;
                 }
 
