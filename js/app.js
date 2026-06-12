@@ -372,6 +372,8 @@ const Map = {
                 document.getElementById('password-modal').classList.add('hidden');
             } else if (pwd === 'orthoptics 4') {
                 this.fastForward(35, "orthoptics 4");
+            } else if (pwd === 'orthoptics 5') {
+                this.fastForward(42, "orthoptics 5");
             } else {
                 window.App.showNotification("Incorrect Password.", "warning");
             }
@@ -408,6 +410,11 @@ const Map = {
                 this.triggerCinematicTransition(2, 3, 'taxi', 28, "orthoptics 3");
                 return;
             }
+        } else if (exitNum === 3) {
+            if (user.streak >= 42 || this.hasPasswordBypass(42)) {
+                window.App.showNotification("You have reached the final goal! Congratulations!", "success");
+                return;
+            }
         }
 
         this.pwdTargetStage = exitNum;
@@ -423,6 +430,7 @@ const Map = {
         if (reqStreak === 21 && user.passwords.includes('orthoptics 2')) return true;
         if (reqStreak === 28 && user.passwords.includes('orthoptics 3')) return true;
         if (reqStreak === 35 && user.passwords.includes('orthoptics 4')) return true;
+        if (reqStreak === 42 && user.passwords.includes('orthoptics 5')) return true;
         return false;
     },
 
@@ -1119,6 +1127,7 @@ const App = {
             if (req === 21 && user.passwords.includes('orthoptics 2')) return true;
             if (req === 28 && user.passwords.includes('orthoptics 3')) return true;
             if (req === 35 && user.passwords.includes('orthoptics 4')) return true;
+            if (req === 42 && user.passwords.includes('orthoptics 5')) return true;
             return false;
         };
 
