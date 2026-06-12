@@ -679,7 +679,8 @@ const Map = {
                     let targetId = 'node-' + lastNodeName.toLowerCase();
                     const targetNode = document.getElementById(targetId);
                     if (targetNode) {
-                        const nodeRect = targetNode.getBoundingClientRect();
+                        const iconNode = targetNode.querySelector('.node-icon') || targetNode;
+                        const nodeRect = iconNode.getBoundingClientRect();
                         av.style.left = (nodeRect.left - contentRect.left + nodeRect.width / 2) + 'px';
                         av.style.top = (nodeRect.top - contentRect.top + nodeRect.height / 2) + 'px';
                     } else {
