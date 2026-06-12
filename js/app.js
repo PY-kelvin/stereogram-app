@@ -345,15 +345,24 @@ const Map = {
 
         document.querySelectorAll('.btn-show-progress').forEach(btn => {
             btn.addEventListener('click', async (e) => {
-                const mapId = parseInt(e.target.getAttribute('data-map'));
                 const user = window.App.currentUser;
-                if (user && user.stagePlays) {
-                    if (!user.lastVisitedNode) user.lastVisitedNode = {};
-                    user.lastVisitedNode[mapId] = 'PROGRESS';
-                    if (window.Progress) window.Progress.saveUser();
-                    // Animate to progress
-                    await window.Map.animateAvatarProgress(mapId, 0, user.stagePlays[mapId] || 0);
+                if (!user || !user.stagePlays) return;
+
+                let targetMap = 1;
+                if (user.stagePlays[3] > 0 || window.Map.hasPasswordBypass(28)) {
+                    targetMap = 3;
+                } else if (user.stagePlays[2] > 0 || window.Map.hasPasswordBypass(14)) {
+                    targetMap = 2;
                 }
+
+                window.App.showScreen('screen-map-' + targetMap);
+
+                if (!user.lastVisitedNode) user.lastVisitedNode = {};
+                user.lastVisitedNode[targetMap] = 'PROGRESS';
+                if (window.Progress) window.Progress.saveUser();
+                
+                // Animate to progress
+                await window.Map.animateAvatarProgress(targetMap, 0, user.stagePlays[targetMap] || 0);
             });
         });
 
