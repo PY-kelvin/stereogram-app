@@ -401,8 +401,8 @@ h1, h2, h3 {
 }
 
 .bg-sakura { background-color: #ffb7b2; background-size: cover; background-position: center; position: relative; }
-.bg-gate { background-color: #8b93a5; background-size: cover; background-position: center; position: relative; }
-.bg-bus { background-color: #ffd166; background-size: cover; background-position: center; position: relative; }
+.bg-gate { background-color: #ffb7b2; background-size: cover; background-position: center; position: relative; }
+.bg-bus { background-color: #a8e6cf; background-size: cover; background-position: center; position: relative; }
 
 /* Game Screen */
 #screen-game {
@@ -666,20 +666,21 @@ h1, h2, h3 {
 
 /* Background images for map nodes */
 .bg-farm {
-    background-image: url('farm_node.png');
+    background-color: #a8e6cf;
     background-size: cover;
     background-position: center;
+    position: relative;
 }
 
 .bg-city {
-    background-image: url('city_node.png');
+    background-color: #a1c9f2;
     background-size: cover;
     background-position: center;
     position: relative;
 }
 
 .bg-castle {
-    background-image: url('castle_node.png');
+    background-color: #a1c9f2;
     background-size: cover;
     background-position: center;
     position: relative;
