@@ -741,6 +741,8 @@ const Map = {
             if (l === 3 && user.stagePlays[2] < 14 && !this.hasPasswordBypass(28)) {
                 av.style.opacity = '0';
                 return;
+            }
+
             // Preserve existing scale if possible
             let currentScale = 'scale(1)';
             if (av.style.transform && av.style.transform.includes('scale')) {
