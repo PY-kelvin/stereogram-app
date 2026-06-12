@@ -388,6 +388,20 @@ const Map = {
     },
     
     handleExitClick(exitNum) {
+        const user = window.App.currentUser;
+        
+        if (exitNum === 1) {
+            if (user.streak >= 14 || this.hasPasswordBypass(14)) {
+                this.triggerCinematicTransition(1, 2, 'bus', 14, "orthoptics 1");
+                return;
+            }
+        } else if (exitNum === 2) {
+            if (user.streak >= 28 || this.hasPasswordBypass(28)) {
+                this.triggerCinematicTransition(2, 3, 'taxi', 28, "orthoptics 3");
+                return;
+            }
+        }
+
         this.pwdTargetStage = exitNum;
         document.getElementById('admin-password').value = '';
         document.getElementById('password-modal').classList.remove('hidden');
