@@ -244,7 +244,6 @@ const Progress = {
                 isExtraSession = true; // For global map streak purposes
             } else {
                 user.dailyProgress = 1;
-                user.streak += 1;
             }
 
             this.saveUser();
@@ -285,10 +284,11 @@ const Progress = {
             const today = new Date().toDateString();
             let progressStr = "(0/1 today)";
             
-            if (user.sessionHistory && user.sessionHistory.some(s => s.dateStr === today && s.durationMins >= 10)) {
-                progressStr = "(Done today!)";
+            let totalCounts = 0;
+            if (user.stagePlays) {
+                totalCounts = (user.stagePlays[1] || 0) + (user.stagePlays[2] || 0) + (user.stagePlays[3] || 0);
             }
-            streakCounter.innerText = `⭐ Counts: ${user.streak}/42 (All-time) ${progressStr}`;
+            streakCounter.innerText = `⭐ Counts: ${totalCounts}/42 (All-time) ${progressStr}`;
         }
     }
 };
@@ -385,17 +385,16 @@ const Map = {
     
     handleNodeClick(nodeName, level, reqStreak) {
         const user = window.App.currentUser;
-        if (user.streak < reqStreak && !this.hasPasswordBypass(reqStreak)) {
-            // Need password for 1B, 2B, 3B if not enough days
-            if (nodeName.endsWith('B')) {
-                this.pwdTargetStage = level;
-                document.getElementById('admin-password').value = '';
-                document.getElementById('password-modal').classList.remove('hidden');
-            } else {
-                window.App.showNotification("You haven't reached this stage yet!", "warning");
-            }
+        if (!user || !user.stagePlays) return;
+
+        if (nodeName.endsWith('B') && user.stagePlays[level] < 7 && !this.hasPasswordBypass(reqStreak)) {
+            // Need password for 1B, 2B, 3B if not enough counts
+            this.pwdTargetStage = level;
+            document.getElementById('password-modal').classList.remove('hidden');
+            document.getElementById('admin-password').value = '';
             return;
         }
+        
         // Passed checks, start game
         window.Game.startStage(nodeName);
     },
@@ -413,7 +412,7 @@ const Map = {
             return;
         }
         
-        if (exitNum === 3 && user.streak >= 42) {
+        if (exitNum === 3 && window.App.currentUser.stagePlays && window.App.currentUser.stagePlays[3] >= 14) {
             window.App.showNotification("You have reached the final goal! Congratulations!", "success");
             return;
         }
@@ -435,49 +434,37 @@ const Map = {
         return false;
     },
 
-    fastForward(targetStreak, pwdFlag) {
+    fastForward(targetStreak, pwdName) {
         const user = window.App.currentUser;
-        document.getElementById('password-modal').classList.add('hidden');
+        if (!user) return;
+        
         user.passwords = user.passwords || [];
-        if (!user.passwords.includes(pwdFlag)) user.passwords.push(pwdFlag);
-        
-        let oldStreak = user.streak || 0;
-        let newStreak = Math.max(oldStreak, targetStreak);
-        
-        if (oldStreak < newStreak) {
-            user.streak = newStreak;
-            if (window.Progress) window.Progress.saveUser();
-            window.App.showNotification("Password Accepted!", "success");
-            this.animateAvatarToStreak(oldStreak, newStreak).then(() => {
-                this.updateUI();
-            });
-        } else {
-            if (window.Progress) window.Progress.saveUser();
-            window.App.showNotification("Password Accepted!", "success");
-            this.updateUI();
+        if (!user.passwords.includes(pwdName)) {
+            user.passwords.push(pwdName);
         }
+        
+        if (window.Progress) window.Progress.saveUser();
+        window.App.showNotification("Password Accepted!", "success");
+        this.updateUI();
     },
 
-    triggerCinematicTransition(fromLevel, toLevel, vehicleId, targetStreak, pwdFlag) {
+    triggerCinematicTransition(fromMap, toMap, vehicleType, targetStreak, pwdName) {
         const user = window.App.currentUser;
-        document.getElementById('password-modal').classList.add('hidden');
+        if (!user) return;
+
         user.passwords = user.passwords || [];
-        if (!user.passwords.includes(pwdFlag)) user.passwords.push(pwdFlag);
-        
-        let oldStreak = user.streak || 0;
-        let newStreak = Math.max(oldStreak, targetStreak);
-        
-        if (oldStreak < newStreak) {
-            user.streak = newStreak;
-            if (window.Progress) window.Progress.saveUser();
-            this.animateAvatarToStreak(oldStreak, newStreak).then(() => {
-                this.updateUI();
-            });
-        } else {
-            if (window.Progress) window.Progress.saveUser();
-            // Already unlocked, so just transition map via animation
-            this.travelForward(fromLevel);
+        if (!user.passwords.includes(pwdName)) {
+            user.passwords.push(pwdName);
         }
+        if (window.Progress) window.Progress.saveUser();
+
+        document.getElementById('password-modal').classList.add('hidden');
+        
+        // Setup cinematic
+        const cinematic = document.getElementById('cinematic-transition');
+        cinematic.className = 'cinematic-overlay';
+        cinematic.classList.remove('hidden'); 
+        this.updateUI();
     },
 
     async travelForward(fromLevel) {
@@ -501,64 +488,71 @@ const Map = {
     },
 
     updateUI() {
-        if (this.isAnimating) return;
-        const user = window.App.currentUser;
+        if (this.isAnimating) return;        const user = window.App.currentUser;
         if (!user) return;
         
-        const s = user.streak || 0;
-        let map1Count = Math.min(s, 14);
-        let map2Count = Math.max(0, Math.min(s - 14, 14));
-        let map3Count = Math.max(0, Math.min(s - 28, 14));
+        if (!user.stagePlays) user.stagePlays = { 1: user.streak || 0, 2: 0, 3: 0 };
+        const p1 = user.stagePlays[1];
+        const p2 = user.stagePlays[2];
+        const p3 = user.stagePlays[3];
 
-        document.getElementById('streak-counter-1').innerText = "⭐ Counts: " + map1Count;
-        document.getElementById('streak-counter-2').innerText = "⭐ Counts: " + map2Count;
-        document.getElementById('streak-counter-3').innerText = "⭐ Counts: " + map3Count;
+        document.getElementById('streak-counter-1').innerText = "⭐ Counts: " + p1;
+        document.getElementById('streak-counter-2').innerText = "⭐ Counts: " + p2;
+        document.getElementById('streak-counter-3').innerText = "⭐ Counts: " + p3;
 
         // Set Avatars
         if (user.animal) {
-            ['1', '2', '3'].forEach(l => {
-                const img = document.getElementById('player-avatar-' + l);
-                if (img) img.src = `avatar_${user.animal}.png`;
+            document.querySelectorAll('.avatar-img').forEach(img => {
+                img.src = 'avatar_' + user.animal + '.png';
             });
         }
-        
+
+        // --- Locks ---
+        document.querySelectorAll('.stage-node').forEach(node => {
+            if (node.id !== 'node-1a' && node.id !== 'node-2a' && node.id !== 'node-3a') {
+                node.classList.add('locked');
+                let lock = node.querySelector('.lock-overlay');
+                if (lock) lock.style.display = 'block';
+            }
+        });
+
         // Unlock 1B
-        if (user.streak >= 7 || this.hasPasswordBypass(7)) {
+        if (p1 >= 7 || this.hasPasswordBypass(7)) {
             document.getElementById('node-1b').classList.remove('locked');
             const l = document.getElementById('node-1b').querySelector('.lock-overlay');
             if (l) l.style.display = 'none';
         }
 
         // Unlock Exit 1
-        if (user.streak >= 14 || this.hasPasswordBypass(14)) {
+        if (p1 >= 14 || this.hasPasswordBypass(14)) {
             document.getElementById('node-exit1').classList.remove('locked');
             const l = document.getElementById('node-exit1').querySelector('.lock-overlay');
             if (l) l.style.display = 'none';
         }
 
         // Unlock 2B
-        if (user.streak >= 21 || this.hasPasswordBypass(21)) {
+        if (p2 >= 7 || this.hasPasswordBypass(21)) {
             document.getElementById('node-2b').classList.remove('locked');
             const l = document.getElementById('node-2b').querySelector('.lock-overlay');
             if (l) l.style.display = 'none';
         }
 
         // Unlock Exit 2
-        if (user.streak >= 28 || this.hasPasswordBypass(28)) {
+        if (p2 >= 14 || this.hasPasswordBypass(28)) {
             document.getElementById('node-exit2').classList.remove('locked');
             const l = document.getElementById('node-exit2').querySelector('.lock-overlay');
             if (l) l.style.display = 'none';
         }
         
         // Unlock 3B
-        if (user.streak >= 35 || this.hasPasswordBypass(35)) {
+        if (p3 >= 7 || this.hasPasswordBypass(35)) {
             document.getElementById('node-3b').classList.remove('locked');
             const l = document.getElementById('node-3b').querySelector('.lock-overlay');
             if (l) l.style.display = 'none';
         }
 
         // Unlock Exit 3
-        if (user.streak >= 42 || this.hasPasswordBypass(42)) {
+        if (p3 >= 14 || this.hasPasswordBypass(42)) {
             document.getElementById('node-exit3').classList.remove('locked');
             const l = document.getElementById('node-exit3').querySelector('.lock-overlay');
             if (l) l.style.display = 'none';
@@ -570,63 +564,62 @@ const Map = {
         }, 50);
     },
     
-    getStreakPosition(s) {
-        let targetLvl = 1;
+    getMapPosition(counts) {
         let ratio = 0; // 0 to 1 for the 2 paths
         
-        if (s < 7) {
-            targetLvl = 1; ratio = (s / 7) * 0.5; // Path 1a
-        } else if (s < 14) {
-            targetLvl = 1; ratio = 0.5 + ((s - 7) / 7) * 0.5; // Path 1b
-        } else if (!this.hasPasswordBypass(14)) {
-            targetLvl = 1; ratio = 1; // Stuck at bus
-        } else if (s < 21) {
-            targetLvl = 2; ratio = ((s - 14) / 7) * 0.5; // Path 2a
-        } else if (s < 28) {
-            targetLvl = 2; ratio = 0.5 + ((s - 21) / 7) * 0.5; // Path 2b
-        } else if (!this.hasPasswordBypass(28)) {
-            targetLvl = 2; ratio = 1; // Stuck at gate
-        } else if (s < 35) {
-            targetLvl = 3; ratio = ((s - 28) / 7) * 0.5; // Path 3a
-        } else if (s < 42) {
-            targetLvl = 3; ratio = 0.5 + ((s - 35) / 7) * 0.5; // Path 3b
+        if (counts < 7) {
+            ratio = (counts / 7) * 0.5; // Path a
+        } else if (counts < 14) {
+            ratio = 0.5 + ((counts - 7) / 7) * 0.5; // Path b
         } else {
-            targetLvl = 3; ratio = 1; // Final goal
+            ratio = 1; // End
         }
-        return { targetLvl, ratio };
+        return ratio;
     },
 
-    positionAvatar(sOverride = null) {
+    positionAvatar(mapOverride = null, countsOverride = null) {
         const user = window.App.currentUser;
-        let s = sOverride !== null ? sOverride : user.streak;
-        
-        const pos = this.getStreakPosition(s);
-        let targetLvl = pos.targetLvl;
-        let ratio = pos.ratio;
+        if (!user || !user.stagePlays) return;
         
         [1, 2, 3].forEach(l => {
             const av = document.getElementById('player-avatar-' + l);
             if (!av) return;
             
-            if (l > targetLvl) {
+            // Only hide avatars for locked maps
+            if (l === 2 && !this.hasPasswordBypass(14)) {
                 av.style.opacity = '0';
-            } else {
-                av.style.opacity = '1';
-                let mapRatio = (l === targetLvl) ? ratio : 1;
-                let pathId = mapRatio < 0.5 ? 'path-line-' + l : 'path-line-' + l + 'b';
-                let localR = mapRatio < 0.5 ? mapRatio * 2 : (mapRatio - 0.5) * 2;
-                if (mapRatio === 1) { pathId = 'path-line-' + l + 'b'; localR = 1; }
-                  
-                const path = document.getElementById(pathId);
-                if (path) {
-                    try {
-                        const pt = path.getPointAtLength(localR * path.getTotalLength());
-                        if (pt && !isNaN(pt.x)) {
-                            av.style.left = `${pt.x}%`;
-                            av.style.top = `${pt.y}%`;
-                        }
-                    } catch (e) {}
-                }
+                return;
+            }
+            if (l === 3 && !this.hasPasswordBypass(28)) {
+                av.style.opacity = '0';
+                return;
+            }
+
+            av.style.opacity = '1';
+
+            let counts = user.stagePlays[l];
+            if (mapOverride === l && countsOverride !== null) counts = countsOverride;
+
+            let ratio = this.getMapPosition(counts);
+            let pathId = ratio < 0.5 ? 'path-line-' + l : 'path-line-' + l + 'b';
+            let localR = ratio < 0.5 ? ratio * 2 : (ratio - 0.5) * 2;
+            if (ratio === 1) { pathId = 'path-line-' + l + 'b'; localR = 1; }
+              
+            const path = document.getElementById(pathId);
+            if (path) {
+                try {
+                    const pt = path.getPointAtLength(localR * path.getTotalLength());
+                    
+                    // Add bounding box offsets
+                    const svgRect = path.closest('svg').getBoundingClientRect();
+                    const containerRect = path.closest('.map-container').getBoundingClientRect();
+                    
+                    const dx = svgRect.left - containerRect.left;
+                    const dy = svgRect.top - containerRect.top;
+                    
+                    av.style.left = (pt.x + dx) + 'px';
+                    av.style.top = (pt.y + dy) + 'px';
+                } catch(e) {}
             }
         });
     },
@@ -661,15 +654,15 @@ const Map = {
         });
     },
 
-    animatePathProgress(startS, endS, durationMs) {
+    animatePathProgress(mapNum, startC, endC, durationMs) {
         return new Promise(resolve => {
-            if (startS === endS) return resolve();
+            if (startC === endC) return resolve();
             const startTime = performance.now();
             const step = (timestamp) => {
                 let elapsed = timestamp - startTime;
                 let progress = Math.min(elapsed / durationMs, 1);
-                let currentS = startS + (endS - startS) * progress;
-                this.positionAvatar(currentS);
+                let currentC = startC + (endC - startC) * progress;
+                this.positionAvatar(mapNum, currentC);
                 if (progress < 1) {
                     requestAnimationFrame(step);
                 } else {
@@ -680,38 +673,16 @@ const Map = {
         });
     },
 
-    async animateAvatarToStreak(oldS, newS) {
+    async animateAvatarProgress(mapNum, oldC, newC) {
         this.isAnimating = true;
-        let currentS = oldS;
-        
-        while (currentS < newS) {
-            let startPos = this.getStreakPosition(currentS);
-            let endPos = this.getStreakPosition(newS);
-            
-            if (startPos.targetLvl === endPos.targetLvl) {
-                // Same map
-                let duration = Math.max(1000, (newS - currentS) * 300);
-                await this.animatePathProgress(currentS, newS, duration);
-                currentS = newS;
-            } else {
-                // Cross map boundary
-                let exitS = startPos.targetLvl * 14; 
-                let duration = Math.max(1000, (exitS - currentS) * 300);
-                await this.animatePathProgress(currentS, exitS, duration);
-                
-                await this.shrinkAvatar(startPos.targetLvl);
-                window.App.showScreen('screen-map-' + (startPos.targetLvl + 1));
-                await this.growAvatar(startPos.targetLvl + 1);
-                
-                currentS = exitS;
-            }
-        }
+        let duration = Math.max(1000, (newC - oldC) * 300);
+        await this.animatePathProgress(mapNum, oldC, newC, duration);
         this.isAnimating = false;
         this.positionAvatar(); // ensure exact final position
     },
 
     animateStep(oldStreak, newStreak) {
-        // Redraw immediately since fast forward handles big jumps
+        // Obsolete
         this.updateUI();
     }
 };
@@ -1008,11 +979,6 @@ const Game = {
         user.sessionHistory = user.sessionHistory || [];
         const lastSession = user.sessionHistory[user.sessionHistory.length - 1];
 
-        // Add streak logic (max 1 per day)
-        // It only increments STREAK when a FULL session is completed!
-        let oldStreak = user.streak || 0;
-        let newStreak = oldStreak;
-        
         const hasFullSessionToday = user.sessionHistory.some(s => s.dateStr === dateStr && s.durationMins >= 10);
         
         // Ensure 10 minutes is logged exactly once for completion
@@ -1023,15 +989,31 @@ const Game = {
             stage: this.currentStageNode
         });
 
-        if (!hasFullSessionToday) {
-            let maxAllowed = 42;
-            if (!window.Map.hasPasswordBypass(14)) maxAllowed = 14;
-            else if (!window.Map.hasPasswordBypass(28)) maxAllowed = 28;
+        // Initialize structures
+        if (!user.stagePlays) user.stagePlays = { 1: user.streak || 0, 2: 0, 3: 0 };
+        if (!user.stageDailyProgress) user.stageDailyProgress = { 1: 0, 2: 0, 3: 0 };
 
-            if (oldStreak < maxAllowed) {
-                newStreak = oldStreak + 1;
-                user.streak = newStreak;
-            }
+        // Reset daily progress if new day
+        if (user.lastActivityDate !== dateStr) {
+            user.stageDailyProgress = { 1: 0, 2: 0, 3: 0 };
+            user.lastActivityDate = dateStr;
+            user.dailyProgress = 0;
+        }
+
+        let stageNum = 1;
+        if (this.currentStageNode) {
+            if (this.currentStageNode.startsWith('2')) stageNum = 2;
+            if (this.currentStageNode.startsWith('3')) stageNum = 3;
+        }
+
+        let oldPlays = user.stagePlays[stageNum];
+        let newPlays = oldPlays;
+
+        if (user.stageDailyProgress[stageNum] === 0) {
+            user.stageDailyProgress[stageNum] = 1;
+            user.stagePlays[stageNum] += 1;
+            user.dailyProgress = 1;
+            newPlays = user.stagePlays[stageNum];
         }
 
         if (window.Progress) window.Progress.saveUser();
@@ -1045,8 +1027,8 @@ const Game = {
         window.App.showMapScreen(specificMap);
         
         if (window.Map) {
-            if (oldStreak < newStreak) {
-                window.Map.animateAvatarToStreak(oldStreak, newStreak).then(() => {
+            if (oldPlays < newPlays) {
+                window.Map.animateAvatarProgress(stageNum, oldPlays, newPlays).then(() => {
                     window.Map.updateUI();
                 });
             } else {
@@ -1155,7 +1137,6 @@ const App = {
     showMapScreen(specificMap = null) {
         const user = this.currentUser || {};
         let targetMap = 1;
-        const s = user.streak || 0;
         
         const hasBypass = (req) => {
             if (!user.passwords) return false;
