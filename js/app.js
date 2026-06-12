@@ -851,7 +851,6 @@ const Map = {
                 return;
             }
 
-            let ratio = this.getMapPosition(counts);
             let pathId = ratio < 0.5 ? 'path-line-' + l : 'path-line-' + l + 'b';
             let localR = ratio < 0.5 ? ratio * 2 : (ratio - 0.5) * 2;
             if (ratio === 1) { pathId = 'path-line-' + l + 'b'; localR = 1; }
