@@ -789,6 +789,9 @@ const Map = {
 
     async animateAvatarProgress(mapNum, oldC, newC) {
         this.isAnimating = true;
+        const av = document.getElementById('player-avatar-' + mapNum);
+        if (av) av.style.transition = 'none'; // Ensure no CSS transition interference
+        console.log(`[v146] Animating map ${mapNum} from counts ${oldC} to ${newC} along SVG curve`);
         let duration = Math.max(1000, Math.abs(newC - oldC) * 300);
         await this.animatePathProgress(mapNum, oldC, newC, duration);
         this.isAnimating = false;
