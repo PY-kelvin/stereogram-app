@@ -557,10 +557,27 @@
             </div>
         </div>
 
+        <!-- Final Goal Modal -->
+        <div id="final-goal-modal" class="modal hidden" style="z-index: 10000;">
+            <canvas id="final-confetti-canvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></canvas>
+            <div class="modal-content" style="text-align: center; width: 90%; max-width: 400px; border: 4px solid #f9a826; border-radius: 20px; background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);">
+                <h2 style="color: #e65100; font-size: 2rem; margin-top: 0;">Congratulations! 🎉</h2>
+                <p style="font-size: 1.2rem; font-weight: 600; color: #5d4037;">You deserve a good eye break!</p>
+                
+                <div id="hug-animation-container" style="position: relative; height: 150px; margin: 30px 0; display: flex; justify-content: center; align-items: flex-end;">
+                    <img id="hug-avatar" src="" style="width: 80px; position: absolute; left: 10%; bottom: 0; z-index: 2; transition: all 1s ease;">
+                    <img id="hug-partner" src="" style="width: 90px; position: absolute; right: 10%; bottom: 0; z-index: 1; transition: all 1s ease;">
+                    <div id="hug-hearts" style="position: absolute; top: -20px; font-size: 2rem; opacity: 0; transition: opacity 0.5s ease; z-index: 3;">❤️❤️❤️</div>
+                </div>
+                
+                <button id="btn-close-final-goal" class="btn btn-primary" style="font-size: 1.2rem; padding: 10px 30px;">Yay!</button>
+            </div>
+        </div>
+
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=183"></script>
+    <script src="js/app.js?v=184"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {

@@ -523,10 +523,58 @@ const Map = {
         await this.animateAvatarProgress(exitNum, oldC, newC);
 
         if (exitNum === 3) {
-            window.App.showNotification("You have reached the final goal! Congratulations!", "success");
+            this.showFinalGoalHug();
         } else {
             this.travelForward(exitNum);
         }
+    },
+
+    showFinalGoalHug() {
+        const modal = document.getElementById('final-goal-modal');
+        const userAvatar = window.App.currentUser.avatar || 'avatar_cat.png';
+        const partners = [
+            'reward_capybara.png', 'reward_chicken.png', 'reward_cow.png', 
+            'reward_duck.png', 'reward_farmers.png', 'reward_hamster.png', 
+            'reward_horse.png', 'reward_penguin.png', 'reward_squirrel.png'
+        ];
+        // Pick a random partner
+        const randomPartner = partners[Math.floor(Math.random() * partners.length)];
+        
+        const avatarImg = document.getElementById('hug-avatar');
+        const partnerImg = document.getElementById('hug-partner');
+        const hearts = document.getElementById('hug-hearts');
+        
+        avatarImg.src = userAvatar;
+        partnerImg.src = randomPartner;
+        
+        // Reset positions
+        avatarImg.style.transform = 'translateX(0) scale(1)';
+        partnerImg.style.transform = 'translateX(0) scale(1)';
+        avatarImg.style.left = '10%';
+        partnerImg.style.right = '10%';
+        hearts.style.opacity = '0';
+        hearts.style.transform = 'translateY(10px)';
+        
+        modal.classList.remove('hidden');
+        if (window.Confetti) window.Confetti.start();
+        
+        // Animate hug after a small delay
+        setTimeout(() => {
+            // Move them to center
+            avatarImg.style.left = '35%';
+            partnerImg.style.right = '35%';
+            
+            // Wait for movement, then "hug"
+            setTimeout(() => {
+                avatarImg.style.transform = 'scale(1.1) rotate(5deg)';
+                partnerImg.style.transform = 'scale(1.1) rotate(-5deg)';
+                
+                // Show hearts
+                hearts.style.transition = 'all 0.5s ease';
+                hearts.style.opacity = '1';
+                hearts.style.transform = 'translateY(-20px)';
+            }, 1000);
+        }, 300);
     },
 
     hasPasswordBypass(reqStreak) {
@@ -1958,24 +2006,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const btnCloseFinalGoal = document.getElementById('btn-close-final-goal');
+    if (btnCloseFinalGoal) {
+        btnCloseFinalGoal.addEventListener('click', () => {
+            document.getElementById('final-goal-modal').classList.add('hidden');
+            if (window.Confetti) window.Confetti.stop();
+        });
+    }
+
     // Global Audio Mute Logic
     const audio = document.getElementById('bgm-audio');
-    const muteBtn = document.getElementById('global-mute-btn');
-    if (audio && muteBtn) {
+    const muteBtns = document.querySelectorAll('.btn-mute');
+    if (audio && muteBtns.length > 0) {
         let isMuted = localStorage.getItem('stereogram_is_muted') === 'true';
         audio.muted = isMuted;
-        muteBtn.innerText = isMuted ? "🔇" : "🔊";
+        muteBtns.forEach(btn => btn.innerText = isMuted ? "🔇" : "🔊");
 
-        muteBtn.addEventListener('click', () => {
-            isMuted = !isMuted;
-            audio.muted = isMuted;
-            localStorage.setItem('stereogram_is_muted', isMuted);
-            muteBtn.innerText = isMuted ? "🔇" : "🔊";
-            
-            // Auto-play if unmuted and user is active
-            if (!isMuted && window.App.currentUser) {
-                audio.play().catch(e => console.log('Audio autoplay blocked', e));
-            }
+        muteBtns.forEach(muteBtn => {
+            muteBtn.addEventListener('click', () => {
+                isMuted = !isMuted;
+                audio.muted = isMuted;
+                localStorage.setItem('stereogram_is_muted', isMuted);
+                muteBtns.forEach(btn => btn.innerText = isMuted ? "🔇" : "🔊");
+                
+                // Auto-play if unmuted and user is active
+                if (!isMuted && window.App.currentUser) {
+                    audio.play().catch(e => console.log('Audio autoplay blocked', e));
+                }
+            });
         });
     }
 });
