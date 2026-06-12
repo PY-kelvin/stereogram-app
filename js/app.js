@@ -587,6 +587,14 @@ const Map = {
         if (window.Progress) window.Progress.saveUser();
         
         await this.shrinkAvatar(fromLevel);
+        
+        // Hide target avatar BEFORE showing screen
+        const targetAv = document.getElementById('player-avatar-' + (fromLevel + 1));
+        if (targetAv) {
+            targetAv.style.transition = 'none';
+            targetAv.style.transform = 'translate(-50%, -50%) scale(0)';
+        }
+        
         window.App.showScreen('screen-map-' + (fromLevel + 1));
         
         // Wait for layout to catch up, then position avatar BEFORE it grows
@@ -608,6 +616,14 @@ const Map = {
         if (window.Progress) window.Progress.saveUser();
         
         await this.shrinkAvatar(fromLevel);
+        
+        // Hide target avatar BEFORE showing screen
+        const targetAv = document.getElementById('player-avatar-' + (fromLevel - 1));
+        if (targetAv) {
+            targetAv.style.transition = 'none';
+            targetAv.style.transform = 'translate(-50%, -50%) scale(0)';
+        }
+        
         window.App.showScreen('screen-map-' + (fromLevel - 1));
         
         // Wait for layout to catch up, then position avatar BEFORE it grows
@@ -725,10 +741,14 @@ const Map = {
             if (l === 3 && user.stagePlays[2] < 14 && !this.hasPasswordBypass(28)) {
                 av.style.opacity = '0';
                 return;
+            // Preserve existing scale if possible
+            let currentScale = 'scale(1)';
+            if (av.style.transform && av.style.transform.includes('scale')) {
+                let match = av.style.transform.match(/scale\([^)]+\)/);
+                if (match) currentScale = match[0];
             }
-
             av.style.opacity = '1';
-            av.style.transform = 'translate(-50%, -50%) scale(1)';
+            av.style.transform = `translate(-50%, -50%) ${currentScale}`;
 
             let counts = user.stagePlays[l];
             if (mapOverride === l && countsOverride !== null) counts = countsOverride;
