@@ -768,7 +768,7 @@ const Map = {
         }
 
         // Unlock Exit 1
-        if (p1 >= 14 || this.hasPasswordBypass(14)) {
+        if (this.hasPasswordBypass(14)) {
             document.getElementById('node-exit1').classList.remove('locked');
             const l = document.getElementById('node-exit1').querySelector('.lock-overlay');
             if (l) l.style.display = 'none';
@@ -782,7 +782,7 @@ const Map = {
         }
 
         // Unlock Exit 2
-        if (p2 >= 14 || this.hasPasswordBypass(28)) {
+        if (this.hasPasswordBypass(28)) {
             document.getElementById('node-exit2').classList.remove('locked');
             const l = document.getElementById('node-exit2').querySelector('.lock-overlay');
             if (l) l.style.display = 'none';
@@ -830,11 +830,11 @@ const Map = {
             if (!av) return;
             
             // Only hide avatars for locked maps
-            if (l === 2 && user.stagePlays[1] < 14 && !this.hasPasswordBypass(14)) {
+            if (l === 2 && !this.hasPasswordBypass(14)) {
                 av.style.opacity = '0';
                 return;
             }
-            if (l === 3 && user.stagePlays[2] < 14 && !this.hasPasswordBypass(28)) {
+            if (l === 3 && !this.hasPasswordBypass(28)) {
                 av.style.opacity = '0';
                 return;
             }
@@ -859,72 +859,23 @@ const Map = {
                 return;
             }
 
-            if (mapOverride === l && countsOverride !== null) {
-                let ratio = this.getMapPosition(counts);
-                let pathId = ratio < 0.5 ? 'path-line-' + l : 'path-line-' + l + 'b';
-                let localR = ratio < 0.5 ? ratio * 2 : (ratio - 0.5) * 2;
-                if (ratio === 1) { pathId = 'path-line-' + l + 'b'; localR = 1; }
-                  
-                const path = document.getElementById(pathId);
-                if (path) {
-                    try {
-                        const pt = path.getPointAtLength(localR * path.getTotalLength());
-                        const svgRect = path.closest('svg').getBoundingClientRect();
-                        const scaleX = svgRect.width / 100;
-                        const scaleY = svgRect.height / 100;
-                        const dx = svgRect.left - contentRect.left;
-                        const dy = svgRect.top - contentRect.top;
-                        av.style.left = (pt.x * scaleX + dx) + 'px';
-                        av.style.top = (pt.y * scaleY + dy) + 'px';
-                    } catch(e) {}
-                }
-            } else {
-                const lastNodeName = (user.lastVisitedNode && user.lastVisitedNode[l]) ? user.lastVisitedNode[l] : (l + 'a');
-                
-                if (lastNodeName === 'PROGRESS') {
-                    // Park at progress point!
-                    let progressCounts = user.stagePlays[l] || 0;
-                    let ratio = this.getMapPosition(progressCounts);
-                    let pathId = ratio < 0.5 ? 'path-line-' + l : 'path-line-' + l + 'b';
-                    let localR = ratio < 0.5 ? ratio * 2 : (ratio - 0.5) * 2;
-                    if (ratio === 1) { pathId = 'path-line-' + l + 'b'; localR = 1; }
-                    
-                    const path = document.getElementById(pathId);
-                    if (path) {
-                        try {
-                            const pt = path.getPointAtLength(localR * path.getTotalLength());
-                            const svgRect = path.closest('svg').getBoundingClientRect();
-                            const scaleX = svgRect.width / 100;
-                            const scaleY = svgRect.height / 100;
-                            const dx = svgRect.left - contentRect.left;
-                            const dy = svgRect.top - contentRect.top;
-                            av.style.left = (pt.x * scaleX + dx) + 'px';
-                            av.style.top = (pt.y * scaleY + dy) + 'px';
-                        } catch(e) {}
-                    }
-                } else {
-                    let targetId = 'node-' + lastNodeName.toLowerCase();
-                    const targetNode = document.getElementById(targetId);
-                    if (targetNode) {
-                        av.style.left = targetNode.style.left;
-                        av.style.top = targetNode.style.top;
-                    } else {
-                        let pathId = 'path-line-' + l;
-                        const path = document.getElementById(pathId);
-                        if (path) {
-                            try {
-                                const pt = path.getPointAtLength(0);
-                                const svgRect = path.closest('svg').getBoundingClientRect();
-                                const scaleX = svgRect.width / 100;
-                                const scaleY = svgRect.height / 100;
-                                const dx = svgRect.left - contentRect.left;
-                                const dy = svgRect.top - contentRect.top;
-                                av.style.left = (pt.x * scaleX + dx) + 'px';
-                                av.style.top = (pt.y * scaleY + dy) + 'px';
-                            } catch(e) {}
-                        }
-                    }
-                }
+            let ratio = this.getMapPosition(counts);
+            let pathId = ratio < 0.5 ? 'path-line-' + l : 'path-line-' + l + 'b';
+            let localR = ratio < 0.5 ? ratio * 2 : (ratio - 0.5) * 2;
+            if (ratio === 1) { pathId = 'path-line-' + l + 'b'; localR = 1; }
+            
+            const path = document.getElementById(pathId);
+            if (path) {
+                try {
+                    const pt = path.getPointAtLength(localR * path.getTotalLength());
+                    const svgRect = path.closest('svg').getBoundingClientRect();
+                    const scaleX = svgRect.width / 100;
+                    const scaleY = svgRect.height / 100;
+                    const dx = svgRect.left - contentRect.left;
+                    const dy = svgRect.top - contentRect.top;
+                    av.style.left = (pt.x * scaleX + dx) + 'px';
+                    av.style.top = (pt.y * scaleY + dy) + 'px';
+                } catch(e) {}
             }
         });
     },
