@@ -183,17 +183,19 @@ const Auth = {
         document.getElementById('form-register').reset();
     },
 
-    checkSession() {
+    checkSession(isStartup = false) {
         const username = localStorage.getItem('currentUser');
         if (username) {
             const userStr = localStorage.getItem(`user_${username}`);
             if (userStr) {
                 const user = JSON.parse(userStr);
                 
-                
-
                 window.App.currentUser = user;
-                window.App.showScreen('screen-welcome');
+                
+                const authScreen = document.getElementById('screen-auth');
+                if (isStartup || (authScreen && authScreen.classList.contains('active'))) {
+                    window.App.showScreen('screen-welcome');
+                }
                 return true;
             }
         }
@@ -451,6 +453,7 @@ const Map = {
                 this.updateUI();
             });
         } else {
+            if (window.Progress) window.Progress.saveUser();
             window.App.showNotification("Password Accepted!", "success");
             this.updateUI();
         }
@@ -472,6 +475,7 @@ const Map = {
                 this.updateUI();
             });
         } else {
+            if (window.Progress) window.Progress.saveUser();
             // Already unlocked, so just transition map via animation
             this.travelForward(fromLevel);
         }
@@ -1075,7 +1079,7 @@ const App = {
         Auth.init();
         Map.init();
         Game.init();
-        Auth.checkSession();
+        Auth.checkSession(true);
 
         document.addEventListener("visibilitychange", () => {
             const audio = document.getElementById('bgm-audio');
