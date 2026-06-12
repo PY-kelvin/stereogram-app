@@ -976,6 +976,13 @@ const Game = {
         user.sessionHistory = user.sessionHistory || [];
         const lastSession = user.sessionHistory[user.sessionHistory.length - 1];
 
+        // Add streak logic (max 1 per day)
+        // It only increments STREAK when a FULL session is completed!
+        let oldStreak = user.streak || 0;
+        let newStreak = oldStreak;
+        
+        const hasFullSessionToday = user.sessionHistory.some(s => s.dateStr === dateStr && s.durationMins >= 10);
+        
         // Ensure 10 minutes is logged exactly once for completion
         user.sessionHistory.push({
             dateStr: dateStr,
@@ -984,12 +991,7 @@ const Game = {
             stage: this.currentStageNode
         });
 
-        // Add streak logic (max 1 per day)
-        // It only increments STREAK when a FULL session is completed!
-        let oldStreak = user.streak || 0;
-        let newStreak = oldStreak;
-        
-        if (!lastSession || lastSession.dateStr !== dateStr) {
+        if (!hasFullSessionToday) {
             newStreak = oldStreak + 1;
             user.streak = newStreak;
         }
