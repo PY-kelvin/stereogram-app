@@ -354,6 +354,10 @@ h1, h2, h3 {
     transform: translate(-50%, calc(-50% - 15px));
 }
 
+.node-2b {
+    top: 75% !important;
+}
+
 .node-exit1, .node-exit2, .node-exit3 {
     top: 50%;
     left: 85%;
