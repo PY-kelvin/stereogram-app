@@ -348,7 +348,7 @@ const Map = {
                 if (user && user.stagePlays) {
                     if (!user.lastVisitedNode) user.lastVisitedNode = {};
                     user.lastVisitedNode[mapId] = 'PROGRESS';
-                    window.App.saveUser(user);
+                    if (window.Progress) window.Progress.saveUser();
                     // Animate to progress
                     await window.Map.animateAvatarProgress(mapId, 0, user.stagePlays[mapId] || 0);
                 }
@@ -406,6 +406,8 @@ const Map = {
         if (nodeName.endsWith('B') && user.stagePlays[level] < 7 && !this.hasPasswordBypass(reqStreak)) {
             // Need password for 1B, 2B, 3B if not enough counts
             this.pwdTargetStage = level;
+            const pwdMsg = document.querySelector('#password-modal p');
+            if (pwdMsg) pwdMsg.innerText = `Enter password to unlock Stage ${nodeName}.`;
             document.getElementById('password-modal').classList.remove('hidden');
             document.getElementById('admin-password').value = '';
             return;
@@ -413,7 +415,7 @@ const Map = {
         
         if (!user.lastVisitedNode) user.lastVisitedNode = {};
         user.lastVisitedNode[level] = nodeName;
-        window.App.saveUser(user);
+        if (window.Progress) window.Progress.saveUser();
         
         // Move avatar to node instantly (could animate later if needed)
         this.positionAvatar();
@@ -428,7 +430,7 @@ const Map = {
         
         if (!user.lastVisitedNode) user.lastVisitedNode = {};
         user.lastVisitedNode[exitNum] = 'exit' + exitNum;
-        window.App.saveUser(user);
+        if (window.Progress) window.Progress.saveUser();
         this.positionAvatar();
 
         if (this.hasPasswordBypass(reqStreak)) {
@@ -446,6 +448,9 @@ const Map = {
         }
 
         this.pwdTargetStage = exitNum;
+        const pwdMsg = document.querySelector('#password-modal p');
+        let nextMap = exitNum + 1;
+        if (pwdMsg) pwdMsg.innerText = `Enter password to unlock Bus/Taxi to Map ${nextMap}.`;
         document.getElementById('password-modal').classList.remove('hidden');
         document.getElementById('admin-password').value = '';
     },
