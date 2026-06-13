@@ -238,11 +238,11 @@ const Auth = {
                     let maxLevel = 0;
                     const pwdMap = [
                         { level: 7, pwd: 'orthoptics' },
-                        { level: 14, pwd: 'orthoptics 1' },
-                        { level: 21, pwd: 'orthoptics 2' },
-                        { level: 28, pwd: 'orthoptics 3' },
-                        { level: 35, pwd: 'orthoptics 4' },
-                        { level: 42, pwd: 'orthoptics 5' }
+                        { level: 14, pwd: 'orthoptics1' },
+                        { level: 21, pwd: 'orthoptics2' },
+                        { level: 28, pwd: 'orthoptics3' },
+                        { level: 35, pwd: 'orthoptics4' },
+                        { level: 42, pwd: 'orthoptics5' }
                     ];
                     for (let p of pwdMap) {
                         if (user.passwords.includes(p.pwd) && p.level > maxLevel) {
@@ -445,19 +445,19 @@ const Map = {
             // Fast forwards
             if (pwd === 'orthoptics') {
                 this.fastForward(7, "orthoptics");
-            } else if (pwd === 'orthoptics 1') {
-                this.triggerCinematicTransition(1, 2, 'bus', 14, "orthoptics 1");
-            } else if (pwd === 'orthoptics 2') {
-                this.fastForward(21, "orthoptics 2");
-            } else if (pwd === 'orthoptics 3') {
-                this.triggerCinematicTransition(2, 3, 'taxi', 28, "orthoptics 3");
+            } else if (pwd === 'orthoptics1') {
+                this.fastForward(14, "orthoptics1");
+            } else if (pwd === 'orthoptics2') {
+                this.fastForward(21, "orthoptics2");
+            } else if (pwd === 'orthoptics3') {
+                this.fastForward(28, "orthoptics3");
             } else if (pwd === 'test20') {
                 window.runSimulation();
                 document.getElementById('password-modal').classList.add('hidden');
-            } else if (pwd === 'orthoptics 4') {
-                this.fastForward(35, "orthoptics 4");
-            } else if (pwd === 'orthoptics 5') {
-                this.fastForward(42, "orthoptics 5");
+            } else if (pwd === 'orthoptics4') {
+                this.fastForward(35, "orthoptics4");
+            } else if (pwd === 'orthoptics5') {
+                this.fastForward(42, "orthoptics5");
             } else {
                 window.App.showNotification("Incorrect Password.", "warning");
             }
@@ -641,41 +641,6 @@ const Map = {
             let e = this.pendingExitClick;
             this.pendingExitClick = null;
             await this.handleExitClick(e);
-        }
-    },
-
-    async triggerCinematicTransition(fromMap, toMap, vehicleType, targetStreak, pwdName) {
-        const user = window.App.currentUser;
-        user.passwords = user.passwords || [];
-        if (!user.passwords.includes(pwdName)) {
-            user.passwords.push(pwdName);
-        }
-        
-        // Sync stagePlays
-        if (!user.stagePlays) user.stagePlays = { 1: 0, 2: 0, 3: 0 };
-        if (!user.visualCount) user.visualCount = { 1: user.stagePlays[1]||0, 2: user.stagePlays[2]||0, 3: user.stagePlays[3]||0 };
-        
-        user.streak = Math.max(user.streak || 0, targetStreak);
-
-        if (window.Progress) window.Progress.saveUser();
-        document.getElementById('password-modal').classList.add('hidden');
-        this.updateUI();
-        
-        if (this.pendingExitClick === fromMap) {
-            let e = this.pendingExitClick;
-            this.pendingExitClick = null;
-            
-            // Animate to exit before traveling
-            let currentVisual = user.visualCount[fromMap] || 0;
-            if (currentVisual < 14) {
-                await this.animateAvatarProgress(fromMap, currentVisual, 14);
-                user.visualCount[fromMap] = 14;
-                if (window.Progress) window.Progress.saveUser();
-            }
-            
-            await this.handleExitClick(e);
-        } else {
-            this.travelForward(fromMap);
         }
     },
 
@@ -1454,11 +1419,11 @@ const App = {
         const hasBypass = (req) => {
             if (!user.passwords) return false;
             if (req === 7 && user.passwords.includes('orthoptics')) return true;
-            if (req === 14 && user.passwords.includes('orthoptics 1')) return true;
-            if (req === 21 && user.passwords.includes('orthoptics 2')) return true;
-            if (req === 28 && user.passwords.includes('orthoptics 3')) return true;
-            if (req === 35 && user.passwords.includes('orthoptics 4')) return true;
-            if (req === 42 && user.passwords.includes('orthoptics 5')) return true;
+            if (req === 14 && user.passwords.includes('orthoptics1')) return true;
+            if (req === 21 && user.passwords.includes('orthoptics2')) return true;
+            if (req === 28 && user.passwords.includes('orthoptics3')) return true;
+            if (req === 35 && user.passwords.includes('orthoptics4')) return true;
+            if (req === 42 && user.passwords.includes('orthoptics5')) return true;
             return false;
         };
 
