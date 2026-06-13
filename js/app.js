@@ -237,29 +237,6 @@ const Auth = {
                 
                 window.App.currentUser = user;
                 
-                // Check for interrupted session (max 2 hours old)
-                if (isStartup && user.savedSession) {
-                    const now = new Date().getTime();
-                    const ageHours = (now - user.savedSession.timestamp) / (1000 * 60 * 60);
-                    if (ageHours < 2) {
-                        // Restore it
-                        window.Game.currentStageNode = user.savedSession.stageNode || '1A';
-                        window.Game.timeLeft = user.savedSession.timeLeft || 600;
-                        window.Game.sessionStartLeft = user.savedSession.sessionStartLeft || 600;
-                        window.Game.hasStartedCurrentSession = true;
-                        
-                        window.Game.loadImage(window.Game.currentStageNode);
-                        window.Game.updateTimerDisplay();
-                        
-                        window.App.showScreen('screen-game');
-                        
-                        // Delete saved session so it doesn't loop forever
-                        user.savedSession = null;
-                        if (window.Progress) window.Progress.saveUser();
-                        return true;
-                    }
-                }
-                
                 const authScreen = document.getElementById('screen-auth');
                 if (isStartup || (authScreen && authScreen.classList.contains('active'))) {
                     window.App.showScreen('screen-welcome');
