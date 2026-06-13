@@ -596,11 +596,11 @@ const Map = {
         
         const pwdMap = [
             { level: 7, pwd: 'orthoptics' },
-            { level: 14, pwd: 'orthoptics 1' },
-            { level: 21, pwd: 'orthoptics 2' },
-            { level: 28, pwd: 'orthoptics 3' },
-            { level: 35, pwd: 'orthoptics 4' },
-            { level: 42, pwd: 'orthoptics 5' }
+            { level: 14, pwd: 'orthoptics1' },
+            { level: 21, pwd: 'orthoptics2' },
+            { level: 28, pwd: 'orthoptics3' },
+            { level: 35, pwd: 'orthoptics4' },
+            { level: 42, pwd: 'orthoptics5' }
         ];
 
         let maxLevel = 0;
