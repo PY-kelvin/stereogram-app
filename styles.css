@@ -139,6 +139,25 @@ h1, h2, h3 {
     width: auto;
 }
 
+.btn-map-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    padding: 5px;
+    text-align: center;
+    font-weight: bold;
+}
+.btn-map-nav .nav-arrow {
+    font-size: 1.1rem;
+    margin-bottom: 2px;
+}
+
 /* Authentication Screen */
 #screen-auth {
     justify-content: flex-start;
