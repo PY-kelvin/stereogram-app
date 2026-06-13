@@ -160,8 +160,11 @@ const Auth = {
             return;
         }
 
+        user.stagePlays = user.stagePlays || { 1: 0, 2: 0, 3: 0 };
+        user.stageDailyProgress = user.stageDailyProgress || { 1: 0, 2: 0, 3: 0 };
+
         if (!user.visualCount) {
-            const sp = user.stagePlays || { 1: 0, 2: 0, 3: 0 };
+            const sp = user.stagePlays;
             user.visualCount = { 
                 1: sp[1]||0, 
                 2: sp[2]||0, 

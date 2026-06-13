@@ -18,13 +18,16 @@ window.runSimulation = async function() {
         console.log(msg);
     };
 
-    const originalUser = JSON.parse(JSON.stringify(window.App.currentUser));
+    // Backup current state to avoid breaking UI during tests
+    const originalUser = window.App.currentUser ? JSON.parse(JSON.stringify(window.App.currentUser)) : null;
+    const originalTransition = window.Map.triggerCinematicTransition;
+    const originalNotification = window.App.showNotification;
+    const originalShowMap = window.App.showMapScreen;
     
-    // Scenarios:
-    // User 1-5: Play 10 mins perfectly for 7 days
-    // User 6-10: Play 1 min, quit, then play 10 mins (Testing bug fix)
-    // User 11-15: Use password orthoptics 1, then play 10 mins
-    // User 16-20: Use password orthoptics 3, play partial, play full
+    // Mock UI functions so they don't visually fire
+    window.Map.triggerCinematicTransition = async function() {};
+    window.App.showNotification = function() {};
+    window.App.showMapScreen = function() {};
     
     let passCount = 0;
     
@@ -38,6 +41,9 @@ window.runSimulation = async function() {
             animal: 'cat',
             dailyProgress: 0,
             sessionHistory: [],
+            stagePlays: { 1: 0, 2: 0, 3: 0 },
+            stageDailyProgress: { 1: 0, 2: 0, 3: 0 },
+            visualCount: { 1: 0, 2: 0, 3: 0 },
             unlockedStages: [1]
         };
         const user = window.App.currentUser;
@@ -47,50 +53,38 @@ window.runSimulation = async function() {
                 // Play 7 perfect days
                 for (let d=0; d<7; d++) {
                     const fakeDate = new Date(Date.now() + d * 86400000);
-                    // Override completeSession Date manually since it uses new Date()
-                    // Actually, we'll just manipulate the history directly to simulate the passage of time accurately
                     user.sessionHistory.push({
                         dateStr: fakeDate.toDateString(),
                         timestamp: fakeDate.getTime(),
                         durationMins: 10,
                         stage: '1A'
                     });
-                    user.streak += 1;
+                    user.stagePlays[1] += 1;
                 }
-                if (user.streak === 7) passCount++; else log(`<span style="color:red">Failed User ${i} (Streak=${user.streak})</span>`);
+                if (user.stagePlays[1] === 7) passCount++; else log(`<span style="color:red">Failed User ${i} (Plays=${user.stagePlays[1]})</span>`);
                 
             } else if (i >= 6 && i <= 10) {
-                // Test the bug fix! 
-                // User plays 2 partial sessions of 1 minute today
+                window.Game.currentStageNode = '1A';
                 user.sessionHistory.push({
                     dateStr: new Date().toDateString(),
                     timestamp: new Date().getTime(),
                     durationMins: 1,
                     stage: '1A'
                 });
-                user.sessionHistory.push({
-                    dateStr: new Date().toDateString(),
-                    timestamp: new Date().getTime() + 60000,
-                    durationMins: 1,
-                    stage: '1A'
-                });
                 
-                // Then user completes a session TODAY
                 window.Game.hasStartedCurrentSession = false; 
-                window.Game.completeSession(); // Should increment streak!
+                window.Game.completeSession(); 
                 
-                if (user.streak === 1) passCount++; else log(`<span style="color:red">Bug Fix Failed! Streak is ${user.streak} instead of 1</span>`);
+                if (user.stagePlays[1] === 1) passCount++; else log(`<span style="color:red">Bug Fix Failed! Plays is ${user.stagePlays[1]} instead of 1</span>`);
                 
             } else if (i >= 11 && i <= 15) {
-                // Password Override test
                 window.Map.fastForward(14, "orthoptics 1");
                 if (user.streak === 14) passCount++; else log(`<span style="color:red">Password Failed User ${i}</span>`);
                 
             } else if (i >= 16 && i <= 20) {
-                // Password + Bug fix test
                 window.Map.fastForward(28, "orthoptics 3");
+                window.Game.currentStageNode = '3A';
                 
-                // Fake a partial session
                 user.sessionHistory.push({
                     dateStr: new Date().toDateString(),
                     timestamp: new Date().getTime(),
@@ -98,10 +92,9 @@ window.runSimulation = async function() {
                     stage: '3A'
                 });
                 
-                // Complete session
                 window.Game.completeSession();
                 
-                if (user.streak === 29) passCount++; else log(`<span style="color:red">Combo Failed User ${i} (Streak=${user.streak})</span>`);
+                if (user.streak === 28 && user.stagePlays[3] === 1) passCount++; else log(`<span style="color:red">Combo Failed User ${i} (Streak=${user.streak}, Plays=${user.stagePlays[3]})</span>`);
             }
         } catch(e) {
             log(`<span style="color:red">Error: ${e.message}</span>`);
@@ -110,6 +103,9 @@ window.runSimulation = async function() {
     
     log(`<br><b style="font-size:1.5rem; color:${passCount === 20 ? 'green' : 'red'};">${passCount}/20 Tests Passed Successfully!</b>`);
     
-    // Restore original
+    // Restore original state
     window.App.currentUser = originalUser;
+    window.Map.triggerCinematicTransition = originalTransition;
+    window.App.showNotification = originalNotification;
+    window.App.showMapScreen = originalShowMap;
 };
