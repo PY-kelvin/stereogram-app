@@ -139,6 +139,7 @@ const Auth = {
             stagePlays: { 1: 0, 2: 0, 3: 0 },
             stageDailyProgress: { 1: 0, 2: 0, 3: 0 },
             visualCount: { 1: 0, 2: 0, 3: 0 },
+            lastVisitedNode: { 1: '1A', 2: '2A', 3: '3A' },
             unlockedStages: [1]
         };
 
@@ -162,6 +163,7 @@ const Auth = {
 
         user.stagePlays = user.stagePlays || { 1: 0, 2: 0, 3: 0 };
         user.stageDailyProgress = user.stageDailyProgress || { 1: 0, 2: 0, 3: 0 };
+        user.lastVisitedNode = user.lastVisitedNode || { 1: '1A', 2: '2A', 3: '3A' };
 
         if (!user.visualCount) {
             const sp = user.stagePlays;
@@ -258,6 +260,8 @@ const Auth = {
                         3: sp[3]||0 
                     };
                 }
+
+                user.lastVisitedNode = user.lastVisitedNode || { 1: '1A', 2: '2A', 3: '3A' };
                 
                 window.App.currentUser = user;
                 
@@ -477,6 +481,7 @@ const Map = {
             return;
         }
 
+        if (!user.lastVisitedNode) user.lastVisitedNode = {};
         user.lastVisitedNode[level] = nodeName;
         
         // Target count for animation
@@ -526,6 +531,7 @@ const Map = {
             if (window.Progress) window.Progress.saveUser();
         }
 
+        if (!user.lastVisitedNode) user.lastVisitedNode = {};
         user.lastVisitedNode[exitNum] = 'exit' + exitNum;
         if (window.Progress) window.Progress.saveUser();
 
