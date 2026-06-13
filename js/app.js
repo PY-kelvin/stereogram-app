@@ -523,7 +523,7 @@ const Map = {
         if (window.Progress) window.Progress.saveUser();
 
         if (exitNum === 3) {
-            this.triggerFinalGoal();
+            this.showFinalGoalHug();
         } else {
             this.travelForward(exitNum);
         }
@@ -942,6 +942,11 @@ const Map = {
         this.isAnimating = true;
         const av = document.getElementById('player-avatar-' + mapNum);
         if (av) av.style.transition = 'none'; // Ensure no CSS transition interference
+        
+        // Fix: Preemptively set the target visualCount so that any intermediate layout reflows (or the final positionAvatar) lock it in correctly.
+        const user = window.App.currentUser;
+        if (user && user.visualCount) user.visualCount[mapNum] = newC;
+        
         console.log(`[v152] Animating map ${mapNum} from counts ${oldC} to ${newC} along SVG curve`);
         let duration = Math.max(1000, Math.abs(newC - oldC) * 300);
         await this.animatePathProgress(mapNum, oldC, newC, duration);
