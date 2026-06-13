@@ -136,6 +136,9 @@ const Auth = {
             lastActivityDate: null,
             dailyProgress: 0,
             savedSession: null,
+            stagePlays: { 1: 0, 2: 0, 3: 0 },
+            stageDailyProgress: { 1: 0, 2: 0, 3: 0 },
+            visualCount: { 1: 0, 2: 0, 3: 0 },
             unlockedStages: [1]
         };
 
@@ -155,6 +158,15 @@ const Auth = {
         if (user.password !== password) {
             window.App.showNotification("Incorrect password!", "warning");
             return;
+        }
+
+        if (!user.visualCount) {
+            const sp = user.stagePlays || { 1: 0, 2: 0, 3: 0 };
+            user.visualCount = { 
+                1: sp[1]||0, 
+                2: sp[2]||0, 
+                3: sp[3]||0 
+            };
         }
 
         localStorage.setItem('currentUser', username);
@@ -234,6 +246,15 @@ const Auth = {
                     }
                     user.streak = Math.max(user.streak || 0, maxLevel);
                 }
+
+                if (!user.visualCount) {
+                    const sp = user.stagePlays || { 1: 0, 2: 0, 3: 0 };
+                    user.visualCount = { 
+                        1: sp[1]||0, 
+                        2: sp[2]||0, 
+                        3: sp[3]||0 
+                    };
+                }
                 
                 window.App.currentUser = user;
                 
@@ -275,6 +296,7 @@ const Progress = {
 
             user.stagePlays = user.stagePlays || { 1: 0, 2: 0, 3: 0 };
             user.stageDailyProgress = user.stageDailyProgress || { 1: 0, 2: 0, 3: 0 };
+            user.visualCount = user.visualCount || { 1: 0, 2: 0, 3: 0 };
 
             let isExtraSession = false;
 
@@ -456,8 +478,13 @@ const Map = {
         
         // Target count for animation
         let targetCount = nodeName.endsWith('B') ? 7 : 0;
-        if (!user.visualCount) user.visualCount = { 1: user.stagePlays[1]||0, 2: user.stagePlays[2]||0, 3: user.stagePlays[3]||0 };
-        let currentVisual = user.visualCount[level] || 0;
+        if (!user.visualCount) user.visualCount = { 1: user.stagePlays[1]||0, 2: user.stagePlays[2]||0, 3: user.stagePlays[3]||0 };        
+        if (targetCount === -1) {
+            window.App.showNotification("This stage is locked!", "warning");
+            return;
+        }
+        
+        let currentVisual = user.visualCount ? (user.visualCount[level] || 0) : 0;
         
         if (currentVisual !== targetCount) {
             await this.animateAvatarProgress(level, currentVisual, targetCount);
@@ -834,7 +861,7 @@ const Map = {
             av.style.opacity = '1';
             av.style.transform = `translate(-50%, -50%) ${currentScale}`;
 
-            let counts = user.visualCount[l] || 0;
+            let counts = user.visualCount ? (user.visualCount[l] || 0) : 0;
             if (mapOverride === l && countsOverride !== null) counts = countsOverride;
 
             let ratio = this.getMapPosition(counts);
