@@ -476,8 +476,18 @@ const Map = {
         }
 
         user.lastVisitedNode[level] = nodeName;
+        
+        // Target count for animation
+        let targetCount = nodeName.endsWith('B') ? 7 : 0;
+        if (!user.visualCount) user.visualCount = { 1: user.stagePlays[1]||0, 2: user.stagePlays[2]||0, 3: user.stagePlays[3]||0 };
+        let currentVisual = user.visualCount[level] || 0;
+        
+        if (currentVisual !== targetCount) {
+            await this.animateAvatarProgress(level, currentVisual, targetCount);
+            user.visualCount[level] = targetCount;
+        }
+        
         if (window.Progress) window.Progress.saveUser();
-
         window.Game.startStage(nodeName);
     },
     
@@ -490,19 +500,30 @@ const Map = {
             this.pwdTargetStage = exitNum;
             this.pendingExitClick = exitNum;
             this.pendingNodeClick = null;
+            const targetName = exitNum === 1 ? 'Sakura Forest' : exitNum === 2 ? 'City Gate' : 'Final Goal';
             const pwdMsg = document.querySelector('#password-modal p');
-            let nextMap = exitNum + 1;
-            if (pwdMsg) pwdMsg.innerText = `Enter password to unlock Stage ${nextMap}.`;
+            if (pwdMsg) pwdMsg.innerText = `Enter password to unlock ${targetName}.`;
             document.getElementById('password-modal').classList.remove('hidden');
             document.getElementById('admin-password').value = '';
             return;
         }
 
+        // Target count for exit is 14
+        let targetCount = 14;
+        if (!user.visualCount) user.visualCount = { 1: user.stagePlays[1]||0, 2: user.stagePlays[2]||0, 3: user.stagePlays[3]||0 };
+        let currentVisual = user.visualCount[exitNum] || 0;
+        
+        if (currentVisual !== targetCount) {
+            await this.animateAvatarProgress(exitNum, currentVisual, targetCount);
+            user.visualCount[exitNum] = targetCount;
+            if (window.Progress) window.Progress.saveUser();
+        }
+
         user.lastVisitedNode[exitNum] = 'exit' + exitNum;
         if (window.Progress) window.Progress.saveUser();
-        
+
         if (exitNum === 3) {
-            this.showFinalGoalHug();
+            this.triggerFinalGoal();
         } else {
             this.travelForward(exitNum);
         }
@@ -602,27 +623,10 @@ const Map = {
         if (this.pendingNodeClick) {
             let p = this.pendingNodeClick;
             this.pendingNodeClick = null;
-            
-            let targetCount = p.nodeName.endsWith('B') ? 7 : 0;
-            let currentVisual = user.visualCount[p.level] || 0;
-            if (currentVisual < targetCount) {
-                await this.animateAvatarProgress(p.level, currentVisual, targetCount);
-                user.visualCount[p.level] = targetCount;
-                if (window.Progress) window.Progress.saveUser();
-            }
-            
             await this.handleNodeClick(p.nodeName, p.level, p.reqStreak);
         } else if (this.pendingExitClick !== null) {
             let e = this.pendingExitClick;
             this.pendingExitClick = null;
-            
-            let currentVisual = user.visualCount[e] || 0;
-            if (currentVisual < 14) {
-                await this.animateAvatarProgress(e, currentVisual, 14);
-                user.visualCount[e] = 14;
-                if (window.Progress) window.Progress.saveUser();
-            }
-            
             await this.handleExitClick(e);
         }
     },
@@ -668,7 +672,10 @@ const Map = {
         
         const user = window.App.currentUser;
         if (!user.lastVisitedNode) user.lastVisitedNode = {};
+        if (!user.visualCount) user.visualCount = { 1: user.stagePlays[1]||0, 2: user.stagePlays[2]||0, 3: user.stagePlays[3]||0 };
+        
         user.lastVisitedNode[fromLevel + 1] = (fromLevel + 1) + 'A';
+        user.visualCount[fromLevel + 1] = 0; // Appear at the start of next map
         if (window.Progress) window.Progress.saveUser();
         
         await this.shrinkAvatar(fromLevel);
@@ -698,7 +705,18 @@ const Map = {
         const user = window.App.currentUser;
         if (!user.lastVisitedNode) user.lastVisitedNode = {};
         
+        // Ensure visualCount is tracked
+        if (!user.visualCount) user.visualCount = { 1: user.stagePlays[1]||0, 2: user.stagePlays[2]||0, 3: user.stagePlays[3]||0 };
+        
+        // Animate backward to A node (count 0) before traveling
+        let currentVisual = user.visualCount[fromLevel] || 0;
+        if (currentVisual > 0) {
+            await this.animateAvatarProgress(fromLevel, currentVisual, 0);
+            user.visualCount[fromLevel] = 0;
+        }
+        
         user.lastVisitedNode[fromLevel - 1] = 'exit' + (fromLevel - 1);
+        user.visualCount[fromLevel - 1] = 14; // Start at the exit of previous map
         if (window.Progress) window.Progress.saveUser();
         
         await this.shrinkAvatar(fromLevel);
@@ -839,7 +857,7 @@ const Map = {
             av.style.opacity = '1';
             av.style.transform = `translate(-50%, -50%) ${currentScale}`;
 
-            let counts = Math.max(user.stagePlays[l] || 0, user.visualCount[l] || 0);
+            let counts = user.visualCount[l] || 0;
             if (mapOverride === l && countsOverride !== null) counts = countsOverride;
 
             let ratio = this.getMapPosition(counts);
