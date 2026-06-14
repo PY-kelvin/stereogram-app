@@ -238,6 +238,7 @@ const Auth = {
                     user.stagePlays[3] = p3;
                 }
 
+                // Decoupled password logic
                 if (user.passwords && user.passwords.length > 0) {
                     let maxLevel = 0;
                     const pwdMap = [
@@ -248,12 +249,9 @@ const Auth = {
                         { level: 35, pwd: 'orthoptics4' },
                         { level: 42, pwd: 'orthoptics5' }
                     ];
-                    for (let p of pwdMap) {
-                        if (user.passwords.includes(p.pwd) && p.level > maxLevel) {
-                            maxLevel = p.level;
-                        }
-                    }
-                    user.streak = Math.max(user.streak || 0, maxLevel);
+                    pwdMap.forEach(p => {
+                        if (user.passwords.includes(p.pwd) && p.level > maxLevel) maxLevel = p.level;
+                    });
                 }
 
                 if (!user.visualCount) {
@@ -534,6 +532,12 @@ const Map = {
             return;
         }
 
+        // If parked at the exit gate, physically run backward to the true count BEFORE starting!
+        if (user.lastVisitedNode && user.lastVisitedNode[level] === ('exit' + level)) {
+            let trueCount = user.stagePlays[level] || 0;
+            await this.animateAvatarProgress(level, 14, trueCount);
+        }
+
         if (!user.lastVisitedNode) user.lastVisitedNode = {};
         user.lastVisitedNode[level] = nodeName;
         
@@ -567,12 +571,14 @@ const Map = {
 
         // Target count for exit is 14
         let targetCount = 14;
-        let currentMath = user.stagePlays[exitNum] || 0;
+        let realCount = user.stagePlays[exitNum] || 0;
+        let startCount = realCount;
+        if (user.lastVisitedNode && user.lastVisitedNode[exitNum] === ('exit' + exitNum)) {
+            startCount = 14;
+        }
         
-        if (currentMath < targetCount) {
-            await this.animateAvatarProgress(exitNum, currentMath, targetCount);
-            user.stagePlays[exitNum] = targetCount;
-            if (window.Progress) window.Progress.saveUser();
+        if (startCount < targetCount) {
+            await this.animateAvatarProgress(exitNum, startCount, targetCount);
         }
 
         if (!user.lastVisitedNode) user.lastVisitedNode = {};
@@ -896,6 +902,12 @@ const Map = {
             av.style.transform = `translate(-50%, -50%) ${currentScale}`;
 
             let counts = user.stagePlays[l] || 0;
+            
+            // If parked at exit, visually override to 14
+            if (user.lastVisitedNode && user.lastVisitedNode[l] === ('exit' + l)) {
+                counts = 14;
+            }
+
             if (mapOverride === l && countsOverride !== null) counts = countsOverride;
 
             let ratio = this.getMapPosition(counts);
@@ -992,7 +1004,7 @@ const Map = {
         
         // Wait 1 frame for CSS layout to catch up if we just switched screens
         await new Promise(r => requestAnimationFrame(r));
-        this.positionAvatar(); // ensure exact final position
+        this.positionAvatar(mapNum, newC); // strictly enforce target count to prevent race conditions
     },
 
     animateStep(oldStreak, newStreak) {
