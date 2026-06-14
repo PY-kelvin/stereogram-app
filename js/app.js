@@ -367,6 +367,13 @@ const Map = {
 
     init() {
         this.bindEvents();
+        window.addEventListener('resize', () => {
+            if (document.getElementById('screen-map-1').classList.contains('active') ||
+                document.getElementById('screen-map-2').classList.contains('active') ||
+                document.getElementById('screen-map-3').classList.contains('active')) {
+                this.positionAvatar();
+            }
+        });
     },
 
     bindEvents() {
@@ -1516,6 +1523,7 @@ const App = {
         if (window.Map) {
             await new Promise(r => setTimeout(r, 50));
             window.Map.updateUI();
+            window.Map.positionAvatar();
         }
     },
 

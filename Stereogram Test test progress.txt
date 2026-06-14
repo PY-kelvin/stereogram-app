@@ -1,5 +1,8 @@
 Stereogram Test: 
 
+User general: T1
+
+
 14/6 Day 1: 
-Phone: 
-General check: 
+Phone: checked pass
+General check: checked pass 
