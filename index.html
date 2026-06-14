@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="app_icon.png?v=new2">
     <link rel="icon" href="app_icon.png?v=new2">
 
-    <link rel="stylesheet" href="styles.css?v=133">
+    <link rel="stylesheet" href="styles.css?v=134">
 </head>
 
 <body>
@@ -336,12 +336,18 @@
             <header class="map-header">
                 <div class="header-left" style="display: flex; align-items: center; gap: 10px;">
                     <button id="btn-forward-map-2" class="btn btn-secondary btn-map-nav">
-                        <span class="nav-arrow">&rarr;</span>
+                        <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="4" y1="12" x2="20" y2="12"></line>
+                            <polyline points="14 6 20 12 14 18"></polyline>
+                        </svg>
                         <span>Sakura<br>Forest</span>
                     </button>
                     <h2 style="margin: 0;">Farm Map 🗺️</h2>
                     <button id="btn-back-main-menu-from-map-1" class="btn btn-secondary btn-map-nav">
-                        <span class="nav-arrow">&larr;</span>
+                        <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="20" y1="12" x2="4" y2="12"></line>
+                            <polyline points="10 18 4 12 10 6"></polyline>
+                        </svg>
                         <span>Menu</span>
                     </button>
                 </div>
@@ -384,16 +390,25 @@
             <header class="map-header">
                 <div class="header-left" style="display: flex; align-items: center; gap: 10px;">
                     <button id="btn-back-level1" class="btn btn-secondary btn-map-nav">
-                        <span class="nav-arrow">&larr;</span>
+                        <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="20" y1="12" x2="4" y2="12"></line>
+                            <polyline points="10 18 4 12 10 6"></polyline>
+                        </svg>
                         <span>Farm</span>
                     </button>
                     <button id="btn-forward-map-3" class="btn btn-secondary btn-map-nav">
-                        <span class="nav-arrow">&rarr;</span>
+                        <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="4" y1="12" x2="20" y2="12"></line>
+                            <polyline points="14 6 20 12 14 18"></polyline>
+                        </svg>
                         <span>City<br>Gate</span>
                     </button>
                     <h2 style="margin: 0;">Sakura Forest 🌸</h2>
                     <button id="btn-back-main-menu-from-map-2" class="btn btn-secondary btn-map-nav">
-                        <span class="nav-arrow">&larr;</span>
+                        <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="20" y1="12" x2="4" y2="12"></line>
+                            <polyline points="10 18 4 12 10 6"></polyline>
+                        </svg>
                         <span>Menu</span>
                     </button>
                 </div>
@@ -437,12 +452,18 @@
             <header class="map-header">
                 <div class="header-left" style="display: flex; align-items: center; gap: 10px;">
                     <button id="btn-back-level2" class="btn btn-secondary btn-map-nav">
-                        <span class="nav-arrow">&larr;</span>
+                        <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="20" y1="12" x2="4" y2="12"></line>
+                            <polyline points="10 18 4 12 10 6"></polyline>
+                        </svg>
                         <span>Sakura</span>
                     </button>
                     <h2 style="margin: 0;">City Center 🏙️</h2>
                     <button id="btn-back-main-menu-from-map-3" class="btn btn-secondary btn-map-nav">
-                        <span class="nav-arrow">&larr;</span>
+                        <svg class="nav-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="20" y1="12" x2="4" y2="12"></line>
+                            <polyline points="10 18 4 12 10 6"></polyline>
+                        </svg>
                         <span>Menu</span>
                     </button>
                 </div>
@@ -598,7 +619,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=211"></script>
+    <script src="js/app.js?v=212"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
