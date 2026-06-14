@@ -157,7 +157,8 @@ h1, h2, h3 {
     font-weight: bold;
 }
 .btn-map-nav .nav-arrow {
-    font-size: 1.1rem;
+    font-size: 1.16rem;
+    -webkit-text-stroke: 0.4px currentColor;
     margin-bottom: 2px;
 }
 
