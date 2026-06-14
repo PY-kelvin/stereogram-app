@@ -2,6 +2,21 @@
 <html lang="en">
 
 <head>
+    <script>
+        // CACHE NUKE: Force wipe all service worker caches and unregister SW on load
+        if ('caches' in window) {
+            caches.keys().then(function(names) {
+                for (let name of names) caches.delete(name);
+            });
+        }
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister();
+                }
+            });
+        }
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -20,7 +35,7 @@
     <link rel="apple-touch-icon" href="app_icon.png?v=new2">
     <link rel="icon" href="app_icon.png?v=new2">
 
-    <link rel="stylesheet" href="styles.css?v=134">
+    <link rel="stylesheet" href="styles.css?v=135">
 </head>
 
 <body>
@@ -376,10 +391,10 @@
             <div class="map-container landscape-map">
                 <div class="map-content">
                     <svg class="map-path" viewBox="0 0 100 100" preserveAspectRatio="none">
-                        <path id="path-line-1" d="M 15 50 Q 32 30, 50 50" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
-                        <path id="path-line-1b" d="M 50 50 Q 67 70, 85 50" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
+                        <path id="path-line-1" d="M 5 50 Q 27 25, 50 50" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
+                        <path id="path-line-1b" d="M 50 50 Q 72 75, 95 50" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
                     </svg>
-                    <div class="stage-node node-1a" id="node-1a" style="left: 15%; top: 50%;">
+                    <div class="stage-node node-1a" id="node-1a" style="left: 5%; top: 50%;">
                         <span class="stage-label">Stage 1A</span>
                         <div class="node-icon bg-farm"></div>
                     </div>
@@ -387,7 +402,7 @@
                         <span class="stage-label">Stage 1B</span>
                         <div class="node-icon bg-farm"><div class="lock-overlay">🔒</div></div>
                     </div>
-                    <div class="stage-node node-exit1 locked" id="node-exit1" style="left: 85%; top: 50%;">
+                    <div class="stage-node node-exit1 locked" id="node-exit1" style="left: 95%; top: 50%;">
                         <span class="stage-label">Sakura Forest</span>
                         <div class="node-icon bg-bus"><div class="lock-overlay">🔒</div></div>
                     </div>
@@ -437,18 +452,18 @@
             <div class="map-container landscape-map">
                 <div class="map-content">
                     <svg class="map-path" viewBox="0 0 100 100" preserveAspectRatio="none">
-                        <path id="path-line-2" d="M 15 50 C 25 20, 40 100, 50 75" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
-                        <path id="path-line-2b" d="M 50 75 C 60 100, 75 20, 85 50" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
+                        <path id="path-line-2" d="M 5 50 C 20 20, 35 100, 50 75" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
+                        <path id="path-line-2b" d="M 50 75 C 65 100, 80 20, 95 50" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
                     </svg>
-                    <div class="stage-node node-2a" id="node-2a" style="left: 15%; top: 50%;">
+                    <div class="stage-node node-2a" id="node-2a" style="left: 5%; top: 50%;">
                         <span class="stage-label">Stage 2A</span>
                         <div class="node-icon bg-sakura"><div class="lock-overlay">🔒</div></div>
                     </div>
-                    <div class="stage-node node-2b locked" id="node-2b" style="left: 50%; top: 50%;">
+                    <div class="stage-node node-2b locked" id="node-2b" style="left: 50%; top: 75%;">
                         <span class="stage-label">Stage 2B</span>
                         <div class="node-icon bg-sakura"><div class="lock-overlay">🔒</div></div>
                     </div>
-                    <div class="stage-node node-exit2 locked" id="node-exit2" style="left: 85%; top: 50%;">
+                    <div class="stage-node node-exit2 locked" id="node-exit2" style="left: 95%; top: 50%;">
                         <span class="stage-label">City Gate</span>
                         <div class="node-icon bg-gate"><div class="lock-overlay">🔒</div></div>
                     </div>
@@ -492,10 +507,10 @@
             <div class="map-container landscape-map">
                 <div class="map-content">
                     <svg class="map-path" viewBox="0 0 100 100" preserveAspectRatio="none">
-                        <path id="path-line-3" d="M 15 50 Q 32 30, 50 50" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
-                        <path id="path-line-3b" d="M 50 50 Q 67 70, 85 50" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
+                        <path id="path-line-3" d="M 5 50 Q 27 30, 50 50" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
+                        <path id="path-line-3b" d="M 50 50 Q 72 70, 95 50" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
                     </svg>
-                    <div class="stage-node node-3a" id="node-3a" style="left: 15%; top: 50%;">
+                    <div class="stage-node node-3a" id="node-3a" style="left: 5%; top: 50%;">
                         <span class="stage-label">Stage 3A</span>
                         <div class="node-icon bg-city"><div class="lock-overlay">🔒</div></div>
                     </div>
@@ -503,7 +518,7 @@
                         <span class="stage-label">Stage 3B</span>
                         <div class="node-icon bg-city"><div class="lock-overlay">🔒</div></div>
                     </div>
-                    <div class="stage-node node-exit3 locked" id="node-exit3" style="left: 85%; top: 50%;">
+                    <div class="stage-node node-exit3 locked" id="node-exit3" style="left: 95%; top: 50%;">
                         <span class="stage-label">Final Goal</span>
                         <div class="node-icon bg-castle"><div class="lock-overlay">🔒</div></div>
                     </div>
@@ -630,7 +645,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=213"></script>
+    <script src="js/app.js?v=219"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {

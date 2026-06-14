@@ -219,19 +219,23 @@ const Auth = {
             if (userStr) {
                 const user = JSON.parse(userStr);
                 
-                // Recalibrate stagePlays based strictly on true history
+                // Recalibrate stagePlays based strictly on true history (min 9.5 mins per day)
                 user.stagePlays = { 1: 0, 2: 0, 3: 0 };
                 if (user.sessionHistory) {
-                    const daysPlayed = { 1: new Set(), 2: new Set(), 3: new Set() };
+                    const dailyMins = { 1: {}, 2: {}, 3: {} };
                     user.sessionHistory.forEach(s => {
                         const sNum = s.stageNum || 1;
-                        if (daysPlayed[sNum]) {
-                            daysPlayed[sNum].add(s.dateStr);
+                        if (dailyMins[sNum]) {
+                            dailyMins[sNum][s.dateStr] = (dailyMins[sNum][s.dateStr] || 0) + (s.durationMins || 0);
                         }
                     });
-                    user.stagePlays[1] = daysPlayed[1].size;
-                    user.stagePlays[2] = daysPlayed[2].size;
-                    user.stagePlays[3] = daysPlayed[3].size;
+                    let p1 = 0, p2 = 0, p3 = 0;
+                    for (let d in dailyMins[1]) if (dailyMins[1][d] >= 9.5) p1++;
+                    for (let d in dailyMins[2]) if (dailyMins[2][d] >= 9.5) p2++;
+                    for (let d in dailyMins[3]) if (dailyMins[3][d] >= 9.5) p3++;
+                    user.stagePlays[1] = p1;
+                    user.stagePlays[2] = p2;
+                    user.stagePlays[3] = p3;
                 }
 
                 if (user.passwords && user.passwords.length > 0) {
@@ -533,21 +537,6 @@ const Map = {
         if (!user.lastVisitedNode) user.lastVisitedNode = {};
         user.lastVisitedNode[level] = nodeName;
         
-        // Target count for animation
-        let targetCount = nodeName.endsWith('B') ? 7 : 0;
-        if (!user.visualCount) user.visualCount = { 1: user.stagePlays[1]||0, 2: user.stagePlays[2]||0, 3: user.stagePlays[3]||0 };        
-        if (targetCount === -1) {
-            window.App.showNotification("This stage is locked!", "warning");
-            return;
-        }
-        
-        let currentVisual = user.visualCount ? (user.visualCount[level] || 0) : 0;
-        
-        if (currentVisual !== targetCount) {
-            await this.animateAvatarProgress(level, currentVisual, targetCount);
-            user.visualCount[level] = targetCount;
-        }
-        
         if (window.Progress) window.Progress.saveUser();
         window.Game.startStage(nodeName);
     },
@@ -578,12 +567,11 @@ const Map = {
 
         // Target count for exit is 14
         let targetCount = 14;
-        if (!user.visualCount) user.visualCount = { 1: user.stagePlays[1]||0, 2: user.stagePlays[2]||0, 3: user.stagePlays[3]||0 };
-        let currentVisual = user.visualCount[exitNum] || 0;
+        let currentMath = user.stagePlays[exitNum] || 0;
         
-        if (currentVisual !== targetCount) {
-            await this.animateAvatarProgress(exitNum, currentVisual, targetCount);
-            user.visualCount[exitNum] = targetCount;
+        if (currentMath < targetCount) {
+            await this.animateAvatarProgress(exitNum, currentMath, targetCount);
+            user.stagePlays[exitNum] = targetCount;
             if (window.Progress) window.Progress.saveUser();
         }
 
@@ -706,10 +694,8 @@ const Map = {
         
         const user = window.App.currentUser;
         if (!user.lastVisitedNode) user.lastVisitedNode = {};
-        if (!user.visualCount) user.visualCount = { 1: user.stagePlays[1]||0, 2: user.stagePlays[2]||0, 3: user.stagePlays[3]||0 };
         
         user.lastVisitedNode[fromLevel + 1] = (fromLevel + 1) + 'A';
-        user.visualCount[fromLevel + 1] = 0; // Appear at the start of next map
         if (window.Progress) window.Progress.saveUser();
         
         await this.shrinkAvatar(fromLevel);
@@ -739,18 +725,14 @@ const Map = {
         const user = window.App.currentUser;
         if (!user.lastVisitedNode) user.lastVisitedNode = {};
         
-        // Ensure visualCount is tracked
-        if (!user.visualCount) user.visualCount = { 1: user.stagePlays[1]||0, 2: user.stagePlays[2]||0, 3: user.stagePlays[3]||0 };
         
         // Animate backward to A node (count 0) before traveling
-        let currentVisual = user.visualCount[fromLevel] || 0;
-        if (currentVisual > 0) {
-            await this.animateAvatarProgress(fromLevel, currentVisual, 0);
-            user.visualCount[fromLevel] = 0;
+        let currentMath = user.stagePlays[fromLevel] || 0;
+        if (currentMath > 0) {
+            await this.animateAvatarProgress(fromLevel, currentMath, 0);
         }
         
         user.lastVisitedNode[fromLevel - 1] = 'exit' + (fromLevel - 1);
-        user.visualCount[fromLevel - 1] = 14; // Start at the exit of previous map
         if (window.Progress) window.Progress.saveUser();
         
         await this.shrinkAvatar(fromLevel);
@@ -778,9 +760,9 @@ const Map = {
         if (!user) return;
         
         if (!user.stagePlays) user.stagePlays = { 1: 0, 2: 0, 3: 0 };
-        const p1 = user.stagePlays[1];
-        const p2 = user.stagePlays[2];
-        const p3 = user.stagePlays[3];
+        const p1 = user.stagePlays[1] || 0;
+        const p2 = user.stagePlays[2] || 0;
+        const p3 = user.stagePlays[3] || 0;
 
         document.getElementById('streak-counter-1').innerText = "⭐ Counts: " + p1;
         document.getElementById('streak-counter-2').innerText = "⭐ Counts: " + p2;
@@ -872,10 +854,17 @@ const Map = {
     getMapPosition(counts) {
         let ratio = 0; // 0 to 1 for the 2 paths
         
+        if (counts === 0) return 0;
+        
         if (counts < 7) {
-            ratio = (counts / 7) * 0.5; // Path a
+            let p = counts / 7;
+            // Add visual boost so the first step completely clears the node
+            p = Math.pow(p, 0.7); 
+            ratio = p * 0.5; // Path a
         } else if (counts < 14) {
-            ratio = 0.5 + ((counts - 7) / 7) * 0.5; // Path b
+            let p = (counts - 7) / 7;
+            p = Math.pow(p, 0.7);
+            ratio = 0.5 + p * 0.5; // Path b
         } else {
             ratio = 1; // End
         }
@@ -885,7 +874,6 @@ const Map = {
     positionAvatar(mapOverride = null, countsOverride = null) {
         const user = window.App.currentUser;
         if (!user || !user.stagePlays) return;
-        if (!user.visualCount) user.visualCount = { 1: user.stagePlays[1]||0, 2: user.stagePlays[2]||0, 3: user.stagePlays[3]||0 };
         
         [1, 2, 3].forEach(l => {
             const av = document.getElementById('player-avatar-' + l);
@@ -904,13 +892,13 @@ const Map = {
             // Preserve existing scale if possible
             let currentScale = 'scale(1)';
             if (av.style.transform && av.style.transform.includes('scale')) {
-                let match = av.style.transform.match(/scale\([^)]+\)/);
-                if (match) currentScale = match[0];
+                let m = av.style.transform.match(/scale\(([^)]+)\)/);
+                if (m) currentScale = `scale(${m[1]})`;
             }
             av.style.opacity = '1';
             av.style.transform = `translate(-50%, -50%) ${currentScale}`;
 
-            let counts = user.visualCount ? (user.visualCount[l] || 0) : 0;
+            let counts = user.stagePlays[l] || 0;
             if (mapOverride === l && countsOverride !== null) counts = countsOverride;
 
             let ratio = this.getMapPosition(counts);
@@ -2019,15 +2007,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.App.pendingAnimation = null;
                 const user = window.App.currentUser;
                 
-                let oldVisual = user.visualCount ? (user.visualCount[stageNum] || 0) : oldPlays;
-                let newVisual = Math.max(newPlays, oldVisual);
-                
-                if (newVisual > oldVisual) {
+                if (newPlays !== oldPlays) {
                     await new Promise(r => setTimeout(r, 100)); // wait for layout to catch up
-                    await window.Map.animateAvatarProgress(stageNum, oldVisual, newVisual);
-                    if (!user.visualCount) user.visualCount = { 1: user.stagePlays[1]||0, 2: user.stagePlays[2]||0, 3: user.stagePlays[3]||0 };
-                    user.visualCount[stageNum] = newVisual;
-                    if (window.Progress) window.Progress.saveUser();
+                    await window.Map.animateAvatarProgress(stageNum, oldPlays, newPlays);
                 }
                 window.Map.updateUI();
             }
