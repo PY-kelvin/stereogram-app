@@ -765,12 +765,17 @@ const Map = {
 
         // --- Locks ---
         document.querySelectorAll('.stage-node').forEach(node => {
-            if (node.id !== 'node-1a' && node.id !== 'node-2a' && node.id !== 'node-3a') {
+            if (node.id !== 'node-1a') {
                 node.classList.add('locked');
                 let lock = node.querySelector('.lock-overlay');
                 if (lock) lock.style.display = 'block';
             }
         });
+
+        // Ensure 1A is unlocked
+        document.getElementById('node-1a').classList.remove('locked');
+        let lock1a = document.getElementById('node-1a').querySelector('.lock-overlay');
+        if (lock1a) lock1a.style.display = 'none';
 
         // Unlock 1B
         if (p1 >= 7 || this.hasPasswordBypass(7)) {
@@ -783,6 +788,13 @@ const Map = {
         if (this.hasPasswordBypass(14)) {
             document.getElementById('node-exit1').classList.remove('locked');
             const l = document.getElementById('node-exit1').querySelector('.lock-overlay');
+            if (l) l.style.display = 'none';
+        }
+
+        // Unlock 2A (Requires Map 2 to be unlocked)
+        if (this.hasPasswordBypass(14)) {
+            document.getElementById('node-2a').classList.remove('locked');
+            const l = document.getElementById('node-2a').querySelector('.lock-overlay');
             if (l) l.style.display = 'none';
         }
 
@@ -800,6 +812,13 @@ const Map = {
             if (l) l.style.display = 'none';
         }
         
+        // Unlock 3A (Requires Map 3 to be unlocked)
+        if (this.hasPasswordBypass(28)) {
+            document.getElementById('node-3a').classList.remove('locked');
+            const l = document.getElementById('node-3a').querySelector('.lock-overlay');
+            if (l) l.style.display = 'none';
+        }
+
         // Unlock 3B
         if (p3 >= 7 || this.hasPasswordBypass(35)) {
             document.getElementById('node-3b').classList.remove('locked');
