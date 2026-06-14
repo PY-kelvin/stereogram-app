@@ -459,6 +459,16 @@ const Map = {
         document.getElementById('node-exit2').addEventListener('click', () => this.handleExitClick(2));
         document.getElementById('node-exit3').addEventListener('click', () => this.handleExitClick(3));
 
+        document.getElementById('btn-cancel-pre-override').addEventListener('click', () => {
+            document.getElementById('pre-override-modal').classList.add('hidden');
+        });
+
+        document.getElementById('btn-admin-override').addEventListener('click', () => {
+            document.getElementById('pre-override-modal').classList.add('hidden');
+            document.getElementById('password-modal').classList.remove('hidden');
+            document.getElementById('admin-password').value = '';
+        });
+
         document.getElementById('btn-cancel-pwd').addEventListener('click', () => {
             document.getElementById('password-modal').classList.add('hidden');
         });
@@ -512,8 +522,11 @@ const Map = {
             this.pendingExitClick = null;
             const pwdMsg = document.querySelector('#password-modal p');
             if (pwdMsg) pwdMsg.innerText = `Enter password to unlock Stage ${nodeName}.`;
-            document.getElementById('password-modal').classList.remove('hidden');
-            document.getElementById('admin-password').value = '';
+            
+            let remaining = 7 - (user.stagePlays[level] || 0);
+            document.getElementById('pre-override-title').innerText = `Stage ${nodeName} Locked`;
+            document.getElementById('pre-override-message').innerText = `Almost there! You just need ${remaining} more star count(s) to unlock this stage.`;
+            document.getElementById('pre-override-modal').classList.remove('hidden');
             return;
         }
 
@@ -551,8 +564,15 @@ const Map = {
             const targetName = exitNum === 1 ? 'Sakura Forest' : exitNum === 2 ? 'City Gate' : 'Final Goal';
             const pwdMsg = document.querySelector('#password-modal p');
             if (pwdMsg) pwdMsg.innerText = `Enter password to unlock ${targetName}.`;
-            document.getElementById('password-modal').classList.remove('hidden');
-            document.getElementById('admin-password').value = '';
+            
+            document.getElementById('pre-override-title').innerText = `${targetName} Locked`;
+            if (exitNum === 3) {
+                let remaining = 14 - (window.App.currentUser.stagePlays[3] || 0);
+                document.getElementById('pre-override-message').innerText = `Almost there! You just need ${remaining} more star count(s) to unlock this stage.`;
+            } else {
+                document.getElementById('pre-override-message').innerText = `Great job! Please ask our friendly orthoptist to unlock your next big adventure.`;
+            }
+            document.getElementById('pre-override-modal').classList.remove('hidden');
             return;
         }
 
