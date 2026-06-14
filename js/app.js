@@ -495,6 +495,16 @@ const Map = {
         const user = window.App.currentUser;
         if (!user || !user.stagePlays) return;
 
+        // Check if map is unlocked for A nodes
+        if (nodeName === '2A' && !this.hasPasswordBypass(14)) {
+            window.App.showNotification("This stage is locked!", "warning");
+            return;
+        }
+        if (nodeName === '3A' && !this.hasPasswordBypass(28)) {
+            window.App.showNotification("This stage is locked!", "warning");
+            return;
+        }
+
         if (nodeName.endsWith('B') && user.stagePlays[level] < 7 && !this.hasPasswordBypass(reqStreak)) {
             // Need password for 1B, 2B, 3B if not enough counts
             this.pwdTargetStage = level;
