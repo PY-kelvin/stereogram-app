@@ -2,21 +2,6 @@
 <html lang="en">
 
 <head>
-    <script>
-        // CACHE NUKE: Force wipe all service worker caches and unregister SW on load
-        if ('caches' in window) {
-            caches.keys().then(function(names) {
-                for (let name of names) caches.delete(name);
-            });
-        }
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                for(let registration of registrations) {
-                    registration.unregister();
-                }
-            });
-        }
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -645,7 +630,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=219"></script>
+    <script src="js/app.js?v=220"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
