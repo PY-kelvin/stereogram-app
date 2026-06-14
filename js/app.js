@@ -858,12 +858,9 @@ const Map = {
         
         if (counts < 7) {
             let p = counts / 7;
-            // Add visual boost so the first step completely clears the node
-            p = Math.pow(p, 0.7); 
             ratio = p * 0.5; // Path a
         } else if (counts < 14) {
             let p = (counts - 7) / 7;
-            p = Math.pow(p, 0.7);
             ratio = 0.5 + p * 0.5; // Path b
         } else {
             ratio = 1; // End
