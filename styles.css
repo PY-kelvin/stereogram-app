@@ -340,7 +340,7 @@ h1, h2, h3 {
     position: absolute;
     z-index: 2;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
     cursor: pointer;
     transition: transform 0.2s;
@@ -363,10 +363,15 @@ h1, h2, h3 {
     align-items: center;
     font-size: 2rem;
     box-shadow: var(--shadow);
-    margin-top: 5px;
 }
 
 .stage-label {
+    position: absolute;
+    bottom: 100%;
+    margin-bottom: 5px;
+    white-space: nowrap; /* Keep shorter labels on one line, or use text-align if wrapping is needed */
+    width: max-content;
+    text-align: center;
     background: var(--text-dark);
     color: white;
     padding: 4px 10px;
@@ -379,23 +384,23 @@ h1, h2, h3 {
 .node-1a, .node-2a, .node-3a {
     top: 50%;
     left: 15%;
-    transform: translate(-50%, calc(-50% - 15px));
+    transform: translate(-50%, -50%);
 }
 
 .node-1b, .node-2b, .node-3b {
     top: 50%;
     left: 50%;
-    transform: translate(-50%, calc(-50% - 15px));
+    transform: translate(-50%, -50%);
 }
 
 .node-2b {
-    top: 75% !important;
+    top: 75%;
 }
 
 .node-exit1, .node-exit2, .node-exit3 {
     top: 50%;
     left: 85%;
-    transform: translate(-50%, calc(-50% - 15px));
+    transform: translate(-50%, -50%);
 }
 
 .player-avatar {
