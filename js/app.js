@@ -547,6 +547,7 @@ const Map = {
 
         if (!user.lastVisitedNode) user.lastVisitedNode = {};
         user.lastVisitedNode[level] = nodeName;
+        user.lastActiveMap = level;
         
         if (window.Progress) window.Progress.saveUser();
         window.Game.startStage(nodeName);
@@ -709,6 +710,7 @@ const Map = {
         if (!user.lastVisitedNode) user.lastVisitedNode = {};
         
         user.lastVisitedNode[fromLevel + 1] = (fromLevel + 1) + 'A';
+        user.lastActiveMap = fromLevel + 1;
         if (window.Progress) window.Progress.saveUser();
         
         await this.shrinkAvatar(fromLevel);
@@ -746,6 +748,7 @@ const Map = {
         }
         
         user.lastVisitedNode[fromLevel - 1] = 'exit' + (fromLevel - 1);
+        user.lastActiveMap = fromLevel - 1;
         if (window.Progress) window.Progress.saveUser();
         
         await this.shrinkAvatar(fromLevel);
@@ -901,7 +904,9 @@ const Map = {
 
             // Preserve existing scale if possible
             let currentScale = 'scale(1)';
-            if (av.style.transform && av.style.transform.includes('scale')) {
+            if (!this.isAnimating) {
+                currentScale = 'scale(1)';
+            } else if (av.style.transform && av.style.transform.includes('scale')) {
                 let m = av.style.transform.match(/scale\(([^)]+)\)/);
                 if (m) currentScale = `scale(${m[1]})`;
             }
@@ -1509,12 +1514,16 @@ const App = {
         if (specificMap !== null) {
             targetMap = specificMap;
         } else {
-            if (!hasBypass(14)) {
-                targetMap = 1;
-            } else if (!hasBypass(28)) {
-                targetMap = 2;
+            if (user.lastActiveMap) {
+                targetMap = user.lastActiveMap;
             } else {
-                targetMap = 3;
+                if (!hasBypass(14)) {
+                    targetMap = 1;
+                } else if (!hasBypass(28)) {
+                    targetMap = 2;
+                } else {
+                    targetMap = 3;
+                }
             }
         }
 
