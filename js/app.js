@@ -536,7 +536,7 @@ const Map = {
             return;
         }
 
-        if (nodeName.endsWith('B') && user.stagePlays[level] < 7) {
+        if (nodeName.endsWith('B') && user.stagePlays[level] < 7 && !this.hasPasswordBypass(level * 14)) {
             // Locked: B stages require 7 counts. Hide Admin Override button!
             let remaining = 7 - (user.stagePlays[level] || 0);
             document.getElementById('pre-override-title').innerText = `Stage ${nodeName} Locked`;
