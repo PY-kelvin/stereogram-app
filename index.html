@@ -423,10 +423,15 @@
             <div class="map-container landscape-map">
                 <div class="map-content">
                     <svg class="map-path" viewBox="0 0 100 100" preserveAspectRatio="none">
-                        <path id="path-line-2" d="M 17 50 Q 35 65, 59 56" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
-                        <path id="path-line-2b" d="M 59 56 Q 75 55, 95 50" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
+                        <path id="path-line-2-entry" d="M 10 55 Q 19 55, 28 55" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
+                        <path id="path-line-2" d="M 28 55 Q 43 55, 59 56" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
+                        <path id="path-line-2b" d="M 59 56 Q 73 55, 88 55" fill="none" stroke="#2b2d42" stroke-width="1.5" stroke-dasharray="2, 1" vector-effect="non-scaling-stroke" />
                     </svg>
-                    <div class="stage-node node-2a" id="node-2a" style="left: 17%; top: 50%;">
+                    <div class="stage-node node-entry2" id="node-entry2" style="left: 10%; top: 55%;">
+                        <span class="stage-label">Forest entrance</span>
+                        <div class="node-icon bg-bus"><div class="lock-overlay">🔒</div></div>
+                    </div>
+                    <div class="stage-node node-2a" id="node-2a" style="left: 28%; top: 55%;">
                         <span class="stage-label">Stage 2A</span>
                         <div class="node-icon bg-sakura"><div class="lock-overlay">🔒</div></div>
                     </div>
@@ -434,7 +439,7 @@
                         <span class="stage-label">Stage 2B</span>
                         <div class="node-icon bg-sakura"><div class="lock-overlay">🔒</div></div>
                     </div>
-                    <div class="stage-node node-exit2 locked" id="node-exit2" style="left: 95%; top: 50%;">
+                    <div class="stage-node node-exit2 locked" id="node-exit2" style="left: 88%; top: 55%;">
                         <span class="stage-label">Orthoptics City</span>
                         <div class="node-icon bg-gate"><div class="lock-overlay">🔒</div></div>
                     </div>
@@ -619,7 +624,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=237"></script>
+    <script src="js/app.js?v=238"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {

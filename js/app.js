@@ -139,7 +139,7 @@ const Auth = {
             stagePlays: { 1: 0, 2: 0, 3: 0 },
             stageDailyProgress: { 1: 0, 2: 0, 3: 0 },
             visualCount: { 1: 0, 2: 0, 3: 0 },
-            lastVisitedNode: { 1: '1A', 2: '2A', 3: '3A' },
+            lastVisitedNode: { 1: '1A', 2: 'entry2', 3: '3A' },
             unlockedStages: [1]
         };
 
@@ -263,7 +263,7 @@ const Auth = {
                     };
                 }
 
-                user.lastVisitedNode = user.lastVisitedNode || { 1: '1A', 2: '2A', 3: '3A' };
+                user.lastVisitedNode = user.lastVisitedNode || { 1: '1A', 2: 'entry2', 3: '3A' };
                 
                 window.App.currentUser = user;
                 
@@ -476,6 +476,7 @@ const Map = {
         // Stage clicks
         document.getElementById('node-1a').addEventListener('click', () => this.handleNodeClick('1A', 1, 0));
         document.getElementById('node-1b').addEventListener('click', () => this.handleNodeClick('1B', 1, 7));
+        document.getElementById('node-entry2').addEventListener('click', () => this.handleEntryClick(2));
         document.getElementById('node-2a').addEventListener('click', () => this.handleNodeClick('2A', 2, 14));
         document.getElementById('node-2b').addEventListener('click', () => this.handleNodeClick('2B', 2, 21));
         document.getElementById('node-3a').addEventListener('click', () => this.handleNodeClick('3A', 3, 28));
@@ -521,6 +522,28 @@ const Map = {
         });
     },
     
+    async handleEntryClick(level) {
+        if (this.isAnimating) return;
+        this.isAnimating = true;
+        const user = window.App.currentUser;
+        
+        let oldNode = user.lastVisitedNode[level] || '2A';
+        user.lastVisitedNode[level] = 'entry' + level;
+        
+        let av = document.getElementById('player-avatar-' + level);
+        if (av) {
+            let target = document.getElementById('node-entry' + level);
+            if (target) {
+                av.style.left = target.style.left;
+                av.style.top = target.style.top;
+                await new Promise(r => setTimeout(r, 800)); // wait for avatar to walk there
+            }
+        }
+        
+        this.isAnimating = false;
+        this.travelBackward(level);
+    },
+
     async handleNodeClick(nodeName, level, reqStreak) {
         if (this.isAnimating) return;
         const user = window.App.currentUser;
@@ -720,7 +743,11 @@ const Map = {
         const user = window.App.currentUser;
         if (!user.lastVisitedNode) user.lastVisitedNode = {};
         
-        user.lastVisitedNode[fromLevel + 1] = (fromLevel + 1) + 'A';
+        if (fromLevel === 1) {
+            user.lastVisitedNode[2] = 'entry2';
+        } else {
+            user.lastVisitedNode[fromLevel + 1] = (fromLevel + 1) + 'A';
+        }
         user.lastActiveMap = fromLevel + 1;
         if (window.Progress) window.Progress.saveUser();
         
@@ -835,6 +862,13 @@ const Map = {
             document.getElementById('node-2a').classList.remove('locked');
             const l = document.getElementById('node-2a').querySelector('.lock-overlay');
             if (l) l.style.display = 'none';
+            
+            const entryNode = document.getElementById('node-entry2');
+            if (entryNode) {
+                entryNode.classList.remove('locked');
+                const le = entryNode.querySelector('.lock-overlay');
+                if (le) le.style.display = 'none';
+            }
         }
 
         // Unlock 2B
