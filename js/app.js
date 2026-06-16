@@ -1304,15 +1304,19 @@ const Game = {
 
     resetUITimer() {
         const uis = document.querySelectorAll('.game-ui');
-        uis.forEach(ui => ui.style.opacity = '1');
+        uis.forEach(ui => {
+            ui.classList.remove('ui-hidden');
+            ui.style.opacity = '1';
+        });
         
         if (this.uiTimeout) clearTimeout(this.uiTimeout);
         
-        if (this.isPlaying) {
-            this.uiTimeout = setTimeout(() => {
-                uis.forEach(ui => ui.style.opacity = '0');
-            }, 3000);
-        }
+        this.uiTimeout = setTimeout(() => {
+            uis.forEach(ui => {
+                ui.classList.add('ui-hidden');
+                ui.style.opacity = '0';
+            });
+        }, 3000);
     },
 
     completeSession() {

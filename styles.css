@@ -630,8 +630,6 @@ h1, h2, h3 {
     /* #game-image sizing is handled globally now */
     
     /* Focus Mode overrides */
-    .focus-mode .game-header .btn-back,
-    .focus-mode .game-header #current-stage-title,
     .focus-mode #cheerful-decorations {
         display: none !important;
     }
