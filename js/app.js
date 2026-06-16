@@ -1585,13 +1585,6 @@ const ProgressReport = {
             window.App.showMapScreen();
         });
 
-        document.getElementById('tab-calendar').addEventListener('click', () => {
-            this.switchTab('calendar');
-        });
-        document.getElementById('tab-summary').addEventListener('click', () => {
-            this.switchTab('summary');
-        });
-
         document.getElementById('btn-prev-month').addEventListener('click', () => {
             this.currentDate.setMonth(this.currentDate.getMonth() - 1);
             this.renderCalendar();
@@ -1602,22 +1595,6 @@ const ProgressReport = {
             this.renderCalendar();
             this.renderSummary();
         });
-    },
-
-    switchTab(tab) {
-        document.getElementById('tab-calendar').classList.toggle('active', tab === 'calendar');
-        document.getElementById('tab-summary').classList.toggle('active', tab === 'summary');
-        
-        document.getElementById('view-calendar').classList.toggle('hidden', tab !== 'calendar');
-        document.getElementById('view-summary').classList.toggle('hidden', tab !== 'summary');
-        document.getElementById('view-calendar').classList.toggle('active', tab === 'calendar');
-        document.getElementById('view-summary').classList.toggle('active', tab === 'summary');
-
-        if (tab === 'summary') {
-            this.renderSummary();
-        } else {
-            this.renderCalendar();
-        }
     },
 
     render() {

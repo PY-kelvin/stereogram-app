@@ -1223,3 +1223,15 @@ img.player-avatar {
     background: rgba(43, 45, 66, 0.7);
 }
 
+
+/* Mobile Stacking for Calendar Dashboard */
+@media screen and (max-width: 768px) {
+    #view-calendar {
+        flex-direction: column !important;
+    }
+    .calendar-left-pane, #calendar-day-details {
+        flex: 0 0 100% !important;
+        width: 100%;
+        max-width: 100% !important;
+    }
+}
