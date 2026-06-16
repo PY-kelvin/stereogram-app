@@ -397,53 +397,71 @@ const Map = {
             });
         }
         
-        const btnForwardM2 = document.getElementById('btn-forward-map-2');
-        if (btnForwardM2) {
-            btnForwardM2.addEventListener('click', () => {
-                if (window.Map && window.Map.hasPasswordBypass(14)) {
-                    window.Map.handleExitClick(1);
-                } else {
-                    window.App.showScreen('screen-map-2');
-                    if (window.Map) window.Map.updateUI();
-                }
-            });
-        }
+        // --- Swipe Navigation for Maps ---
+        let touchStartX = 0;
+        let touchEndX = 0;
 
-        const btnForwardM3 = document.getElementById('btn-forward-map-3');
-        if (btnForwardM3) {
-            btnForwardM3.addEventListener('click', () => {
-                if (window.Map && window.Map.hasPasswordBypass(28)) {
-                    window.Map.handleExitClick(2);
-                } else {
-                    window.App.showScreen('screen-map-3');
-                    if (window.Map) window.Map.updateUI();
-                }
-            });
-        }
+        const handleSwipe = (currentMapLevel) => {
+            const swipeDistance = touchEndX - touchStartX;
+            const threshold = 50; // minimum distance to trigger swipe
 
-        const btnBackL1 = document.getElementById('btn-back-level1');
-        if (btnBackL1) {
-            btnBackL1.addEventListener('click', () => {
-                if (window.Map && window.Map.hasPasswordBypass(14)) {
-                    window.Map.travelBackward(2);
-                } else {
-                    window.App.showScreen('screen-map-1');
-                    if (window.Map) window.Map.updateUI();
+            if (swipeDistance < -threshold) {
+                // Swipe Left -> Go Forward
+                if (currentMapLevel === 1) {
+                    if (window.Map && window.Map.hasPasswordBypass(14)) {
+                        window.Map.handleExitClick(1);
+                    } else {
+                        window.App.showScreen('screen-map-2');
+                        if (window.Map) window.Map.updateUI();
+                    }
+                } else if (currentMapLevel === 2) {
+                    if (window.Map && window.Map.hasPasswordBypass(28)) {
+                        window.Map.handleExitClick(2);
+                    } else {
+                        window.App.showScreen('screen-map-3');
+                        if (window.Map) window.Map.updateUI();
+                    }
                 }
-            });
-        }
+            } else if (swipeDistance > threshold) {
+                // Swipe Right -> Go Backward
+                if (currentMapLevel === 2) {
+                    if (window.Map && window.Map.hasPasswordBypass(14)) {
+                        window.Map.travelBackward(2);
+                    } else {
+                        window.App.showScreen('screen-map-1');
+                        if (window.Map) window.Map.updateUI();
+                    }
+                } else if (currentMapLevel === 3) {
+                    if (window.Map && window.Map.hasPasswordBypass(28)) {
+                        window.Map.travelBackward(3);
+                    } else {
+                        window.App.showScreen('screen-map-2');
+                        if (window.Map) window.Map.updateUI();
+                    }
+                }
+            }
+        };
 
-        const btnBackL2 = document.getElementById('btn-back-level2');
-        if (btnBackL2) {
-            btnBackL2.addEventListener('click', () => {
-                if (window.Map && window.Map.hasPasswordBypass(28)) {
-                    window.Map.travelBackward(3);
-                } else {
-                    window.App.showScreen('screen-map-2');
-                    if (window.Map) window.Map.updateUI();
+        const setupSwipeForMap = (mapId, level) => {
+            const mapEl = document.getElementById(mapId);
+            if (!mapEl) return;
+            
+            mapEl.addEventListener('touchstart', e => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, {passive: true});
+            
+            mapEl.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].screenX;
+                // Ensure we are currently looking at this map before swiping
+                if (mapEl.style.display !== 'none') {
+                    handleSwipe(level);
                 }
-            });
-        }
+            }, {passive: true});
+        };
+
+        setupSwipeForMap('screen-map-1', 1);
+        setupSwipeForMap('screen-map-2', 2);
+        setupSwipeForMap('screen-map-3', 3);
 
         // Progress buttons
         document.querySelectorAll('.btn-progress').forEach(btn => {
