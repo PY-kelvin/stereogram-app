@@ -506,21 +506,15 @@ const Map = {
             const user = window.App.currentUser;
             
             // Fast forwards
-            if (pwd === 'orthoptics') {
-                this.fastForward(7, "orthoptics");
-            } else if (pwd === 'orthoptics1') {
-                this.fastForward(14, "orthoptics1");
-            } else if (pwd === 'orthoptics2') {
-                this.fastForward(21, "orthoptics2");
-            } else if (pwd === 'orthoptics3') {
-                this.fastForward(28, "orthoptics3");
+            if (pwd === 'orthoptist123') {
+                this.fastForward(14, "orthoptist123");
+            } else if (pwd === 'orthoptist 1234') {
+                this.fastForward(28, "orthoptist 1234");
+            } else if (pwd === 'orthoptist 12345') {
+                this.fastForward(42, "orthoptist 12345");
             } else if (pwd === 'test20') {
                 window.runSimulation();
                 document.getElementById('password-modal').classList.add('hidden');
-            } else if (pwd === 'orthoptics4') {
-                this.fastForward(35, "orthoptics4");
-            } else if (pwd === 'orthoptics5') {
-                this.fastForward(42, "orthoptics5");
             } else {
                 window.App.showNotification("Incorrect Password.", "warning");
             }
@@ -542,17 +536,15 @@ const Map = {
             return;
         }
 
-        if (nodeName.endsWith('B') && user.stagePlays[level] < 7 && !this.hasPasswordBypass(reqStreak)) {
-            // Need password for 1B, 2B, 3B if not enough counts
-            this.pwdTargetStage = level;
-            this.pendingNodeClick = { nodeName, level, reqStreak };
-            this.pendingExitClick = null;
-            const pwdMsg = document.querySelector('#password-modal p');
-            if (pwdMsg) pwdMsg.innerText = `Enter password to unlock Stage ${nodeName}.`;
-            
+        if (nodeName.endsWith('B') && user.stagePlays[level] < 7) {
+            // Locked: B stages require 7 counts. Hide Admin Override button!
             let remaining = 7 - (user.stagePlays[level] || 0);
             document.getElementById('pre-override-title').innerText = `Stage ${nodeName} Locked`;
             document.getElementById('pre-override-message').innerText = `Almost there! You just need ${remaining} more star count(s) to unlock this stage.`;
+            
+            const btnOverride = document.getElementById('btn-admin-override');
+            if (btnOverride) btnOverride.style.display = 'none';
+            
             document.getElementById('pre-override-modal').classList.remove('hidden');
             return;
         }
@@ -580,7 +572,7 @@ const Map = {
             this.pwdTargetStage = exitNum;
             this.pendingExitClick = exitNum;
             this.pendingNodeClick = null;
-            const targetName = exitNum === 1 ? 'Sakura Forest' : exitNum === 2 ? 'City Gate' : 'Final Goal';
+            const targetName = exitNum === 1 ? 'Sakura Forest' : exitNum === 2 ? 'Sakura City' : 'Final Goal';
             const pwdMsg = document.querySelector('#password-modal p');
             if (pwdMsg) pwdMsg.innerText = `Enter password to unlock ${targetName}.`;
             
@@ -591,6 +583,10 @@ const Map = {
             } else {
                 document.getElementById('pre-override-message').innerText = `Great job! Please ask our friendly orthoptist to unlock your next big adventure.`;
             }
+            
+            const btnOverride = document.getElementById('btn-admin-override');
+            if (btnOverride) btnOverride.style.display = ''; // Show it again if hidden
+            
             document.getElementById('pre-override-modal').classList.remove('hidden');
             return;
         }
@@ -671,12 +667,9 @@ const Map = {
         user.passwords = user.passwords || [];
         
         const pwdMap = [
-            { level: 7, pwd: 'orthoptics' },
-            { level: 14, pwd: 'orthoptics1' },
-            { level: 21, pwd: 'orthoptics2' },
-            { level: 28, pwd: 'orthoptics3' },
-            { level: 35, pwd: 'orthoptics4' },
-            { level: 42, pwd: 'orthoptics5' }
+            { level: 14, pwd: 'orthoptist123' },
+            { level: 28, pwd: 'orthoptist 1234' },
+            { level: 42, pwd: 'orthoptist 12345' }
         ];
 
         let maxLevel = 0;
@@ -824,7 +817,7 @@ const Map = {
         if (lock1a) lock1a.style.display = 'none';
 
         // Unlock 1B
-        if (p1 >= 7 || this.hasPasswordBypass(7)) {
+        if (p1 >= 7 || this.hasPasswordBypass(14)) {
             document.getElementById('node-1b').classList.remove('locked');
             const l = document.getElementById('node-1b').querySelector('.lock-overlay');
             if (l) l.style.display = 'none';
@@ -845,7 +838,7 @@ const Map = {
         }
 
         // Unlock 2B
-        if (p2 >= 7 || this.hasPasswordBypass(21)) {
+        if (p2 >= 7 || this.hasPasswordBypass(28)) {
             document.getElementById('node-2b').classList.remove('locked');
             const l = document.getElementById('node-2b').querySelector('.lock-overlay');
             if (l) l.style.display = 'none';
@@ -866,7 +859,7 @@ const Map = {
         }
 
         // Unlock 3B
-        if (p3 >= 7 || this.hasPasswordBypass(35)) {
+        if (p3 >= 7 || this.hasPasswordBypass(42)) {
             document.getElementById('node-3b').classList.remove('locked');
             const l = document.getElementById('node-3b').querySelector('.lock-overlay');
             if (l) l.style.display = 'none';
@@ -1521,12 +1514,9 @@ const App = {
         
         const hasBypass = (req) => {
             if (!user.passwords) return false;
-            if (req === 7 && user.passwords.includes('orthoptics')) return true;
-            if (req === 14 && user.passwords.includes('orthoptics1')) return true;
-            if (req === 21 && user.passwords.includes('orthoptics2')) return true;
-            if (req === 28 && user.passwords.includes('orthoptics3')) return true;
-            if (req === 35 && user.passwords.includes('orthoptics4')) return true;
-            if (req === 42 && user.passwords.includes('orthoptics5')) return true;
+            if (req === 14 && user.passwords.includes('orthoptist123')) return true;
+            if (req === 28 && user.passwords.includes('orthoptist 1234')) return true;
+            if (req === 42 && user.passwords.includes('orthoptist 12345')) return true;
             return false;
         };
 
