@@ -1,12 +1,18 @@
-const CACHE_NAME = 'myeyegym-cache-v228';
+const CACHE_NAME = 'myeyegym-cache-v229';
 const urlsToCache = [
   './',
   './index.html',
-  './styles.css?v=138',
+  './styles.css?v=139',
   './js/app.js?v=225',
   './fonts/fredoka.woff2',
   './manifest.json',
   './app_icon.png',
+  './app_icon_small.png',
+  './app_icon_medium.png',
+  './nodoka_farm_village.png',
+  './sakura_forest.png',
+  './sakura_city.png',
+  './reference_card.jpg',
   './avatar_cat.png',
   './avatar_cow.png',
   './avatar_hamster.png',
