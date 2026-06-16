@@ -539,9 +539,9 @@
                     <button id="btn-next-month" class="btn btn-small btn-secondary">&gt;</button>
                 </div>
 
-                <div id="view-calendar" class="progress-view active" style="display: flex; gap: 40px; align-items: flex-start; justify-content: center; flex-wrap: wrap;">
-                    <div class="calendar-left-pane" style="flex: 1; min-width: 250px; max-width: 300px;">
-                        <div class="calendar-grid compact-calendar">
+                <div id="view-calendar" class="progress-view active" style="display: flex; gap: 20px; align-items: flex-start; justify-content: space-between; flex-wrap: nowrap; max-width: 100%; overflow-x: hidden;">
+                    <div class="calendar-left-pane" style="flex: 0 0 55%; min-width: 0;">
+                        <div class="calendar-grid compact-calendar" style="width: 100%; max-width: 100%;">
                             <div class="day-name">M</div>
                             <div class="day-name">T</div>
                             <div class="day-name">W</div>
@@ -553,8 +553,8 @@
                         </div>
                     </div>
                     
-                    <div id="calendar-day-details" class="day-details hidden" style="flex: 1; min-width: 250px; max-width: 350px; text-align: left; background: transparent; box-shadow: none; padding: 0;">
-                        <h4 style="margin-bottom: 10px; font-size: 1.1rem; color: #2b2d42; font-weight: normal;">(if you clicked on <span id="detail-date" style="font-weight: bold;"></span>)</h4>
+                    <div id="calendar-day-details" class="day-details hidden" style="flex: 0 0 calc(45% - 20px); min-width: 0; text-align: left; background: transparent; box-shadow: none; padding: 0; margin: 0;">
+                        <h4 style="margin-top: 0; margin-bottom: 10px; font-size: 1.1rem; color: #2b2d42; font-weight: bold; text-align: center;"><span id="detail-date"></span></h4>
                         
                         <!-- Duration Box -->
                         <div style="border: 2px solid #2b2d42; border-radius: 8px; padding: 15px; margin-bottom: 15px; font-weight: bold; font-size: 1.1rem; display: flex; justify-content: space-between;">
