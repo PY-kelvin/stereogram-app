@@ -540,7 +540,7 @@ const Map = {
             // Locked: B stages require 7 counts. Hide Admin Override button!
             let remaining = 7 - (user.stagePlays[level] || 0);
             document.getElementById('pre-override-title').innerText = `Stage ${nodeName} Locked`;
-            document.getElementById('pre-override-message').innerText = `Almost there! You just need ${remaining} more star count(s) to unlock this stage.`;
+            document.getElementById('pre-override-message').innerText = `Almost there! You just need ${remaining} more stars to unlock this stage.`;
             
             const btnOverride = document.getElementById('btn-admin-override');
             if (btnOverride) btnOverride.style.display = 'none';
@@ -579,7 +579,7 @@ const Map = {
             document.getElementById('pre-override-title').innerText = `${targetName} Locked`;
             if (exitNum === 3) {
                 let remaining = 14 - (window.App.currentUser.stagePlays[3] || 0);
-                document.getElementById('pre-override-message').innerText = `Almost there! You just need ${remaining} more star count(s) to unlock this stage.`;
+                document.getElementById('pre-override-message').innerText = `Almost there! You just need ${remaining} more stars to unlock this stage.`;
             } else {
                 document.getElementById('pre-override-message').innerText = `Great job! Please ask our friendly orthoptist to unlock your next big adventure.`;
             }
