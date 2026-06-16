@@ -1180,3 +1180,31 @@ img.player-avatar {
 .btn-mute:active {
     transform: scale(0.95);
 }
+
+/* Scroll Indicator Styles */
+@keyframes bounce-down {
+    0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+    40% { transform: translateX(-50%) translateY(-10px); }
+    60% { transform: translateX(-50%) translateY(-5px); }
+}
+
+.scroll-indicator {
+    animation: bounce-down 2s infinite;
+}
+
+/* Custom Scrollbar */
+.screen::-webkit-scrollbar {
+    width: 8px;
+}
+.screen::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+}
+.screen::-webkit-scrollbar-thumb {
+    background: rgba(43, 45, 66, 0.4);
+    border-radius: 10px;
+}
+.screen::-webkit-scrollbar-thumb:hover {
+    background: rgba(43, 45, 66, 0.7);
+}
+

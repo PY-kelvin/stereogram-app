@@ -2081,4 +2081,17 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // Scroll Indicator Logic
+    const instScreen = document.getElementById('screen-instructions');
+    const scrollInd = document.getElementById('instruction-scroll-indicator');
+    if (instScreen && scrollInd) {
+        instScreen.addEventListener('scroll', () => {
+            if (instScreen.scrollTop > 50) {
+                scrollInd.style.opacity = '0';
+            } else {
+                scrollInd.style.opacity = '1';
+            }
+        });
+    }
 });
