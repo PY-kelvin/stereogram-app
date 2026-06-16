@@ -1654,7 +1654,8 @@ const ProgressReport = {
             }
         });
 
-        const firstDay = new Date(year, month, 1).getDay();
+        // Monday-start calendar adjustment (0=Mon, 6=Sun)
+        const firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
         const daysInMonth = new Date(year, month + 1, 0).getDate();
 
         for (let i = 0; i < firstDay; i++) {

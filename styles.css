@@ -909,6 +909,23 @@ img.player-avatar {
 
 .calendar-day.selected {
     border-color: #2b2d42;
+    border-radius: 4px;
+}
+
+.compact-calendar {
+    gap: 4px;
+    margin-bottom: 0;
+}
+.compact-calendar .calendar-day {
+    border-radius: 4px;
+    font-size: 1rem;
+}
+.compact-calendar .day-name {
+    font-size: 0.85rem;
+}
+.compact-calendar .calendar-day.active-day {
+    font-weight: bold;
+    box-shadow: none;
 }
 
 .day-details {
