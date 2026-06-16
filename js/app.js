@@ -1670,11 +1670,11 @@ const ProgressReport = {
             grid.appendChild(dayDiv);
         }
 
-        document.getElementById('calendar-day-details').classList.add('hidden');
+        document.getElementById('daily-stats-container').classList.add('hidden');
     },
 
     showDayDetails(date, daySessions) {
-        document.getElementById('calendar-day-details').classList.remove('hidden');
+        document.getElementById('daily-stats-container').classList.remove('hidden');
         document.getElementById('detail-date').innerText = date.toDateString();
         
         let totalMins = daySessions.reduce((sum, s) => sum + (s.durationMins || 10), 0);
