@@ -970,8 +970,8 @@ img.player-avatar {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 30px;
-    padding: 40px 20px;
+    gap: 15px;
+    padding: 10px 20px;
     height: 100%;
 }
 
@@ -979,7 +979,7 @@ img.player-avatar {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
     width: 100%;
 }
 
@@ -1008,15 +1008,15 @@ img.player-avatar {
 }
 
 .bubble-small {
-    width: 145px;
-    height: 145px;
+    width: 115px;
+    height: 115px;
     background: #ffb703;
 }
 
 .bubble-rect {
     width: 90%;
-    max-width: 350px;
-    height: 120px;
+    max-width: 280px;
+    height: 85px;
     border-radius: 20px;
 }
 
@@ -1055,7 +1055,7 @@ img.player-avatar {
 }
 
 .bubble-text {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     font-weight: bold;
     color: var(--text-dark);
     text-shadow: 1px 1px 0px rgba(255,255,255,0.5);
@@ -1063,7 +1063,7 @@ img.player-avatar {
 }
 
 .bubble-small .bubble-text {
-    font-size: 1.1rem;
+    font-size: 0.95rem;
 }
 
 .bubble-text-dark {
