@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="app_icon.png?v=new2">
     <link rel="icon" href="app_icon.png?v=new2">
 
-    <link rel="stylesheet" href="styles.css?v=146">
+    <link rel="stylesheet" href="styles.css?v=147">
 </head>
 
 <body>
@@ -539,8 +539,8 @@
                     <button id="btn-next-month" class="btn btn-small btn-secondary">&gt;</button>
                 </div>
 
-                <div id="view-calendar" class="progress-view active" style="display: flex; gap: 20px; align-items: flex-start; justify-content: space-between; flex-wrap: nowrap; max-width: 100%; overflow-x: hidden;">
-                    <div class="calendar-left-pane" style="flex: 0 0 55%; min-width: 0;">
+                <div id="view-calendar" class="progress-view active" style="display: flex; flex-direction: row !important; gap: 20px; align-items: flex-start; justify-content: space-between; flex-wrap: nowrap; max-width: 100%; overflow-x: hidden;">
+                    <div class="calendar-left-pane" style="flex: 0 0 60%; min-width: 0;">
                         <div class="calendar-grid compact-calendar" style="width: 100%; max-width: 100%;">
                             <div class="day-name">M</div>
                             <div class="day-name">T</div>
@@ -553,7 +553,7 @@
                         </div>
                     </div>
                     
-                    <div id="calendar-day-details" class="day-details hidden" style="flex: 0 0 calc(45% - 20px); min-width: 0; text-align: left; background: transparent; box-shadow: none; padding: 0; margin: 0;">
+                    <div id="calendar-day-details" class="day-details hidden" style="flex: 0 0 calc(40% - 20px); min-width: 0; text-align: left; background: transparent; box-shadow: none; padding: 0; margin: 0;">
                         <h4 style="margin-top: 0; margin-bottom: 10px; font-size: 1.1rem; color: #2b2d42; font-weight: bold; text-align: center;"><span id="detail-date"></span></h4>
                         
                         <!-- Duration Box -->
@@ -622,7 +622,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=231"></script>
+    <script src="js/app.js?v=232"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
