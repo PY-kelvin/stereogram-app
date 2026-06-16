@@ -237,17 +237,47 @@ h1, h2, h3 {
     border-color: var(--primary-color);
 }
 
+.screen.map-level {
+    padding: 0;
+    gap: 0;
+}
+
 /* Map Screen */
 .map-header {
-    background: var(--card-bg);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
     padding: 15px;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    pointer-events: none;
+}
+
+.map-header * {
+    pointer-events: auto;
+}
+
+.map-header h2,
+.map-header .streak-counter {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    padding: 6px 14px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
     border: 2px solid var(--text-dark);
-    margin-bottom: 20px;
+    margin: 0;
+}
+
+.map-header .btn {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.map-header .btn-mute {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
 .header-left, .header-right {
@@ -267,7 +297,6 @@ h1, h2, h3 {
 }
 
 .map-header h2 {
-    margin: 0;
     font-size: 1.4rem;
 }
 
@@ -317,10 +346,10 @@ h1, h2, h3 {
 .map-container {
     flex: 1;
     position: relative;
-    border-radius: var(--border-radius);
-    border: 2px solid var(--text-dark);
     overflow-y: auto;
     overflow-x: hidden;
+    width: 100%;
+    height: 100%;
 }
 
 .map-content {
