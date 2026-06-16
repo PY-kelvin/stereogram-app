@@ -1195,9 +1195,9 @@ const Game = {
         
         gameImageEl.src = imgPath;
 
-        let cmValue = 4.0;
-        if (nodeName.startsWith('2')) cmValue = 5.0;
-        if (nodeName.startsWith('3')) cmValue = 6.0;
+        let cmValue = 4.1026;
+        if (nodeName.startsWith('2')) cmValue = 5.1282;
+        if (nodeName.startsWith('3')) cmValue = 6.1538;
 
         const ratios = this.stageRatios[nodeName];
         if (ratios && ratios[imgPath]) {
@@ -1208,6 +1208,7 @@ const Game = {
             gameImageEl.style.height = 'auto';
             gameImageEl.style.maxWidth = 'none';
             gameImageEl.style.maxHeight = 'none';
+            gameImageEl.style.flexShrink = '0';
             gameImageEl.style.objectFit = 'fill';
         } else {
             gameImageEl.style.width = '';
