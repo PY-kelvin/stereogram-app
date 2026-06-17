@@ -524,23 +524,6 @@ const Map = {
     
     async handleEntryClick(level) {
         if (this.isAnimating) return;
-        this.isAnimating = true;
-        const user = window.App.currentUser;
-        
-        let oldNode = user.lastVisitedNode[level] || '2A';
-        user.lastVisitedNode[level] = 'entry' + level;
-        
-        let av = document.getElementById('player-avatar-' + level);
-        if (av) {
-            let target = document.getElementById('node-entry' + level);
-            if (target) {
-                av.style.left = target.style.left;
-                av.style.top = target.style.top;
-                await new Promise(r => setTimeout(r, 800)); // wait for avatar to walk there
-            }
-        }
-        
-        this.isAnimating = false;
         this.travelBackward(level);
     },
 
@@ -576,6 +559,12 @@ const Map = {
         if (user.lastVisitedNode && user.lastVisitedNode[level] === ('exit' + level)) {
             let trueCount = user.stagePlays[level] || 0;
             await this.animateAvatarProgress(level, 14, trueCount);
+        }
+
+        // If parked at entry gate on Map 2, physically run forward to the true count BEFORE starting!
+        if (level === 2 && user.lastVisitedNode && user.lastVisitedNode[2] === 'entry2') {
+            let trueCount = user.stagePlays[level] || 0;
+            await this.animateAvatarProgress(level, -7, trueCount);
         }
 
         if (!user.lastVisitedNode) user.lastVisitedNode = {};
@@ -781,7 +770,9 @@ const Map = {
         
         // Animate backward to A node (count 0) before traveling
         let currentMath = user.stagePlays[fromLevel] || 0;
-        if (currentMath > 0) {
+        if (fromLevel === 2) {
+             await this.animateAvatarProgress(fromLevel, currentMath, -7);
+        } else if (currentMath > 0) {
             await this.animateAvatarProgress(fromLevel, currentMath, 0);
         }
         
@@ -964,10 +955,13 @@ const Map = {
             if (user.lastVisitedNode && user.lastVisitedNode[l] === ('exit' + l)) {
                 counts = 14;
             }
+            // If parked at entry on Map 2, visually override to -7
+            if (l === 2 && user.lastVisitedNode && user.lastVisitedNode[l] === 'entry2') {
+                counts = -7;
+            }
 
             if (mapOverride === l && countsOverride !== null) counts = countsOverride;
 
-            let ratio = this.getMapPosition(counts);
             const mapContent = av.closest('.map-content');
             if (!mapContent) return;
             const contentRect = mapContent.getBoundingClientRect();
@@ -976,9 +970,17 @@ const Map = {
                 return;
             }
 
-            let pathId = ratio < 0.5 ? 'path-line-' + l : 'path-line-' + l + 'b';
-            let localR = ratio < 0.5 ? ratio * 2 : (ratio - 0.5) * 2;
-            if (ratio === 1) { pathId = 'path-line-' + l + 'b'; localR = 1; }
+            let pathId;
+            let localR;
+            if (l === 2 && counts < 0) {
+                pathId = 'path-line-2-entry';
+                localR = Math.max(0, 1 + (counts / 7)); // -7 => 0, 0 => 1
+            } else {
+                let ratio = this.getMapPosition(counts);
+                pathId = ratio < 0.5 ? 'path-line-' + l : 'path-line-' + l + 'b';
+                localR = ratio < 0.5 ? ratio * 2 : (ratio - 0.5) * 2;
+                if (ratio === 1) { pathId = 'path-line-' + l + 'b'; localR = 1; }
+            }
             
             const path = document.getElementById(pathId);
             if (path) {
