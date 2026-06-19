@@ -418,7 +418,7 @@ h1, h2, h3 {
 }
 
 /* Positions for nodes on horizontal 100x100 grid */
-.node-1a, .node-2a, .node-3a {
+.node-1a, .node-2a, .node-3a, .node-entry2 {
     top: 50%;
     left: 15%;
     transform: translate(-50%, -50%);
