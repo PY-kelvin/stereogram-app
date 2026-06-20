@@ -523,6 +523,14 @@ const Map = {
         });
     },
     
+    getVisualCount(level) {
+        const user = window.App.currentUser;
+        if (!user) return 0;
+        if (user.lastVisitedNode && user.lastVisitedNode[level] === ('exit' + level)) return 14;
+        if ((level === 2 || level === 3) && user.lastVisitedNode && user.lastVisitedNode[level] === ('entry' + level)) return -7;
+        return user.stagePlays[level] || 0;
+    },
+
     async handleEntryClick(level) {
         if (this.isAnimating) return;
         this.travelBackward(level);
@@ -556,16 +564,11 @@ const Map = {
             return;
         }
 
-        // If parked at the exit gate, physically run backward to the true count BEFORE starting!
-        if (user.lastVisitedNode && user.lastVisitedNode[level] === ('exit' + level)) {
-            let trueCount = user.stagePlays[level] || 0;
-            await this.animateAvatarProgress(level, 14, trueCount);
-        }
-
-        // If parked at entry gate on Map 2 or 3, physically run forward to the true count BEFORE starting!
-        if ((level === 2 || level === 3) && user.lastVisitedNode && user.lastVisitedNode[level] === ('entry' + level)) {
-            let trueCount = user.stagePlays[level] || 0;
-            await this.animateAvatarProgress(level, -7, trueCount);
+        // If parked somewhere else, physically run forward/backward to the target node's count BEFORE starting!
+        let startCount = this.getVisualCount(level);
+        let trueCount = user.stagePlays[level] || 0;
+        if (startCount !== trueCount) {
+            await this.animateAvatarProgress(level, startCount, trueCount);
         }
 
         if (!user.lastVisitedNode) user.lastVisitedNode = {};
@@ -606,13 +609,9 @@ const Map = {
 
         // Target count for exit is 14
         let targetCount = 14;
-        let realCount = user.stagePlays[exitNum] || 0;
-        let startCount = realCount;
-        if (user.lastVisitedNode && user.lastVisitedNode[exitNum] === ('exit' + exitNum)) {
-            startCount = 14;
-        }
+        let startCount = this.getVisualCount(exitNum);
         
-        if (startCount < targetCount) {
+        if (startCount !== targetCount) {
             await this.animateAvatarProgress(exitNum, startCount, targetCount);
         }
 
@@ -770,13 +769,12 @@ const Map = {
         const user = window.App.currentUser;
         if (!user.lastVisitedNode) user.lastVisitedNode = {};
         
-        
-        // Animate backward to A node (count 0) before traveling
-        let currentMath = user.stagePlays[fromLevel] || 0;
+        // Animate backward to entry (-7) or 0 before traveling
+        let startCount = this.getVisualCount(fromLevel);
         if (fromLevel === 2 || fromLevel === 3) {
-             await this.animateAvatarProgress(fromLevel, currentMath, -7);
-        } else if (currentMath > 0) {
-            await this.animateAvatarProgress(fromLevel, currentMath, 0);
+             if (startCount !== -7) await this.animateAvatarProgress(fromLevel, startCount, -7);
+        } else if (startCount > 0) {
+            await this.animateAvatarProgress(fromLevel, startCount, 0);
         }
         
         user.lastVisitedNode[fromLevel - 1] = 'exit' + (fromLevel - 1);
