@@ -861,18 +861,18 @@ const Map = {
         }
 
         // --- Locks ---
+        const alwaysUnlockedNodes = ['node-1a', 'node-exit1', 'node-entry2', 'node-exit2', 'node-entry3'];
         document.querySelectorAll('.stage-node').forEach(node => {
-            if (node.id !== 'node-1a') {
+            if (!alwaysUnlockedNodes.includes(node.id)) {
                 node.classList.add('locked');
                 let lock = node.querySelector('.lock-overlay');
                 if (lock) lock.style.display = 'block';
+            } else {
+                node.classList.remove('locked');
+                let lock = node.querySelector('.lock-overlay');
+                if (lock) lock.style.display = 'none';
             }
         });
-
-        // Ensure 1A is unlocked
-        document.getElementById('node-1a').classList.remove('locked');
-        let lock1a = document.getElementById('node-1a').querySelector('.lock-overlay');
-        if (lock1a) lock1a.style.display = 'none';
 
         // Unlock 1B
         if (p1 >= 7 || this.hasPasswordBypass(14)) {
@@ -881,25 +881,11 @@ const Map = {
             if (l) l.style.display = 'none';
         }
 
-        // Unlock Exit 1
-        if (this.hasPasswordBypass(14)) {
-            document.getElementById('node-exit1').classList.remove('locked');
-            const l = document.getElementById('node-exit1').querySelector('.lock-overlay');
-            if (l) l.style.display = 'none';
-        }
-
         // Unlock 2A (Requires Map 2 to be unlocked)
         if (this.hasPasswordBypass(14)) {
             document.getElementById('node-2a').classList.remove('locked');
             const l = document.getElementById('node-2a').querySelector('.lock-overlay');
             if (l) l.style.display = 'none';
-            
-            const entryNode = document.getElementById('node-entry2');
-            if (entryNode) {
-                entryNode.classList.remove('locked');
-                const le = entryNode.querySelector('.lock-overlay');
-                if (le) le.style.display = 'none';
-            }
         }
 
         // Unlock 2B
@@ -908,37 +894,16 @@ const Map = {
             const l = document.getElementById('node-2b').querySelector('.lock-overlay');
             if (l) l.style.display = 'none';
         }
-
-        // Unlock Exit 2
-        if (this.hasPasswordBypass(28)) {
-            document.getElementById('node-exit2').classList.remove('locked');
-            const l = document.getElementById('node-exit2').querySelector('.lock-overlay');
-            if (l) l.style.display = 'none';
-        }
         
         // Unlock 3A (Requires Map 3 to be unlocked)
-              if (user.lastActiveMap >= 3 || (user.stagePlays[2] && user.stagePlays[2] >= 14) || this.hasPasswordBypass(28)) {
+        if (user.lastActiveMap >= 3 || (user.stagePlays[2] && user.stagePlays[2] >= 14) || this.hasPasswordBypass(28)) {
             document.getElementById('node-3a').classList.remove('locked');
             const l = document.getElementById('node-3a').querySelector('.lock-overlay');
             if (l) l.style.display = 'none';
-
-            const entryNode = document.getElementById('node-entry3');
-            if (entryNode) {
-                entryNode.classList.remove('locked');
-                const le = entryNode.querySelector('.lock-overlay');
-                if (le) le.style.display = 'none';
-            }
         } else {
             document.getElementById('node-3a').classList.add('locked');
             const l = document.getElementById('node-3a').querySelector('.lock-overlay');
             if (l) l.style.display = '';
-
-            const entryNode = document.getElementById('node-entry3');
-            if (entryNode) {
-                entryNode.classList.add('locked');
-                const le = entryNode.querySelector('.lock-overlay');
-                if (le) le.style.display = '';
-            }
         }
 
         // Unlock 3B
