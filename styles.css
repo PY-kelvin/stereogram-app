@@ -445,8 +445,10 @@ h1, h2, h3 {
     background-color: transparent !important;
 }
 
-/* --- Signboard Transit Nodes (Testing on Map 1) --- */
-#node-exit1 .node-icon {
+/* --- Signboard Transit Nodes (Map 1, 2, 3) --- */
+#node-exit1 .node-icon,
+#node-exit2 .node-icon,
+#node-entry3 .node-icon {
     width: 145px;
     height: 65px;
     border-radius: 0;
@@ -458,15 +460,19 @@ h1, h2, h3 {
     animation: none !important;
 }
 
-#node-exit1.stage-node:not(.locked):hover .node-icon {
+#node-exit1.stage-node:not(.locked):hover .node-icon,
+#node-exit2.stage-node:not(.locked):hover .node-icon,
+#node-entry3.stage-node:not(.locked):hover .node-icon {
     animation: none !important;
 }
 
-#node-exit1 .node-icon::before {
+#node-exit1 .node-icon::before,
+#node-exit2 .node-icon::before,
+#node-entry3 .node-icon::before {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    /* Draw a hollow arrow pointing right */
+    /* Right pointing arrow */
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 145 65'%3E%3Cpolygon points='2,2 115,2 143,32.5 115,63 2,63' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E");
     background-size: 100% 100%;
     /* Apply glowing dropshadow */
@@ -475,7 +481,41 @@ h1, h2, h3 {
     animation: pulseArrowGlow 2s infinite ease-in-out;
 }
 
-#node-exit1.stage-node:not(.locked):hover .node-icon::before {
+#node-exit1.stage-node:not(.locked):hover .node-icon::before,
+#node-exit2.stage-node:not(.locked):hover .node-icon::before,
+#node-entry3.stage-node:not(.locked):hover .node-icon::before {
+    animation: pulseArrowGlowHover 1.5s infinite ease-in-out;
+}
+
+/* Double-sided arrow for Map 2 entry */
+#node-entry2 .node-icon {
+    width: 160px;
+    height: 60px;
+    border-radius: 0;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    position: relative;
+    animation: none !important;
+}
+
+#node-entry2.stage-node:not(.locked):hover .node-icon {
+    animation: none !important;
+}
+
+#node-entry2 .node-icon::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    /* Double-sided arrow */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 60'%3E%3Cpolygon points='30,2 130,2 158,30 130,58 30,58 2,30' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-size: 100% 100%;
+    filter: drop-shadow(0 0 5px rgba(255,255,255,0.6));
+    transition: all 0.3s ease;
+    animation: pulseArrowGlow 2s infinite ease-in-out;
+}
+
+#node-entry2.stage-node:not(.locked):hover .node-icon::before {
     animation: pulseArrowGlowHover 1.5s infinite ease-in-out;
 }
 
@@ -1358,3 +1398,10 @@ img.player-avatar {
 }
 
 /* Base hover scaling applied above per-map */
+/* Hide the labels for signboards */
+#node-exit1 .stage-label,
+#node-entry2 .stage-label,
+#node-exit2 .stage-label,
+#node-entry3 .stage-label {
+    display: none !important;
+}
