@@ -493,17 +493,17 @@ h1, h2, h3 {
 }
 
 /* 2. Map 2 Entry (Orthoptic Clinic) - Double-sided arrow, taller, extend lower */
-/* Increased width to 230, height to 80. Lowered via margin-top to align. */
-#node-entry2 .node-icon { width: 230px; height: 80px; margin-top: 15px; }
+/* Increased width to 230, height to 80. Lowered via margin-top. margin-left: -20px shifts it left. */
+#node-entry2 .node-icon { width: 230px; height: 80px; margin-top: 15px; margin-left: -20px; }
 #node-entry2 .node-icon::before {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 230 80'%3E%3Cpolygon points='35,2 195,2 228,35 195,78 35,78 2,35' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
 /* 3. Map 2 Exit (Orthoptics City) - Longer arrow side, slightly longer lower height */
-/* Increased width to 195. margin-left applied so the extra width goes mainly to the right point. */
-#node-exit2 .node-icon { width: 195px; height: 75px; margin-left: 15px; }
+/* Increased width to 215. margin-left: 40px shifts it right to match wooden board. */
+#node-exit2 .node-icon { width: 215px; height: 75px; margin-left: 40px; }
 #node-exit2 .node-icon::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 195 75'%3E%3Cpolygon points='2,2 140,2 193,35 140,73 2,73' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 215 75'%3E%3Cpolygon points='2,2 150,2 213,35 150,73 2,73' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
 /* 4. Map 3 Entry (Orthoptic forest) - Reduce tail, increase arrow side, lower height slightly more */
