@@ -1242,3 +1242,40 @@ img.player-avatar {
         max-width: 100% !important;
     }
 }
+
+/* === STAGE NODE HOVER A/B TEST === */
+.stage-label {
+    transition: transform 0.2s ease;
+}
+.stage-node:not(.locked):hover .stage-label {
+    transform: translateY(-5px);
+}
+
+/* OPTION 1 FOR MAP 1: Frosted Glass */
+#screen-map-1 .node-icon {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    transition: all 0.3s ease;
+}
+#screen-map-1 .stage-node:not(.locked):hover .node-icon {
+    transform: scale(1.15);
+    background-color: rgba(255, 255, 255, 0.6) !important;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+}
+
+/* OPTION 2 FOR MAP 2: Chameleon */
+#screen-map-2 .node-icon {
+    background-color: transparent !important;
+    transition: all 0.3s ease;
+}
+#screen-map-2 .stage-node:not(.locked):hover .node-icon {
+    transform: scale(1.15);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+}
+#screen-map-2 .stage-node:not(.locked):hover .node-icon.bg-sakura { background-color: #ffb7b2 !important; }
+#screen-map-2 .stage-node:not(.locked):hover .node-icon.bg-gate { background-color: #ffb7b2 !important; }
+#screen-map-2 .stage-node:not(.locked):hover .node-icon.bg-bus { background-color: #a8e6cf !important; }
+#screen-map-2 .stage-node:not(.locked):hover .node-icon.bg-farm { background-color: #a8e6cf !important; }
+#screen-map-2 .stage-node:not(.locked):hover .node-icon.bg-city { background-color: #a1c9f2 !important; }
+#screen-map-2 .stage-node:not(.locked):hover .node-icon.bg-castle { background-color: #a1c9f2 !important; }
