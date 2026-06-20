@@ -500,10 +500,10 @@ h1, h2, h3 {
 }
 
 /* 3. Map 2 Exit (Orthoptics City) - Longer arrow side, slightly longer lower height */
-/* Increased width to 235. margin-left: 70px shifts it right to match wooden board. */
-#node-exit2 .node-icon { width: 235px; height: 75px; margin-left: 70px; }
+/* Increased width to 260. margin-left: 95px shifts it right to match wooden board. */
+#node-exit2 .node-icon { width: 260px; height: 75px; margin-left: 95px; }
 #node-exit2 .node-icon::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 235 75'%3E%3Cpolygon points='2,2 170,2 233,35 170,73 2,73' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 260 75'%3E%3Cpolygon points='2,2 190,2 258,35 190,73 2,73' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
 /* 4. Map 3 Entry (Orthoptic forest) - Reduce tail, increase arrow side, lower height slightly more */
