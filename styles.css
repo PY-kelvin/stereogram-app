@@ -447,8 +447,8 @@ h1, h2, h3 {
 
 /* --- Signboard Transit Nodes (Testing on Map 1) --- */
 #node-exit1 .node-icon {
-    width: 160px;
-    height: 50px;
+    width: 145px;
+    height: 65px;
     border-radius: 0;
     border: none !important;
     box-shadow: none !important;
@@ -467,7 +467,7 @@ h1, h2, h3 {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
     /* Draw a hollow arrow pointing right */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 50'%3E%3Cpolygon points='2,2 135,2 158,25 135,48 2,48' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 145 65'%3E%3Cpolygon points='2,2 115,2 143,32.5 115,63 2,63' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E");
     background-size: 100% 100%;
     /* Apply glowing dropshadow */
     filter: drop-shadow(0 0 5px rgba(255,255,255,0.6));
