@@ -418,7 +418,8 @@ h1, h2, h3 {
     border: 2px solid var(--text-dark);
     font-size: 0.85rem;
     font-weight: 800;
-    pointer-events: none;
+    pointer-events: auto;
+    cursor: pointer;
     z-index: 2;
     box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
