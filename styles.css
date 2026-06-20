@@ -409,12 +409,18 @@ h1, h2, h3 {
     white-space: nowrap; /* Keep shorter labels on one line, or use text-align if wrapping is needed */
     width: max-content;
     text-align: center;
-    background: var(--text-dark);
-    color: white;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    color: var(--text-dark);
     padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 600;
+    border-radius: 20px;
+    border: 2px solid var(--text-dark);
+    font-size: 0.85rem;
+    font-weight: 800;
+    pointer-events: none;
+    z-index: 2;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
 /* Positions for nodes on horizontal 100x100 grid */
