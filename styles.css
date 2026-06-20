@@ -445,6 +445,16 @@ h1, h2, h3 {
     background-color: transparent !important;
 }
 
+/* --- Signboard Transit Nodes (Testing on Map 1) --- */
+#node-exit1 .node-icon {
+    width: 200px;
+    height: 80px;
+    border-radius: 12px;
+}
+#node-exit1 .stage-label {
+    display: none !important;
+}
+
 /* --- Flowing Energy Paths --- */
 @keyframes flowPathEnergy {
     to { stroke-dashoffset: -28; }
