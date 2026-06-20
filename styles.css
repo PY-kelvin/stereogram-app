@@ -445,78 +445,72 @@ h1, h2, h3 {
     background-color: transparent !important;
 }
 
-/* --- Signboard Transit Nodes (Map 1, 2, 3) --- */
+/* --- Signboard Transit Nodes --- */
+
+/* Base reset for all signboard icons */
 #node-exit1 .node-icon,
+#node-entry2 .node-icon,
 #node-exit2 .node-icon,
 #node-entry3 .node-icon {
-    width: 145px;
-    height: 65px;
     border-radius: 0;
     border: none !important;
     box-shadow: none !important;
     background: transparent !important;
     position: relative;
-    /* disable the default circular animation */
     animation: none !important;
 }
-
 #node-exit1.stage-node:not(.locked):hover .node-icon,
+#node-entry2.stage-node:not(.locked):hover .node-icon,
 #node-exit2.stage-node:not(.locked):hover .node-icon,
 #node-entry3.stage-node:not(.locked):hover .node-icon {
     animation: none !important;
 }
 
+/* Common ::before for all signboard icons */
 #node-exit1 .node-icon::before,
+#node-entry2 .node-icon::before,
 #node-exit2 .node-icon::before,
 #node-entry3 .node-icon::before {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    /* Right pointing arrow */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 145 65'%3E%3Cpolygon points='2,2 115,2 143,32.5 115,63 2,63' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E");
     background-size: 100% 100%;
-    /* Apply glowing dropshadow */
     filter: drop-shadow(0 0 5px rgba(255,255,255,0.6));
     transition: all 0.3s ease;
     animation: pulseArrowGlow 2s infinite ease-in-out;
 }
-
 #node-exit1.stage-node:not(.locked):hover .node-icon::before,
+#node-entry2.stage-node:not(.locked):hover .node-icon::before,
 #node-exit2.stage-node:not(.locked):hover .node-icon::before,
 #node-entry3.stage-node:not(.locked):hover .node-icon::before {
     animation: pulseArrowGlowHover 1.5s infinite ease-in-out;
 }
 
-/* Double-sided arrow for Map 2 entry */
-#node-entry2 .node-icon {
-    width: 160px;
-    height: 60px;
-    border-radius: 0;
-    border: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
-    position: relative;
-    animation: none !important;
+/* 1. Map 1 Exit (Orthoptic Forest) - Unchanged */
+#node-exit1 .node-icon { width: 145px; height: 65px; }
+#node-exit1 .node-icon::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 145 65'%3E%3Cpolygon points='2,2 115,2 143,32.5 115,63 2,63' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
-#node-entry2.stage-node:not(.locked):hover .node-icon {
-    animation: none !important;
-}
-
+/* 2. Map 2 Entry (Orthoptic Clinic) - Double-sided arrow, taller, extend lower */
+/* Increased width to 180, height to 80. Lower segment extended (arrow point at y=35, bottom at y=78) */
+#node-entry2 .node-icon { width: 180px; height: 80px; }
 #node-entry2 .node-icon::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    /* Double-sided arrow */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 60'%3E%3Cpolygon points='30,2 130,2 158,30 130,58 30,58 2,30' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E");
-    background-size: 100% 100%;
-    filter: drop-shadow(0 0 5px rgba(255,255,255,0.6));
-    transition: all 0.3s ease;
-    animation: pulseArrowGlow 2s infinite ease-in-out;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 80'%3E%3Cpolygon points='30,2 150,2 178,35 150,78 30,78 2,35' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
-#node-entry2.stage-node:not(.locked):hover .node-icon::before {
-    animation: pulseArrowGlowHover 1.5s infinite ease-in-out;
+/* 3. Map 2 Exit (Orthoptics City) - Longer arrow side, slightly longer lower height */
+/* Increased width to 160, height to 75. Arrow side longer (points at x=158) */
+#node-exit2 .node-icon { width: 160px; height: 75px; }
+#node-exit2 .node-icon::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 75'%3E%3Cpolygon points='2,2 115,2 158,35 115,73 2,73' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* 4. Map 3 Entry (Orthoptic forest) - Reduce tail, increase arrow side, lower height slightly more */
+/* width 145, height 75. Tail is shorter, arrow longer (flat part ends at x=100 instead of 115) */
+#node-entry3 .node-icon { width: 145px; height: 75px; }
+#node-entry3 .node-icon::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 145 75'%3E%3Cpolygon points='2,2 100,2 143,35 100,73 2,73' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
 @keyframes pulseArrowGlow {
@@ -1398,10 +1392,7 @@ img.player-avatar {
 }
 
 /* Base hover scaling applied above per-map */
-/* Hide the labels for signboards */
-#node-exit1 .stage-label,
-#node-entry2 .stage-label,
-#node-exit2 .stage-label,
-#node-entry3 .stage-label {
-    display: none !important;
+/* Ensure all stage labels are visible on map */
+.stage-label {
+    opacity: 1 !important;
 }
