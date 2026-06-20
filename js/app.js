@@ -477,6 +477,7 @@ const Map = {
         document.getElementById('node-1a').addEventListener('click', () => this.handleNodeClick('1A', 1, 0));
         document.getElementById('node-1b').addEventListener('click', () => this.handleNodeClick('1B', 1, 7));
         document.getElementById('node-entry2').addEventListener('click', () => this.handleEntryClick(2));
+        document.getElementById('node-entry3').addEventListener('click', () => this.handleEntryClick(3));
         document.getElementById('node-2a').addEventListener('click', () => this.handleNodeClick('2A', 2, 14));
         document.getElementById('node-2b').addEventListener('click', () => this.handleNodeClick('2B', 2, 21));
         document.getElementById('node-3a').addEventListener('click', () => this.handleNodeClick('3A', 3, 28));
@@ -561,8 +562,8 @@ const Map = {
             await this.animateAvatarProgress(level, 14, trueCount);
         }
 
-        // If parked at entry gate on Map 2, physically run forward to the true count BEFORE starting!
-        if (level === 2 && user.lastVisitedNode && user.lastVisitedNode[2] === 'entry2') {
+        // If parked at entry gate on Map 2 or 3, physically run forward to the true count BEFORE starting!
+        if ((level === 2 || level === 3) && user.lastVisitedNode && user.lastVisitedNode[level] === ('entry' + level)) {
             let trueCount = user.stagePlays[level] || 0;
             await this.animateAvatarProgress(level, -7, trueCount);
         }
@@ -734,6 +735,8 @@ const Map = {
         
         if (fromLevel === 1) {
             user.lastVisitedNode[2] = 'entry2';
+        } else if (fromLevel === 2) {
+            user.lastVisitedNode[3] = 'entry3';
         } else {
             user.lastVisitedNode[fromLevel + 1] = (fromLevel + 1) + 'A';
         }
@@ -770,7 +773,7 @@ const Map = {
         
         // Animate backward to A node (count 0) before traveling
         let currentMath = user.stagePlays[fromLevel] || 0;
-        if (fromLevel === 2) {
+        if (fromLevel === 2 || fromLevel === 3) {
              await this.animateAvatarProgress(fromLevel, currentMath, -7);
         } else if (currentMath > 0) {
             await this.animateAvatarProgress(fromLevel, currentMath, 0);
@@ -877,10 +880,28 @@ const Map = {
         }
         
         // Unlock 3A (Requires Map 3 to be unlocked)
-        if (this.hasPasswordBypass(28)) {
+              if (user.lastActiveMap >= 3 || (user.stagePlays[2] && user.stagePlays[2] >= 14) || this.hasPasswordBypass(28)) {
             document.getElementById('node-3a').classList.remove('locked');
             const l = document.getElementById('node-3a').querySelector('.lock-overlay');
             if (l) l.style.display = 'none';
+
+            const entryNode = document.getElementById('node-entry3');
+            if (entryNode) {
+                entryNode.classList.remove('locked');
+                const le = entryNode.querySelector('.lock-overlay');
+                if (le) le.style.display = 'none';
+            }
+        } else {
+            document.getElementById('node-3a').classList.add('locked');
+            const l = document.getElementById('node-3a').querySelector('.lock-overlay');
+            if (l) l.style.display = '';
+
+            const entryNode = document.getElementById('node-entry3');
+            if (entryNode) {
+                entryNode.classList.add('locked');
+                const le = entryNode.querySelector('.lock-overlay');
+                if (le) le.style.display = '';
+            }
         }
 
         // Unlock 3B
@@ -955,8 +976,8 @@ const Map = {
             if (user.lastVisitedNode && user.lastVisitedNode[l] === ('exit' + l)) {
                 counts = 14;
             }
-            // If parked at entry on Map 2, visually override to -7
-            if (l === 2 && user.lastVisitedNode && user.lastVisitedNode[l] === 'entry2') {
+            // If parked at entry on Map 2 or 3, visually override to -7
+            if ((l === 2 || l === 3) && user.lastVisitedNode && user.lastVisitedNode[l] === ('entry' + l)) {
                 counts = -7;
             }
 
@@ -972,8 +993,8 @@ const Map = {
 
             let pathId;
             let localR;
-            if (l === 2 && counts < 0) {
-                pathId = 'path-line-2-entry';
+            if ((l === 2 || l === 3) && counts < 0) {
+                pathId = 'path-line-' + l + '-entry';
                 localR = Math.max(0, 1 + (counts / 7)); // -7 => 0, 0 => 1
             } else {
                 let ratio = this.getMapPosition(counts);
