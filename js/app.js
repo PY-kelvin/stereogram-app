@@ -508,12 +508,12 @@ const Map = {
             const user = window.App.currentUser;
             
             // Fast forwards
-            if (pwd === 'orthoptist123') {
-                this.fastForward(14, "orthoptist123");
-            } else if (pwd === 'orthoptist1234') {
-                this.fastForward(28, "orthoptist1234");
-            } else if (pwd === 'orthoptist12345') {
-                this.fastForward(42, "orthoptist12345");
+            if (pwd === 'snec1234') {
+                this.fastForward(14, "snec1234");
+            } else if (pwd === 's1n2e3c4') {
+                this.fastForward(28, "s1n2e3c4");
+            } else if (pwd === 'snec12345') {
+                this.fastForward(42, "snec12345");
             } else if (pwd === 'test20') {
                 window.runSimulation();
                 document.getElementById('password-modal').classList.add('hidden');
@@ -718,9 +718,9 @@ const Map = {
         user.passwords = user.passwords || [];
         
         const pwdMap = [
-            { level: 14, pwd: 'orthoptist123' },
-            { level: 28, pwd: 'orthoptist1234' },
-            { level: 42, pwd: 'orthoptist12345' }
+            { level: 14, pwd: 'snec1234' },
+            { level: 28, pwd: 's1n2e3c4' },
+            { level: 42, pwd: 'snec12345' }
         ];
 
         let maxLevel = 0;
@@ -1577,10 +1577,12 @@ const App = {
         let targetMap = 1;
         
         const hasBypass = (req) => {
-            if (!user.passwords) return false;
-            if (req === 14 && user.passwords.includes('orthoptist123')) return true;
-            if (req === 28 && user.passwords.includes('orthoptist1234')) return true;
-            if (req === 42 && user.passwords.includes('orthoptist12345')) return true;
+            if (user.passwords && user.passwords.length > 0) {
+                // Support backwards compatibility for users who already unlocked maps with old passwords
+                if (req === 14 && (user.passwords.includes('snec1234') || user.passwords.includes('orthoptist123'))) return true;
+                if (req === 28 && (user.passwords.includes('s1n2e3c4') || user.passwords.includes('orthoptist1234'))) return true;
+                if (req === 42 && (user.passwords.includes('snec12345') || user.passwords.includes('orthoptist12345'))) return true;
+            }
             return false;
         };
 
