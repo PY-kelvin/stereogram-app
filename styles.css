@@ -477,13 +477,13 @@ h1, h2, h3 {
     background-size: 100% 100%;
     filter: drop-shadow(0 0 5px rgba(255,255,255,0.6));
     transition: all 0.3s ease;
-    animation: pulseArrowGlow 2s infinite ease-in-out;
+    animation: pulseArrowGlow 3s infinite ease-in-out;
 }
 #node-exit1.stage-node:not(.locked):hover .node-icon::before,
 #node-entry2.stage-node:not(.locked):hover .node-icon::before,
 #node-exit2.stage-node:not(.locked):hover .node-icon::before,
 #node-entry3.stage-node:not(.locked):hover .node-icon::before {
-    animation: pulseArrowGlowHover 1.5s infinite ease-in-out;
+    animation: pulseHeartbeatGlow 1s infinite ease-in-out;
 }
 
 /* 1. Map 1 Exit (Orthoptic Forest) - Unchanged */
@@ -519,14 +519,13 @@ h1, h2, h3 {
     100% { filter: drop-shadow(0 0 5px rgba(255,255,255,0.4)); opacity: 0.6; }
 }
 
-@keyframes pulseArrowGlowHover {
-    0% { filter: drop-shadow(0 0 8px rgba(255,255,255,0.8)); opacity: 0.8; }
-    50% { filter: drop-shadow(0 0 20px rgba(255,255,255,1)) drop-shadow(0 0 10px rgba(255,255,255,0.6)); opacity: 1; }
-    100% { filter: drop-shadow(0 0 8px rgba(255,255,255,0.8)); opacity: 0.8; }
-}
-
-#node-exit1 .stage-label {
-    display: none !important;
+@keyframes pulseHeartbeatGlow {
+    0% { filter: drop-shadow(0 0 5px rgba(255,255,255,0.6)); opacity: 0.7; }
+    15% { filter: drop-shadow(0 0 20px rgba(255,255,255,1)); opacity: 1; }
+    30% { filter: drop-shadow(0 0 5px rgba(255,255,255,0.6)); opacity: 0.7; }
+    45% { filter: drop-shadow(0 0 25px rgba(255,255,255,1)); opacity: 1; }
+    60% { filter: drop-shadow(0 0 5px rgba(255,255,255,0.6)); opacity: 0.7; }
+    100% { filter: drop-shadow(0 0 5px rgba(255,255,255,0.6)); opacity: 0.7; }
 }
 
 /* --- Flowing Energy Paths --- */
