@@ -969,7 +969,7 @@ const Map = {
             }
             av.style.opacity = '1';
             av.style.transform = `translate(-50%, -50%) ${currentScale}`;
-
+            
             let counts = user.stagePlays[l] || 0;
             
             // If parked at exit, visually override to 14
@@ -981,6 +981,7 @@ const Map = {
                 counts = -7;
             }
 
+            // Overrides for animations MUST trump park overrides
             if (mapOverride === l && countsOverride !== null) counts = countsOverride;
 
             const mapContent = av.closest('.map-content');
