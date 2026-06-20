@@ -400,37 +400,62 @@ h1, h2, h3 {
     transition: all 0.3s ease;
 }
 
-/* Option 2: Glowing Halo (Map 1 & 3) */
-#screen-map-1 .node-icon, #screen-map-3 .node-icon {
-    border: 3px solid rgba(255, 255, 255, 0.9);
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.8), inset 0 0 15px rgba(255, 255, 255, 0.5);
-    background-color: transparent !important;
-}
-#screen-map-1 .stage-node:not(.locked):hover .node-icon,
-#screen-map-3 .stage-node:not(.locked):hover .node-icon {
-    box-shadow: 0 0 25px rgba(255, 255, 255, 1), inset 0 0 20px rgba(255, 255, 255, 0.8);
-    background-color: rgba(255, 255, 255, 0.2) !important;
-    transform: scale(1.15);
+/* --- Magical Glowing Rings --- */
+@keyframes breatheGlowingRing {
+    0% {
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.9), inset 0 0 20px rgba(255, 255, 255, 0.6);
+        border-color: rgba(255, 255, 255, 0.9);
+    }
+    100% {
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
 }
 
-/* Option 3: Gentle Breathing Ring (Map 2) */
-@keyframes breatheRing {
-    0% { background-color: rgba(255, 255, 255, 0); border-color: rgba(255, 255, 255, 0.2); }
-    50% { background-color: rgba(255, 255, 255, 0.4); border-color: rgba(255, 255, 255, 0.8); box-shadow: 0 0 10px rgba(255,255,255,0.5); }
-    100% { background-color: rgba(255, 255, 255, 0); border-color: rgba(255, 255, 255, 0.2); }
+@keyframes pulseGlowingRingHover {
+    0% {
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.6);
+        border-color: rgba(255, 255, 255, 1);
+        transform: scale(1.15);
+    }
+    50% {
+        box-shadow: 0 0 35px rgba(255, 255, 255, 1), inset 0 0 30px rgba(255, 255, 255, 0.9);
+        border-color: rgba(255, 255, 255, 1);
+        transform: scale(1.2);
+    }
+    100% {
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.6);
+        border-color: rgba(255, 255, 255, 1);
+        transform: scale(1.15);
+    }
 }
-#screen-map-2 .node-icon {
-    animation: breatheRing 3s infinite ease-in-out;
-    border: 3px solid rgba(255, 255, 255, 0.2);
+
+.node-icon {
+    background-color: transparent !important;
+    animation: breatheGlowingRing 3s infinite ease-in-out;
+    border: 3px solid rgba(255, 255, 255, 0.5);
 }
-#screen-map-2 .stage-node:not(.locked):hover .node-icon {
-    animation: none !important; /* Stop breathing on hover */
-    background-color: rgba(255, 255, 255, 0.5) !important;
-    border-color: rgba(255, 255, 255, 1);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-    transform: scale(1.15);
+
+.stage-node:not(.locked):hover .node-icon {
+    animation: pulseGlowingRingHover 1.5s infinite ease-in-out;
+    background-color: transparent !important;
+}
+
+/* --- Flowing Energy Paths --- */
+@keyframes flowPathEnergy {
+    to { stroke-dashoffset: -28; }
+}
+
+.map-path path {
+    stroke: rgba(255, 245, 200, 0.9); /* Golden-white */
+    stroke-width: 2.5px;
+    stroke-dasharray: 8, 6;
+    animation: flowPathEnergy 1s linear infinite;
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.8));
 }
 
 .stage-label {
