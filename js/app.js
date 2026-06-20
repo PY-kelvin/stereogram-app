@@ -509,10 +509,10 @@ const Map = {
             // Fast forwards
             if (pwd === 'orthoptist123') {
                 this.fastForward(14, "orthoptist123");
-            } else if (pwd === 'orthoptist 1234') {
-                this.fastForward(28, "orthoptist 1234");
-            } else if (pwd === 'orthoptist 12345') {
-                this.fastForward(42, "orthoptist 12345");
+            } else if (pwd === 'orthoptist1234') {
+                this.fastForward(28, "orthoptist1234");
+            } else if (pwd === 'orthoptist12345') {
+                this.fastForward(42, "orthoptist12345");
             } else if (pwd === 'test20') {
                 window.runSimulation();
                 document.getElementById('password-modal').classList.add('hidden');
@@ -680,8 +680,8 @@ const Map = {
         
         const pwdMap = [
             { level: 14, pwd: 'orthoptist123' },
-            { level: 28, pwd: 'orthoptist 1234' },
-            { level: 42, pwd: 'orthoptist 12345' }
+            { level: 28, pwd: 'orthoptist1234' },
+            { level: 42, pwd: 'orthoptist12345' }
         ];
 
         let maxLevel = 0;
@@ -1555,8 +1555,8 @@ const App = {
         const hasBypass = (req) => {
             if (!user.passwords) return false;
             if (req === 14 && user.passwords.includes('orthoptist123')) return true;
-            if (req === 28 && user.passwords.includes('orthoptist 1234')) return true;
-            if (req === 42 && user.passwords.includes('orthoptist 12345')) return true;
+            if (req === 28 && user.passwords.includes('orthoptist1234')) return true;
+            if (req === 42 && user.passwords.includes('orthoptist12345')) return true;
             return false;
         };
 
