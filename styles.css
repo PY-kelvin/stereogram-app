@@ -507,10 +507,10 @@ h1, h2, h3 {
 }
 
 /* 4. Map 3 Entry (Orthoptic forest) - Reduce tail, increase arrow side, lower height slightly more */
-/* Width 210 to shorten front and back */
-#node-entry3 .node-icon { width: 210px; height: 75px; margin-left: 70px; margin-top: 20px; }
+/* Width 185, margin-left 75px to nudge right and reduce width */
+#node-entry3 .node-icon { width: 185px; height: 75px; margin-left: 75px; margin-top: 20px; }
 #node-entry3 .node-icon::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 210 75'%3E%3Cpolygon points='2,2 145,2 208,35 145,73 2,73' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 185 75'%3E%3Cpolygon points='2,2 125,2 183,35 125,73 2,73' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
 @keyframes pulseArrowGlow {
