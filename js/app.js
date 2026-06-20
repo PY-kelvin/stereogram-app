@@ -533,6 +533,17 @@ const Map = {
 
     async handleEntryClick(level) {
         if (this.isAnimating) return;
+        
+        let isLocked = false;
+        if (level === 2 && !this.hasPasswordBypass(14)) isLocked = true;
+        if (level === 3 && !this.hasPasswordBypass(28)) isLocked = true;
+
+        if (isLocked) {
+            window.App.showScreen('screen-map-' + (level - 1));
+            if (window.Map) window.Map.updateUI();
+            return;
+        }
+
         this.travelBackward(level);
     },
 
@@ -543,11 +554,33 @@ const Map = {
 
         // Check if map is unlocked for A nodes
         if (nodeName === '2A' && !this.hasPasswordBypass(14)) {
-            window.App.showNotification("This stage is locked!", "warning");
+            this.pendingNodeClick = { nodeName, level, reqStreak };
+            this.pendingExitClick = null;
+            
+            const pwdMsg = document.querySelector('#password-modal p');
+            if (pwdMsg) pwdMsg.innerText = `Enter password to unlock Sakura City.`;
+            document.getElementById('pre-override-title').innerText = `Sakura City Locked`;
+            document.getElementById('pre-override-message').innerText = `Great job! Please ask our friendly orthoptist to unlock your next big adventure.`;
+            
+            const btnOverride = document.getElementById('btn-admin-override');
+            if (btnOverride) btnOverride.style.display = ''; 
+            
+            document.getElementById('pre-override-modal').classList.remove('hidden');
             return;
         }
         if (nodeName === '3A' && !this.hasPasswordBypass(28)) {
-            window.App.showNotification("This stage is locked!", "warning");
+            this.pendingNodeClick = { nodeName, level, reqStreak };
+            this.pendingExitClick = null;
+            
+            const pwdMsg = document.querySelector('#password-modal p');
+            if (pwdMsg) pwdMsg.innerText = `Enter password to unlock Orthoptic forest.`;
+            document.getElementById('pre-override-title').innerText = `Orthoptic forest Locked`;
+            document.getElementById('pre-override-message').innerText = `Great job! Please ask our friendly orthoptist to unlock your next big adventure.`;
+            
+            const btnOverride = document.getElementById('btn-admin-override');
+            if (btnOverride) btnOverride.style.display = ''; 
+            
+            document.getElementById('pre-override-modal').classList.remove('hidden');
             return;
         }
 
@@ -584,27 +617,33 @@ const Map = {
         const user = window.App.currentUser;
         let reqStreak = exitNum * 14; 
         
-        if (!this.hasPasswordBypass(reqStreak) && !(exitNum === 3 && window.App.currentUser.stagePlays && window.App.currentUser.stagePlays[3] >= 14)) {
-            this.pwdTargetStage = exitNum;
-            this.pendingExitClick = exitNum;
-            this.pendingNodeClick = null;
-            const targetName = exitNum === 1 ? 'Sakura Forest' : exitNum === 2 ? 'Sakura City' : 'Final Goal';
-            const pwdMsg = document.querySelector('#password-modal p');
-            if (pwdMsg) pwdMsg.innerText = `Enter password to unlock ${targetName}.`;
-            
-            document.getElementById('pre-override-title').innerText = `${targetName} Locked`;
+        let isLocked = !this.hasPasswordBypass(reqStreak) && !(exitNum === 3 && window.App.currentUser.stagePlays && window.App.currentUser.stagePlays[3] >= 14);
+
+        if (isLocked) {
             if (exitNum === 3) {
+                // Keep password prompt for final goal
+                this.pwdTargetStage = exitNum;
+                this.pendingExitClick = exitNum;
+                this.pendingNodeClick = null;
+                const targetName = 'Final Goal';
+                const pwdMsg = document.querySelector('#password-modal p');
+                if (pwdMsg) pwdMsg.innerText = `Enter password to unlock ${targetName}.`;
+                
+                document.getElementById('pre-override-title').innerText = `${targetName} Locked`;
                 let remaining = 14 - (window.App.currentUser.stagePlays[3] || 0);
                 document.getElementById('pre-override-message').innerText = `Almost there! You just need ${remaining} more stars to unlock this stage.`;
+                
+                const btnOverride = document.getElementById('btn-admin-override');
+                if (btnOverride) btnOverride.style.display = ''; // Show it again if hidden
+                
+                document.getElementById('pre-override-modal').classList.remove('hidden');
+                return;
             } else {
-                document.getElementById('pre-override-message').innerText = `Great job! Please ask our friendly orthoptist to unlock your next big adventure.`;
+                // Act as navigation swipe
+                window.App.showScreen('screen-map-' + (exitNum + 1));
+                if (window.Map) window.Map.updateUI();
+                return;
             }
-            
-            const btnOverride = document.getElementById('btn-admin-override');
-            if (btnOverride) btnOverride.style.display = ''; // Show it again if hidden
-            
-            document.getElementById('pre-override-modal').classList.remove('hidden');
-            return;
         }
 
         // Target count for exit is 14
