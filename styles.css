@@ -1394,12 +1394,12 @@ img.player-avatar {
 }
 
 /* Mobile Scaling for Signboard Arrows */
-@media screen and (max-width: 950px) {
+@media screen and (max-width: 1100px) {
     #node-exit1 .node-icon,
     #node-entry2 .node-icon,
     #node-exit2 .node-icon,
     #node-entry3 .node-icon {
-        transform: scale(0.45);
+        transform: scale(0.30) !important;
         transform-origin: center center;
     }
 }
