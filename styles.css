@@ -447,11 +447,8 @@ h1, h2, h3 {
 
 /* --- Signboard Transit Nodes --- */
 
-/* Base reset for all signboard icons */
-#node-exit1 .node-icon,
-#node-entry2 .node-icon,
-#node-exit2 .node-icon,
-#node-entry3 .node-icon {
+/* Base reset for signboard icons (Map 1 Exit only) */
+#node-exit1 .node-icon {
     border-radius: 0;
     border: none !important;
     box-shadow: none !important;
@@ -459,18 +456,12 @@ h1, h2, h3 {
     position: relative;
     animation: none !important;
 }
-#node-exit1.stage-node:not(.locked):hover .node-icon,
-#node-entry2.stage-node:not(.locked):hover .node-icon,
-#node-exit2.stage-node:not(.locked):hover .node-icon,
-#node-entry3.stage-node:not(.locked):hover .node-icon {
+#node-exit1.stage-node:not(.locked):hover .node-icon {
     animation: none !important;
 }
 
-/* Common ::before for all signboard icons */
-#node-exit1 .node-icon::before,
-#node-entry2 .node-icon::before,
-#node-exit2 .node-icon::before,
-#node-entry3 .node-icon::before {
+/* Common ::before for signboard icons (Map 1 Exit only) */
+#node-exit1 .node-icon::before {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -479,38 +470,44 @@ h1, h2, h3 {
     transition: all 0.3s ease;
     animation: pulseArrowGlow 3s infinite ease-in-out;
 }
-#node-exit1.stage-node:not(.locked):hover .node-icon::before,
-#node-entry2.stage-node:not(.locked):hover .node-icon::before,
-#node-exit2.stage-node:not(.locked):hover .node-icon::before,
-#node-entry3.stage-node:not(.locked):hover .node-icon::before {
+#node-exit1.stage-node:not(.locked):hover .node-icon::before {
     animation: pulseArrowGlowHover 1.5s infinite ease-in-out;
 }
 
-/* 1. Map 1 Exit (Orthoptic Forest) - Unchanged */
-#node-exit1 .node-icon { width: 145px; height: 65px; }
+/* 1. Map 1 Exit (Orthoptic Forest) - Option 1: Responsive Distortion */
+#node-exit1 .node-icon { width: 7.55vw; height: 6vh; }
 #node-exit1 .node-icon::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 145 65'%3E%3Cpolygon points='2,2 115,2 143,32.5 115,63 2,63' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 145 65' preserveAspectRatio='none'%3E%3Cpolygon points='2,2 115,2 143,32.5 115,63 2,63' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
-/* 2. Map 2 Entry (Orthoptic Clinic) - Double-sided arrow, taller, extend lower */
-/* Increased width to 230, height to 80. Lowered via margin-top. margin-left: -20px shifts it left. */
-#node-entry2 .node-icon { width: 230px; height: 80px; margin-top: 20px; margin-left: -35px; }
-#node-entry2 .node-icon::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 230 80'%3E%3Cpolygon points='35,2 195,2 228,35 195,78 35,78 2,35' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E");
-}
+/* 2. Map 2 Entry (Orthoptic Clinic) - Option 2: Floating Bubble */
+/* Removed overrides, natively falls back to standard circular node */
 
-/* 3. Map 2 Exit (Orthoptics City) - Longer arrow side, slightly longer lower height */
-/* Increased width to 260. margin-left: 95px shifts it right to match wooden board. */
-#node-exit2 .node-icon { width: 260px; height: 75px; margin-left: 95px; }
-#node-exit2 .node-icon::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 260 75'%3E%3Cpolygon points='2,2 190,2 258,35 190,73 2,73' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E");
-}
+/* 3. Map 2 Exit (Orthoptics City) - Option 2: Floating Bubble */
+/* Removed overrides, natively falls back to standard circular node */
 
-/* 4. Map 3 Entry (Orthoptic forest) - Reduce tail, increase arrow side, lower height slightly more */
-/* Width 185, margin-left 75px to nudge right and reduce width */
-#node-entry3 .node-icon { width: 185px; height: 75px; margin-left: 75px; margin-top: 20px; }
-#node-entry3 .node-icon::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 185 75'%3E%3Cpolygon points='2,2 125,2 183,35 125,73 2,73' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E");
+/* 4. Map 3 Entry (Orthoptic forest) - Option 4: Floating Pointer */
+#node-entry3 .node-icon {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    position: relative;
+    margin-top: -30px; /* hover over the board */
+    animation: none !important; /* disable standard pulse */
+}
+#node-entry3 .node-icon::after {
+    content: "⬇️";
+    font-size: 50px;
+    position: absolute;
+    top: 0; left: 5px;
+    animation: bouncePointer 1s infinite alternate ease-in-out;
+    filter: drop-shadow(0 0 5px white);
+}
+@keyframes bouncePointer {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-20px); }
 }
 
 @keyframes pulseArrowGlow {
@@ -1394,12 +1391,4 @@ img.player-avatar {
 }
 
 /* Mobile Scaling for Signboard Arrows */
-@media screen and (max-width: 1100px) {
-    #node-exit1 .node-icon,
-    #node-entry2 .node-icon,
-    #node-exit2 .node-icon,
-    #node-entry3 .node-icon {
-        transform: scale(0.30) !important;
-        transform-origin: center center;
-    }
-}
+/* Removed media query entirely, we are no longer using static scales! */
