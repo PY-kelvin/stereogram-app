@@ -617,7 +617,12 @@ const Map = {
         const user = window.App.currentUser;
         let reqStreak = exitNum * 14; 
         
-        let isLocked = !this.hasPasswordBypass(reqStreak) && !(exitNum === 3 && window.App.currentUser.stagePlays && window.App.currentUser.stagePlays[3] >= 14);
+        let isLocked;
+        if (exitNum === 3) {
+            isLocked = !(window.App.currentUser.stagePlays && window.App.currentUser.stagePlays[3] >= 14);
+        } else {
+            isLocked = !this.hasPasswordBypass(reqStreak);
+        }
 
         if (isLocked) {
             if (exitNum === 3) {
@@ -634,7 +639,7 @@ const Map = {
                 document.getElementById('pre-override-message').innerText = `Almost there! You just need ${remaining} more stars to unlock this stage.`;
                 
                 const btnOverride = document.getElementById('btn-admin-override');
-                if (btnOverride) btnOverride.style.display = ''; // Show it again if hidden
+                if (btnOverride) btnOverride.style.display = 'none'; // HIDE IT for final goal
                 
                 document.getElementById('pre-override-modal').classList.remove('hidden');
                 return;
@@ -914,7 +919,7 @@ const Map = {
         }
 
         // Unlock Exit 3
-        if (p3 >= 14 || this.hasPasswordBypass(42)) {
+        if (p3 >= 14) {
             document.getElementById('node-exit3').classList.remove('locked');
             const l = document.getElementById('node-exit3').querySelector('.lock-overlay');
             if (l) l.style.display = 'none';
