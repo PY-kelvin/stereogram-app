@@ -1391,37 +1391,7 @@ img.player-avatar {
     #stat-month, #stat-freq { font-size: 1.1rem !important; margin: 0 !important; }
 }
 
-/* Mobile Scaling for Calendar Dashboard (Zero-Scroll Birds Eye Squash) */
-@media screen and (max-width: 768px) {
-    #screen-progress.birds-eye .progress-container { padding: 2px !important; overflow: hidden !important; }
-    #screen-progress.birds-eye .progress-header { padding: 0px 5px !important; }
-    #screen-progress.birds-eye .progress-header h2 { font-size: 0.9rem !important; margin: 0 !important; }
-    #screen-progress.birds-eye .progress-header .btn { padding: 1px 4px !important; font-size: 0.65rem !important; }
-    
-    #screen-progress.birds-eye .progress-view-layout { gap: 2px; }
-    #screen-progress.birds-eye .calendar-left-pane { flex: 0 0 55% !important; max-width: 55%; } 
-    #screen-progress.birds-eye .progress-day-details { flex: 0 0 calc(45% - 2px) !important; max-width: calc(45% - 2px); gap: 2px; }
-    
-    /* Squash Calendar Down */
-    #screen-progress.birds-eye .calendar-header { margin-bottom: 0px !important; }
-    #screen-progress.birds-eye .calendar-header h3 { font-size: 0.75rem !important; margin: 0 !important; }
-    #screen-progress.birds-eye .calendar-header .btn { padding: 1px 4px !important; font-size: 0.65rem !important; margin: 0 !important; }
-    #screen-progress.birds-eye .calendar-grid { gap: 1px !important; }
-    #screen-progress.birds-eye .calendar-day { aspect-ratio: auto !important; height: 2.2vh !important; font-size: 0.6rem !important; display: flex; align-items: center; justify-content: center; }
-    #screen-progress.birds-eye .day-name { font-size: 0.5rem !important; padding-bottom: 0px !important; height: 1.5vh !important; display: flex; align-items: center; justify-content: center; }
-    
-    /* Squash Dashboard Down */
-    #screen-progress.birds-eye .progress-stats-container { gap: 2px; }
-    #screen-progress.birds-eye .progress-detail-box { padding: 2px !important; font-size: 0.55rem !important; border-width: 1px !important; border-radius: 4px !important; line-height: 1.0 !important; }
-    #screen-progress.birds-eye .progress-stat-card { padding: 2px 4px !important; border-left-width: 2px !important; border-radius: 4px !important; }
-    
-    #screen-progress.birds-eye #title-stat-month, #screen-progress.birds-eye #title-stat-duration { font-size: 0.45rem !important; margin-bottom: 0px !important; }
-    #screen-progress.birds-eye #stat-month, #screen-progress.birds-eye #stat-freq { font-size: 0.7rem !important; margin: 0 !important; }
-    #screen-progress.birds-eye #daily-stats-container h4 { font-size: 0.6rem !important; margin: 0 0 1px 0 !important; }
-    
-    #screen-progress.birds-eye #calendar-day-details ul { gap: 0px !important; padding-left: 10px !important; margin: 0 !important; }
-    #screen-progress.birds-eye #calendar-day-details li { margin-bottom: 0 !important; font-size: 0.55rem !important; }
-}
+
 
 /* === GLOBAL INVISIBLE GLASS STAGE NODES === */
 .stage-label {

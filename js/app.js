@@ -1573,6 +1573,15 @@ const App = {
         if (screenId === 'screen-game') {
             Game.resizeCanvas();
         }
+
+        const viewportMeta = document.querySelector('meta[name="viewport"]');
+        if (viewportMeta) {
+            if (screenId === 'screen-progress') {
+                viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover');
+            } else {
+                viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover');
+            }
+        }
     },
 
     async showMapScreen(specificMap = null) {
@@ -1649,19 +1658,6 @@ const ProgressReport = {
         document.getElementById('btn-back-map-from-progress').addEventListener('click', () => {
             window.App.showMapScreen();
         });
-
-        const toggleZoomBtn = document.getElementById('btn-toggle-zoom');
-        if (toggleZoomBtn) {
-            toggleZoomBtn.addEventListener('click', () => {
-                const screen = document.getElementById('screen-progress');
-                screen.classList.toggle('birds-eye');
-                if (screen.classList.contains('birds-eye')) {
-                    toggleZoomBtn.innerText = '🔍 Detail';
-                } else {
-                    toggleZoomBtn.innerText = '🔍 Zoom';
-                }
-            });
-        }
 
         document.getElementById('btn-prev-month').addEventListener('click', () => {
             this.currentDate.setMonth(this.currentDate.getMonth() - 1);
