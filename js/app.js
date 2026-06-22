@@ -727,7 +727,8 @@ const Map = {
         const pwdMap = [
             { level: 14, pwd: 'snec1234' },
             { level: 28, pwd: 's1n2e3c4' },
-            { level: 42, pwd: 'snec12345' }
+            { level: 42, pwd: 'snec12345' },
+            { level: 42, pwd: 'snecorthoptics' }
         ];
 
         let maxLevel = 0;
