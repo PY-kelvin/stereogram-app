@@ -537,8 +537,8 @@
             </header>
 
             <div class="progress-container">
-                <div id="view-calendar" class="progress-view active" style="display: flex; flex-direction: row !important; gap: 20px; align-items: flex-start; justify-content: space-between; flex-wrap: nowrap; max-width: 100%; overflow-x: hidden;">
-                    <div class="calendar-left-pane" style="flex: 0 0 50%; min-width: 0;">
+                <div id="view-calendar" class="progress-view active progress-view-layout" style="display: flex; align-items: flex-start; justify-content: space-between; max-width: 100%; overflow-x: hidden;">
+                    <div class="calendar-left-pane">
                         <!-- Month Header -->
                         <div class="calendar-header" style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
                             <button id="btn-prev-month" class="btn btn-small btn-secondary" style="margin: 0;">&lt;</button>
@@ -558,20 +558,20 @@
                         </div>
                     </div>
                     
-                    <div id="calendar-day-details" class="day-details" style="flex: 0 0 calc(50% - 20px); min-width: 0; text-align: left; background: transparent; box-shadow: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 15px;">
+                    <div id="calendar-day-details" class="day-details progress-day-details" style="min-width: 0; text-align: left; background: transparent; box-shadow: none; margin: 0; display: flex; flex-direction: column;">
                         
                         <!-- Daily Details Container (Hidden until a day is clicked) -->
-                        <div id="daily-stats-container" class="hidden" style="display: flex; flex-direction: column; gap: 15px;">
+                        <div id="daily-stats-container" class="hidden progress-stats-container" style="display: flex; flex-direction: column;">
                             <h4 style="margin-top: 0; margin-bottom: 0; font-size: 1.1rem; color: #2b2d42; font-weight: bold; text-align: center;"><span id="detail-date"></span></h4>
                             
                             <!-- Duration Box -->
-                            <div style="border: 2px solid #2b2d42; border-radius: 8px; padding: 15px; font-weight: bold; font-size: 1.1rem; display: flex; justify-content: space-between; background: transparent;">
+                            <div class="progress-detail-box" style="border: 2px solid #2b2d42; border-radius: 8px; font-weight: bold; display: flex; justify-content: space-between; background: transparent;">
                                 <span>Duration</span>
                                 <span id="detail-duration">0 min</span>
                             </div>
 
                             <!-- Stages Box -->
-                            <div style="border: 2px solid #2b2d42; border-radius: 8px; padding: 15px; font-size: 1.1rem; background: transparent;">
+                            <div class="progress-detail-box progress-detail-box-normal" style="border: 2px solid #2b2d42; border-radius: 8px; background: transparent;">
                                 <ul style="list-style: none; padding-left: 0; margin: 0; display: flex; flex-direction: column; gap: 10px;">
                                     <li style="display: flex; justify-content: space-between;"><span>Stage 1:</span> <strong id="detail-duration-s1">0.0 mins</strong></li>
                                     <li style="display: flex; justify-content: space-between;"><span>Stage 2:</span> <strong id="detail-duration-s2">0.0 mins</strong></li>
@@ -581,12 +581,12 @@
                         </div>
                         
                         <!-- Summary Cards -->
-                        <div class="summary-card" style="background: white; border-radius: 8px; padding: 15px; text-align: center; border-left: 5px solid #FFC107;">
+                        <div class="summary-card progress-stat-card" style="background: white; border-radius: 8px; text-align: center; border-left: 5px solid #FFC107;">
                             <h3 id="title-stat-month" style="font-size: 0.9rem; margin: 0 0 5px 0; color: #8d99ae; text-transform: uppercase;">Total number of days done in the month of June</h3>
                             <p id="stat-month" class="stat-number" style="margin: 0; font-size: 1.8rem; font-weight: bold; color: #2b2d42;">0</p>
                         </div>
 
-                        <div class="summary-card" style="background: white; border-radius: 8px; padding: 15px; text-align: center; border-left: 5px solid #FFC107;">
+                        <div class="summary-card progress-stat-card" style="background: white; border-radius: 8px; text-align: center; border-left: 5px solid #FFC107;">
                             <h3 id="title-stat-duration" style="font-size: 0.9rem; margin: 0 0 5px 0; color: #8d99ae; text-transform: uppercase;">Average Duration</h3>
                             <p id="stat-freq" class="stat-number" style="margin: 0; font-size: 1.8rem; font-weight: bold; color: #2b2d42;">0 mins</p>
                         </div>

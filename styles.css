@@ -1364,16 +1364,40 @@ img.player-avatar {
 }
 
 
-/* Mobile Stacking for Calendar Dashboard */
+/* Base CSS for Progress Layout (extracted from inline styles) */
+.progress-view-layout { flex-direction: row; flex-wrap: nowrap; gap: 20px; }
+.calendar-left-pane { flex: 0 0 50%; min-width: 0; }
+.progress-day-details { flex: 0 0 calc(50% - 20px); gap: 15px; }
+.progress-stats-container { gap: 15px; }
+.progress-detail-box { padding: 15px; font-size: 1.1rem; }
+.progress-stat-card { padding: 15px; }
+
+/* Mobile Scaling for Calendar Dashboard (Side-by-Side Locked) */
 @media screen and (max-width: 768px) {
     #view-calendar {
-        flex-direction: column !important;
+        flex-direction: row !important; /* Force side-by-side */
     }
-    .calendar-left-pane, #calendar-day-details {
-        flex: 0 0 100% !important;
-        width: 100%;
-        max-width: 100% !important;
-    }
+    .progress-view-layout { gap: 5px; }
+    .calendar-left-pane { flex: 0 0 55% !important; max-width: 55%; } 
+    .progress-day-details { flex: 0 0 calc(45% - 5px) !important; max-width: calc(45% - 5px); gap: 5px; }
+    
+    /* Scale Calendar Down */
+    .calendar-header { margin-bottom: 5px !important; }
+    .calendar-header h3 { font-size: 0.9rem !important; }
+    .calendar-header .btn { padding: 2px 5px !important; font-size: 0.8rem; }
+    .calendar-day { font-size: 0.75rem !important; }
+    .day-name { font-size: 0.65rem !important; padding-bottom: 2px !important; }
+    
+    /* Scale Dashboard Down */
+    .progress-stats-container { gap: 5px; }
+    .progress-detail-box { padding: 5px !important; font-size: 0.65rem !important; border-width: 1px !important; border-radius: 4px !important; }
+    .progress-stat-card { padding: 8px 5px !important; border-left-width: 3px !important; border-radius: 4px !important; }
+    
+    #title-stat-month, #title-stat-duration { font-size: 0.55rem !important; margin-bottom: 2px !important; }
+    #stat-month, #stat-freq { font-size: 1.1rem !important; }
+    #daily-stats-container h4 { font-size: 0.75rem !important; }
+    
+    #calendar-day-details ul { gap: 2px !important; }
 }
 
 /* === GLOBAL INVISIBLE GLASS STAGE NODES === */
