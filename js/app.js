@@ -1573,15 +1573,6 @@ const App = {
         if (screenId === 'screen-game') {
             Game.resizeCanvas();
         }
-
-        const viewportMeta = document.querySelector('meta[name="viewport"]');
-        if (viewportMeta) {
-            if (screenId === 'screen-progress') {
-                viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover');
-            } else {
-                viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover');
-            }
-        }
     },
 
     async showMapScreen(specificMap = null) {
