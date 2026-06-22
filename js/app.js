@@ -573,8 +573,8 @@ const Map = {
             this.pendingExitClick = null;
             
             const pwdMsg = document.querySelector('#password-modal p');
-            if (pwdMsg) pwdMsg.innerText = `Enter password to unlock Orthoptics Forest.`;
-            document.getElementById('pre-override-title').innerText = `Orthoptics Forest Locked`;
+            if (pwdMsg) pwdMsg.innerText = `Enter password to unlock Orthoptics Town.`;
+            document.getElementById('pre-override-title').innerText = `Orthoptics Town Locked`;
             document.getElementById('pre-override-message').innerText = `Great job! Please ask our friendly orthoptist to unlock your next big adventure.`;
             
             const btnOverride = document.getElementById('btn-admin-override');
