@@ -1,4 +1,4 @@
-const CACHE_NAME = 'myeyegym-cache-v314';
+const CACHE_NAME = 'myeyegym-cache-v315';
 const urlsToCache = [
   './',
   './index.html',
