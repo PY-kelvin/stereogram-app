@@ -1365,6 +1365,7 @@ img.player-avatar {
 
 
 /* Base CSS for Progress Layout (extracted from inline styles) */
+.progress-header { padding: 20px; }
 .progress-view-layout { flex-direction: row; flex-wrap: nowrap; gap: 20px; }
 .calendar-left-pane { flex: 0 0 50%; min-width: 0; }
 .progress-day-details { flex: 0 0 calc(50% - 20px); gap: 15px; }
@@ -1372,32 +1373,38 @@ img.player-avatar {
 .progress-detail-box { padding: 15px; font-size: 1.1rem; }
 .progress-stat-card { padding: 15px; }
 
-/* Mobile Scaling for Calendar Dashboard (Side-by-Side Locked) */
+/* Mobile Scaling for Calendar Dashboard (Zero-Scroll Squash) */
 @media screen and (max-width: 768px) {
+    .progress-header { padding: 2px 10px !important; }
+    .progress-header h2 { font-size: 1rem !important; }
+    .progress-header .btn { padding: 2px 5px !important; font-size: 0.7rem; }
+    
     #view-calendar {
         flex-direction: row !important; /* Force side-by-side */
     }
-    .progress-view-layout { gap: 5px; }
+    .progress-view-layout { gap: 2px; }
     .calendar-left-pane { flex: 0 0 55% !important; max-width: 55%; } 
-    .progress-day-details { flex: 0 0 calc(45% - 5px) !important; max-width: calc(45% - 5px); gap: 5px; }
+    .progress-day-details { flex: 0 0 calc(45% - 2px) !important; max-width: calc(45% - 2px); gap: 2px; }
     
-    /* Scale Calendar Down */
-    .calendar-header { margin-bottom: 5px !important; }
-    .calendar-header h3 { font-size: 0.9rem !important; }
-    .calendar-header .btn { padding: 2px 5px !important; font-size: 0.8rem; }
-    .calendar-day { font-size: 0.75rem !important; }
-    .day-name { font-size: 0.65rem !important; padding-bottom: 2px !important; }
+    /* Squash Calendar Down */
+    .calendar-header { margin-bottom: 2px !important; }
+    .calendar-header h3 { font-size: 0.8rem !important; margin: 0 !important; }
+    .calendar-header .btn { padding: 2px 5px !important; font-size: 0.7rem; }
+    .calendar-grid { gap: 2px !important; }
+    .calendar-day { aspect-ratio: auto !important; height: 3.5vh !important; font-size: 0.65rem !important; display: flex; align-items: center; justify-content: center; }
+    .day-name { font-size: 0.55rem !important; padding-bottom: 0px !important; }
     
-    /* Scale Dashboard Down */
-    .progress-stats-container { gap: 5px; }
-    .progress-detail-box { padding: 5px !important; font-size: 0.65rem !important; border-width: 1px !important; border-radius: 4px !important; }
-    .progress-stat-card { padding: 8px 5px !important; border-left-width: 3px !important; border-radius: 4px !important; }
+    /* Squash Dashboard Down */
+    .progress-stats-container { gap: 2px; }
+    .progress-detail-box { padding: 3px !important; font-size: 0.6rem !important; border-width: 1px !important; border-radius: 4px !important; line-height: 1.1 !important; }
+    .progress-stat-card { padding: 2px 5px !important; border-left-width: 3px !important; border-radius: 4px !important; }
     
-    #title-stat-month, #title-stat-duration { font-size: 0.55rem !important; margin-bottom: 2px !important; }
-    #stat-month, #stat-freq { font-size: 1.1rem !important; }
-    #daily-stats-container h4 { font-size: 0.75rem !important; }
+    #title-stat-month, #title-stat-duration { font-size: 0.5rem !important; margin-bottom: 0px !important; }
+    #stat-month, #stat-freq { font-size: 0.8rem !important; margin: 0 !important; }
+    #daily-stats-container h4 { font-size: 0.65rem !important; margin: 0 0 2px 0 !important; }
     
-    #calendar-day-details ul { gap: 2px !important; }
+    #calendar-day-details ul { gap: 0px !important; padding-left: 15px !important; }
+    #calendar-day-details li { margin-bottom: 0 !important; }
 }
 
 /* === GLOBAL INVISIBLE GLASS STAGE NODES === */
