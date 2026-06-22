@@ -617,6 +617,7 @@ const Map = {
         let isLocked;
         if (exitNum === 3) {
             isLocked = !(window.App.currentUser.stagePlays && window.App.currentUser.stagePlays[3] >= 14);
+            if (this.hasPasswordBypass(42)) isLocked = false;
         } else {
             isLocked = !this.hasPasswordBypass(reqStreak);
         }
@@ -916,7 +917,7 @@ const Map = {
         }
 
         // Unlock Exit 3
-        if (p3 >= 14) {
+        if (p3 >= 14 || this.hasPasswordBypass(42)) {
             document.getElementById('node-exit3').classList.remove('locked');
             const l = document.getElementById('node-exit3').querySelector('.lock-overlay');
             if (l) l.style.display = 'none';
