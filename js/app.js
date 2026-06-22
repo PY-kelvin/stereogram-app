@@ -514,6 +514,8 @@ const Map = {
                 this.fastForward(28, "s1n2e3c4");
             } else if (pwd === 'snec12345') {
                 this.fastForward(42, "snec12345");
+            } else if (pwd === 'snecorthoptics') {
+                this.fastForward(42, "snecorthoptics");
             } else if (pwd === 'test20') {
                 window.runSimulation();
                 document.getElementById('password-modal').classList.add('hidden');
