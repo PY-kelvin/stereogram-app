@@ -512,13 +512,8 @@ const Map = {
                 this.fastForward(14, "snec1234");
             } else if (pwd === 's1n2e3c4') {
                 this.fastForward(28, "s1n2e3c4");
-            } else if (pwd === 'snec12345') {
-                this.fastForward(42, "snec12345");
             } else if (pwd === 'snecorthoptics') {
                 this.fastForward(42, "snecorthoptics");
-            } else if (pwd === 'test20') {
-                window.runSimulation();
-                document.getElementById('password-modal').classList.add('hidden');
             } else {
                 window.App.showNotification("Incorrect Password.", "warning");
             }
@@ -727,7 +722,6 @@ const Map = {
         const pwdMap = [
             { level: 14, pwd: 'snec1234' },
             { level: 28, pwd: 's1n2e3c4' },
-            { level: 42, pwd: 'snec12345' },
             { level: 42, pwd: 'snecorthoptics' }
         ];
 
