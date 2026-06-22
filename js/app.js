@@ -1650,6 +1650,19 @@ const ProgressReport = {
             window.App.showMapScreen();
         });
 
+        const toggleZoomBtn = document.getElementById('btn-toggle-zoom');
+        if (toggleZoomBtn) {
+            toggleZoomBtn.addEventListener('click', () => {
+                const screen = document.getElementById('screen-progress');
+                screen.classList.toggle('birds-eye');
+                if (screen.classList.contains('birds-eye')) {
+                    toggleZoomBtn.innerText = '🔍 Detail';
+                } else {
+                    toggleZoomBtn.innerText = '🔍 Zoom';
+                }
+            });
+        }
+
         document.getElementById('btn-prev-month').addEventListener('click', () => {
             this.currentDate.setMonth(this.currentDate.getMonth() - 1);
             this.renderCalendar();
