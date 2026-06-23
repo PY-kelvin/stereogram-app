@@ -1435,3 +1435,8 @@ img.player-avatar {
 
 /* Mobile Scaling for Signboard Arrows */
 /* Removed media query entirely, we are no longer using static scales! */
+
+/* Rectangular labels for transition stages */
+.rect-label .stage-label {
+    border-radius: 4px !important;
+}
