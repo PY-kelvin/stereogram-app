@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="app_icon.png?v=new2">
     <link rel="icon" href="app_icon.png?v=new2">
 
-    <link rel="stylesheet" href="styles.css?v=350">
+    <link rel="stylesheet" href="styles.css?v=351">
 </head>
 
 <body>
@@ -322,6 +322,7 @@
 
             </div>
 
+            </div>
             <!-- Floating Scroll Indicator -->
             <div id="instruction-scroll-indicator" class="scroll-indicator" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(255, 107, 107, 0.9); color: white; padding: 10px 20px; border-radius: 20px; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 100; pointer-events: none; transition: opacity 0.3s ease;">
                 ↓ Scroll down for videos ↓
@@ -329,11 +330,7 @@
         </section>
 
         <!-- WRITTEN INSTRUCTION SCREEN -->
-        <section id="screen-written-instruction" class="screen" style="background: linear-gradient(135deg, #e0f7fa 0%, #fff9c4 100%); display: flex; flex-direction: column; overflow: hidden;">
-            <!-- Cute decorations -->
-            <img src="avatar_cat.png" style="position: fixed; bottom: 5%; left: 5%; width: 120px; opacity: 0.2; transform: rotate(-15deg); z-index: 0; pointer-events: none;">
-            <img src="avatar_hamster.png" style="position: fixed; top: 15%; right: 5%; width: 100px; opacity: 0.2; transform: rotate(10deg); z-index: 0; pointer-events: none;">
-
+        <section id="screen-written-instruction" class="screen" style="background: linear-gradient(135deg, #e0f7fa 0%, #fff9c4 100%); overflow: hidden;">
             <header class="map-header" style="position: relative; flex-shrink: 0; z-index: 10; border-bottom: 2px solid #2b2d42;">
                 <div style="flex: 1; display: flex; justify-content: flex-start;">
                     <button id="btn-back-instructions" class="btn btn-secondary btn-small">⬅ Back</button>
@@ -630,7 +627,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=350"></script>
+    <script src="js/app.js?v=351"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {

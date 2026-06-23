@@ -1,4 +1,4 @@
-// Global variable to store the install prompt event
+﻿// Global variable to store the install prompt event
 window.deferredPrompt = null;
 
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -2130,7 +2130,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Scroll Indicator Logic
-    const instScreen = document.getElementById('screen-instructions');
+    const instScreen = document.getElementById('instruction-scroll-container');
     const scrollInd = document.getElementById('instruction-scroll-indicator');
     if (instScreen && scrollInd) {
         instScreen.addEventListener('scroll', () => {
