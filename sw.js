@@ -1,15 +1,15 @@
-﻿const CACHE_NAME = 'myeyegym-cache-v340';
+﻿const CACHE_NAME = 'myeyegym-cache-v341';
 const urlsToCache = [
   './',
-  './index.html?v=340',
-  './styles.css?v=340',
-  './js/app.js?v=340',
+  './index.html?v=341',
+  './styles.css?v=341',
+  './js/app.js?v=341',
   './fonts/fredoka.woff2',
   './manifest.json',
   './app_icon.png',
-  './orthoptics_village_bg.png',
-  './orthoptics_town_bg.png',
-  './orthoptics_city_bg.png',
+  './Orthoptics%20Village.png',
+  './Orthoptics%20Town.png',
+  './Orthoptics%20City.png',
   './avatar_cat.png',
   './avatar_cow.png',
   './avatar_hamster.png',
