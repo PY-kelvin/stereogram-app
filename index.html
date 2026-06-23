@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="app_icon.png?v=new2">
     <link rel="icon" href="app_icon.png?v=new2">
 
-    <link rel="stylesheet" href="styles.css?v=348">
+    <link rel="stylesheet" href="styles.css?v=349">
 </head>
 
 <body>
@@ -43,7 +43,7 @@
                 <p id="pre-override-message" style="font-size: 1.2rem; color: #444; margin-bottom: 25px;"></p>
                 <div class="modal-actions" style="justify-content: center; gap: 15px;">
                     <button id="btn-cancel-pre-override" class="btn btn-secondary btn-small">Okay</button>
-                    <button id="btn-admin-override" class="btn btn-primary btn-small">Admin Override</button>
+                    <button id="btn-admin-override" class="btn btn-primary btn-small">Password</button>
                 </div>
             </div>
         </div>
@@ -51,7 +51,7 @@
         <!-- Password Modal -->
         <div id="password-modal" class="modal hidden">
             <div class="modal-content">
-                <h3>Admin Override</h3>
+                <h3>Password</h3>
                 <p>Enter password to unlock Stage 2.</p>
                 <input type="password" id="admin-password" placeholder="Password">
                 <div class="modal-actions">
@@ -629,7 +629,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=348"></script>
+    <script src="js/app.js?v=349"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
