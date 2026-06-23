@@ -1462,7 +1462,7 @@ const LOCAL_STORAGE_KEY = 'stereogram_app_data';
 
 const distContent = `
 <div style="font-size: 1.1rem; line-height: 1.6;">
-    <strong>Purpose:</strong> To improve relaxation of your eyes (ie. Divergence).<br> 1) Hold the card with the images facing you at arm's length at eye level.<br><br>
+    <strong>Purpose:</strong> To improve relaxation of your eyes (ie. Divergence).<br><br> 1) Hold the card with the images facing you at arm's length at eye level.<br><br>
     2) Focus on a central object in the distance (at least 3m away) just above the card (or looking through the transparent card) while being aware of the images on your card.<br><br>
     3) Concentrate on this distant object until you are aware of a third fused (merged) image in the centre of the two images on your card. It is very important at this stage of the exercise NOT to look directly at the card or the exercise will not work - look continuously at the distant object.<br><br>
     4) You may notice 4 images at times - you can adjust the distance of the card slightly until you see the fused image.<br><br>
@@ -1478,7 +1478,7 @@ const distContent = `
 
 const nearContent = `
 <div style="font-size: 1.1rem; line-height: 1.6;">
-    <strong>Purpose:</strong> To improve control of your eyes and encourage convergence.<br> 1) Hold the card with the images facing you at arm's length at eye level.<br><br>
+    <strong>Purpose:</strong> To improve control of your eyes and encourage convergence.<br><br> 1) Hold the card with the images facing you at arm's length at eye level.<br><br>
     2) Place a pen in front of the card and in between the two images.<br><br>
     3) Keep looking at the pen constantly. It is very important at this stage of the exercise NOT to look directly at the card or the exercise will not work - look continuously at the pen.<br><br>
     4) Whilst looking at the pen you should be aware of both the images becoming double, therefore you should see 4 images.<br><br>
