@@ -1,9 +1,9 @@
-const CACHE_NAME = 'myeyegym-cache-v337';
+const CACHE_NAME = 'myeyegym-cache-v338';
 const urlsToCache = [
   './',
-  './index.html',
-  './styles.css?v=337',
-  './js/app.js?v=337',
+  './index.html?v=338',
+  './styles.css?v=338',
+  './js/app.js?v=338',
   './fonts/fredoka.woff2',
   './manifest.json',
   './app_icon.png',
@@ -51,7 +51,7 @@ self.addEventListener('install', event => {
 
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request)
+    caches.match(event.request, { ignoreSearch: true })
       .then(response => {
         if (response) {
           return response; // Return from cache if found
