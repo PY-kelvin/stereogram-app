@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="app_icon.png?v=new2">
     <link rel="icon" href="app_icon.png?v=new2">
 
-    <link rel="stylesheet" href="styles.css?v=351">
+    <link rel="stylesheet" href="styles.css?v=352">
 </head>
 
 <body>
@@ -267,29 +267,20 @@
         </section>
 
         <!-- INSTRUCTIONS SCREEN -->
-        <section id="screen-instructions" class="screen"
-            style="background: linear-gradient(135deg, #e0f7fa 0%, #fff9c4 100%); position: relative; overflow-y: auto; overflow-x: hidden;">
-            <!-- Cute decorations -->
-            <img src="avatar_cat.png"
-                style="position: absolute; bottom: 5%; left: 5%; width: 120px; opacity: 0.6; transform: rotate(-15deg); z-index: 0;">
-            <img src="avatar_cow.png"
-                style="position: absolute; top: 15%; right: 5%; width: 100px; opacity: 0.6; transform: rotate(10deg); z-index: 0;">
-            <img src="avatar_hamster.png"
-                style="position: absolute; bottom: 10%; right: 10%; width: 90px; opacity: 0.6; transform: rotate(25deg); z-index: 0;">
-            <div style="position: absolute; top: 20%; left: 15%; font-size: 3rem; opacity: 0.4; z-index: 0;">🌸</div>
-            <div style="position: absolute; bottom: 30%; right: 25%; font-size: 3rem; opacity: 0.4; z-index: 0;">✨</div>
-            <div style="position: absolute; top: 40%; left: 10%; font-size: 2.5rem; opacity: 0.4; z-index: 0;">🦋</div>
+                <section id="screen-instructions" class="screen"
+            style="background: linear-gradient(135deg, #e0f7fa 0%, #fff9c4 100%); overflow: hidden;">
 
-            <header class="map-header" style="position: relative; z-index: 1;">
+            <header class="map-header" style="position: relative; flex-shrink: 0; z-index: 10;">
                 <div style="flex: 1; display: flex; justify-content: flex-start;">
-                    <button id="btn-back-main-menu" class="btn btn-secondary btn-small">⬅ Back</button>
+                    <button id="btn-back-main-menu" class="btn btn-secondary btn-small">&#8592; Back</button>
                 </div>
                 <h2 style="flex: 2; text-align: center; margin: 0;">Instructions</h2>
                 <div style="flex: 1;"></div>
             </header>
 
+                        <div id="instruction-scroll-container" style="flex-grow: 1; overflow-y: auto; overflow-x: hidden; width: 100%;">
             <div class="instructions-content"
-                style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: calc(100vh - 80px); padding: 40px 0; gap: 40px; position: relative; z-index: 1;">
+                style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: 100%; padding: 40px 0; gap: 40px; position: relative; z-index: 1;">
 
                 <div class="instruction-category" style="text-align: center; width: 100%;">
                     <h3 style="color: #2b2d42; margin-bottom: 20px; font-size: 1.5rem; background: rgba(255,255,255,0.7); display: inline-block; padding: 5px 20px; border-radius: 20px; border: 2px solid #2b2d42;">📖 Written Instructions</h3>
@@ -627,7 +618,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=351"></script>
+    <script src="js/app.js?v=352"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
