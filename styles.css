@@ -300,6 +300,32 @@ h1, h2, h3 {
     font-size: 1.4rem;
 }
 
+/* Responsive Map Header for narrow screens */
+@media screen and (max-width: 768px) {
+    .map-header {
+        padding: 5px;
+    }
+    .map-header h2 {
+        font-size: 0.95rem;
+        padding: 4px 8px;
+    }
+    .map-header .streak-counter {
+        font-size: 0.85rem;
+        padding: 4px 8px;
+    }
+    .map-header .btn {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+        min-width: 70px !important;
+    }
+    .header-left {
+        gap: 5px !important;
+    }
+    .user-stats {
+        gap: 5px !important;
+    }
+}
+
 .user-stats {
     display: flex;
     align-items: center;
