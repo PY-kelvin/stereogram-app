@@ -1,6 +1,6 @@
-{
-  "name": "MyEyeGym",
-  "short_name": "MyEyeGym",
+﻿{
+  "name": "EyeBuddy",
+  "short_name": "EyeBuddy",
   "start_url": "./index.html",
   "display": "standalone",
   "orientation": "landscape",
