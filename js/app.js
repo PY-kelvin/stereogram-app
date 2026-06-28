@@ -1571,6 +1571,14 @@ const App = {
         if (screenId === 'screen-game') {
             Game.resizeCanvas();
         }
+        
+        // Show disclaimer if navigating to main menu for the first time this session
+        if (screenId === 'screen-main-menu' && sessionStorage.getItem('disclaimer_accepted') !== 'true') {
+            const disclaimerModal = document.getElementById('disclaimer-modal');
+            if (disclaimerModal) {
+                disclaimerModal.classList.remove('hidden');
+            }
+        }
     },
 
     async showMapScreen(specificMap = null) {
@@ -2074,6 +2082,14 @@ document.addEventListener('DOMContentLoaded', () => {
     App.init();
     ProgressReport.init();
     Menu.init();
+
+    const btnAcceptDisclaimer = document.getElementById('btn-accept-disclaimer');
+    if (btnAcceptDisclaimer) {
+        btnAcceptDisclaimer.addEventListener('click', () => {
+            sessionStorage.setItem('disclaimer_accepted', 'true');
+            document.getElementById('disclaimer-modal').classList.add('hidden');
+        });
+    }
 
     const btnCloseReward = document.getElementById('btn-close-reward');
     if (btnCloseReward) {
