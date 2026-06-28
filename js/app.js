@@ -206,6 +206,7 @@ const Auth = {
         }
 
         localStorage.removeItem('currentUser');
+        sessionStorage.removeItem('disclaimer_accepted');
         window.App.currentUser = null;
         window.App.showScreen('screen-auth');
         document.getElementById('form-login').reset();
