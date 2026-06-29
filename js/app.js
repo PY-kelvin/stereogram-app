@@ -1578,6 +1578,21 @@ const App = {
             const disclaimerModal = document.getElementById('disclaimer-modal');
             if (disclaimerModal) {
                 disclaimerModal.classList.remove('hidden');
+                
+                // Immediately check if content needs scrolling. We need a small timeout for layout to render.
+                setTimeout(() => {
+                    const contentDiv = document.getElementById('disclaimer-content');
+                    if (contentDiv) {
+                        if (contentDiv.scrollHeight <= contentDiv.clientHeight + 5) {
+                            document.getElementById('disclaimer-scroll-indicator').classList.add('hidden');
+                            document.getElementById('btn-accept-disclaimer').classList.remove('hidden');
+                        } else {
+                            document.getElementById('disclaimer-scroll-indicator').classList.remove('hidden');
+                            document.getElementById('btn-accept-disclaimer').classList.add('hidden');
+                            contentDiv.scrollTop = 0; // reset scroll position
+                        }
+                    }
+                }, 50);
             }
         }
     },
@@ -2089,6 +2104,16 @@ document.addEventListener('DOMContentLoaded', () => {
         btnAcceptDisclaimer.addEventListener('click', () => {
             sessionStorage.setItem('disclaimer_accepted', 'true');
             document.getElementById('disclaimer-modal').classList.add('hidden');
+        });
+    }
+
+    const disclaimerContent = document.getElementById('disclaimer-content');
+    if (disclaimerContent) {
+        disclaimerContent.addEventListener('scroll', () => {
+            if (disclaimerContent.scrollHeight - disclaimerContent.scrollTop <= disclaimerContent.clientHeight + 5) {
+                document.getElementById('disclaimer-scroll-indicator').classList.add('hidden');
+                document.getElementById('btn-accept-disclaimer').classList.remove('hidden');
+            }
         });
     }
 

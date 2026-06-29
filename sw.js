@@ -1,9 +1,9 @@
-﻿const CACHE_NAME = 'eyebuddy-cache-v360';
+﻿const CACHE_NAME = 'eyebuddy-cache-v361';
 const urlsToCache = [
   './',
-  './index.html?v=360',
-  './styles.css?v=360',
-  './js/app.js?v=360',
+  './index.html?v=361',
+  './styles.css?v=361',
+  './js/app.js?v=361',
   './fonts/fredoka.woff2',
   './manifest.json',
   './app_icon.png',

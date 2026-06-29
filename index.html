@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="app_icon.png?v=new2">
     <link rel="icon" href="app_icon.png?v=new2">
 
-    <link rel="stylesheet" href="styles.css?v=360">
+    <link rel="stylesheet" href="styles.css?v=361">
 </head>
 
 <body>
@@ -622,7 +622,7 @@
             <div class="modal-content" style="width: 90%; max-width: 600px; text-align: left; padding: 25px; border-radius: 15px; border: 4px solid #b3c2e6; background: #ffffff;">
                 <h2 style="margin-top: 0; font-size: 1.5rem; border-bottom: 2px solid #eee; padding-bottom: 10px; color: #333;">Disclaimer</h2>
                 
-                <div style="max-height: 50vh; overflow-y: auto; padding-right: 10px; font-size: 0.95rem; color: #444; line-height: 1.5;">
+                <div id="disclaimer-content" style="max-height: 50vh; overflow-y: auto; padding-right: 10px; font-size: 0.95rem; color: #444; line-height: 1.5;">
                     <h3 style="color: #1976d2; font-size: 1.1rem; margin-top: 15px; margin-bottom: 5px;">EyeBuddy App Does Not Provide Medical Advice</h3>
                     <p style="margin-top: 0;">The contents of EyeBuddy Mobile App, such as text, graphics, images, information, programmes and other material contained or uploaded from the EyeBuddy Mobile App ("Content") are for general information purposes and are provided on the understanding that no surgical or medical advice or recommendation is being rendered.</p>
                     <p>Medical treatment has to be individualized and can only be rendered after adequate assessment of your condition through appropriate clinical examination. Please do not disregard the professional medical advice of your physician or local healthcare provider or delay in seeking medical advice from them because of any information herein. For the reasons given above, you should not rely on the Content herein and to the fullest extent permitted by law, we do not accept any responsibility if you do.</p>
@@ -634,14 +634,15 @@
                     <p style="margin-top: 0;">By using the EyeBuddy Mobile App, you agree to defend, indemnify, and hold SNEC, its officers, directors, employees, agents, licensors, and suppliers, harmless from and against any claims, actions or demands, liabilities and settlements including without limitation, reasonable legal and accounting fees, resulting from, or alleged to result from, your use of this EyeBuddy Mobile App.</p>
                 </div>
                 
-                <div style="text-align: right; margin-top: 20px;">
-                    <button id="btn-accept-disclaimer" class="btn btn-primary" style="padding: 10px 20px; font-size: 1rem; border-radius: 8px; background-color: #e5e9f2; color: #1976d2; border: 1px solid #c5d1eb;">Yes, I Understand</button>
+                <div style="text-align: center; margin-top: 20px;">
+                    <div id="disclaimer-scroll-indicator" style="font-size: 0.95rem; color: #888; font-style: italic; padding: 10px;">Continue scrolling ↓</div>
+                    <button id="btn-accept-disclaimer" class="btn btn-primary hidden" style="width: 100%; max-width: 400px; padding: 12px 20px; font-size: 1.1rem; font-weight: bold; border-radius: 8px; background-color: #e5e9f2; color: #1976d2; border: 1px solid #c5d1eb;">Yes, I Understand</button>
                 </div>
             </div>
         </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=360"></script>
+    <script src="js/app.js?v=361"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
