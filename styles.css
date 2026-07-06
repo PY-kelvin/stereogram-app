@@ -1440,3 +1440,12 @@ img.player-avatar {
 .rect-label .stage-label {
     border-radius: 4px !important;
 }
+@keyframes blinkDot {
+    0%, 100% { opacity: 0.15; transform: scale(0.8); }
+    50% { opacity: 0.7; transform: scale(1.1); }
+}
+.pathway-dot {
+    animation: blinkDot 2s infinite ease-in-out;
+    transform-box: fill-box;
+    transform-origin: center;
+}

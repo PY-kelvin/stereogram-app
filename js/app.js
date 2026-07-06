@@ -349,7 +349,28 @@ const Map = {
     pendingNodeClick: null,
     pendingExitClick: null,
 
+    drawPathDots() {
+        const pathIds = ['path-line-1', 'path-line-1b', 'path-line-2', 'path-line-2b', 'path-line-3', 'path-line-3b'];
+        pathIds.forEach(id => {
+            const path = document.getElementById(id);
+            if (!path) return;
+            const svg = path.ownerSVGElement;
+            const len = path.getTotalLength();
+            for (let i = 1; i <= 6; i++) {
+                const pt = path.getPointAtLength(len * (i / 7));
+                const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                dot.setAttribute("cx", pt.x);
+                dot.setAttribute("cy", pt.y);
+                dot.setAttribute("r", "1.2");
+                dot.setAttribute("fill", "#ffffff");
+                dot.setAttribute("class", "pathway-dot");
+                svg.appendChild(dot);
+            }
+        });
+    },
+
     init() {
+        this.drawPathDots();
         this.bindEvents();
         window.addEventListener('resize', () => {
             if (document.getElementById('screen-map-1').classList.contains('active') ||
