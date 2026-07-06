@@ -1444,8 +1444,13 @@ img.player-avatar {
     0%, 100% { opacity: 0.05; transform: scale(0.8); }
     50% { opacity: 0.4; transform: scale(1.1); }
 }
-.pathway-dot {
+.pathway-dot-html {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%); /* perfectly center it on its coordinate */
     animation: blinkDot 4s infinite ease-in-out;
-    transform-box: fill-box;
-    transform-origin: center;
+    pointer-events: none; /* so it doesn't block clicks */
 }

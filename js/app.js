@@ -355,16 +355,15 @@ const Map = {
             const path = document.getElementById(id);
             if (!path) return;
             const svg = path.ownerSVGElement;
+            const mapContent = svg.parentElement;
             const len = path.getTotalLength();
             for (let i = 1; i <= 6; i++) {
                 const pt = path.getPointAtLength(len * (i / 7));
-                const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                dot.setAttribute("cx", pt.x);
-                dot.setAttribute("cy", pt.y);
-                dot.setAttribute("r", "0.7");
-                dot.setAttribute("fill", "#ffffff");
-                dot.setAttribute("class", "pathway-dot");
-                svg.appendChild(dot);
+                const dot = document.createElement("div");
+                dot.className = "pathway-dot-html";
+                dot.style.left = pt.x + "%";
+                dot.style.top = pt.y + "%";
+                mapContent.appendChild(dot);
             }
         });
     },
