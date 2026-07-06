@@ -361,7 +361,7 @@ const Map = {
                 const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
                 dot.setAttribute("cx", pt.x);
                 dot.setAttribute("cy", pt.y);
-                dot.setAttribute("r", "1.2");
+                dot.setAttribute("r", "0.7");
                 dot.setAttribute("fill", "#ffffff");
                 dot.setAttribute("class", "pathway-dot");
                 svg.appendChild(dot);

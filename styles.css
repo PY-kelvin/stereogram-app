@@ -1,4 +1,4 @@
-﻿/* Local Font Hosting for Fredoka Variable Font */
+/* Local Font Hosting for Fredoka Variable Font */
 @font-face {
   font-family: 'Fredoka';
   font-style: normal;
@@ -1441,11 +1441,11 @@ img.player-avatar {
     border-radius: 4px !important;
 }
 @keyframes blinkDot {
-    0%, 100% { opacity: 0.15; transform: scale(0.8); }
-    50% { opacity: 0.7; transform: scale(1.1); }
+    0%, 100% { opacity: 0.05; transform: scale(0.8); }
+    50% { opacity: 0.4; transform: scale(1.1); }
 }
 .pathway-dot {
-    animation: blinkDot 2s infinite ease-in-out;
+    animation: blinkDot 4s infinite ease-in-out;
     transform-box: fill-box;
     transform-origin: center;
 }
