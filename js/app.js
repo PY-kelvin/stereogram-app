@@ -1175,6 +1175,13 @@ const Game = {
         document.getElementById('btn-back-map').addEventListener('click', () => {
             if (this.isPlaying || (this.timeLeft > 0 && this.timeLeft < 600)) {
                 this.pauseTimer();
+                
+                // If they played for at least 1 minute (timer dropped from 600 to 540 or below)
+                // grant the progress before exiting back to map
+                if (this.timeLeft <= 540) {
+                    this.grantSessionProgress();
+                }
+
                 const user = window.App.currentUser;
                 if (user) {
                     user.savedSession = {
@@ -1317,6 +1324,10 @@ const Game = {
             this.timeLeft--;
             this.updateTimerDisplay();
 
+            if (this.timeLeft === 540) {
+                this.grantSessionProgress();
+            }
+
             if (this.timeLeft <= 0) {
                 this.pauseTimer();
                 this.completeSession();
@@ -1383,11 +1394,7 @@ const Game = {
         }, 3000);
     },
 
-    completeSession() {
-        window.App.showNotification("Session Complete! Great Job!", "success");
-        
-        this.stopGame();
-
+    grantSessionProgress() {
         const user = window.App.currentUser;
         if (!user) return;
 
@@ -1422,7 +1429,18 @@ const Game = {
         }
 
         if (window.Progress) window.Progress.saveUser();
+
+        if (window.Map && oldPlays < newPlays) {
+            window.App.pendingAnimation = { stageNum, oldPlays, newPlays };
+        }
+    },
+
+    completeSession() {
+        window.App.showNotification("Session Complete! Great Job!", "success");
         
+        this.stopGame();
+        this.grantSessionProgress();
+
         let specificMap = null;
         if (this.currentStageNode) {
             if (this.currentStageNode.startsWith('1')) specificMap = 1;
@@ -1444,9 +1462,7 @@ const Game = {
         if (window.Confetti) window.Confetti.start();
         
         if (window.Map) {
-            if (oldPlays < newPlays) {
-                window.App.pendingAnimation = { stageNum, oldPlays, newPlays };
-            } else {
+            if (!window.App.pendingAnimation) {
                 window.Map.updateUI();
             }
         }
