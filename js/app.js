@@ -220,24 +220,7 @@ const Auth = {
             if (userStr) {
                 const user = JSON.parse(userStr);
                 
-                // Recalibrate stagePlays based strictly on true history (min 9.5 mins per day)
-                user.stagePlays = { 1: 0, 2: 0, 3: 0 };
-                if (user.sessionHistory) {
-                    const dailyMins = { 1: {}, 2: {}, 3: {} };
-                    user.sessionHistory.forEach(s => {
-                        const sNum = s.stageNum || 1;
-                        if (dailyMins[sNum]) {
-                            dailyMins[sNum][s.dateStr] = (dailyMins[sNum][s.dateStr] || 0) + (s.durationMins || 0);
-                        }
-                    });
-                    let p1 = 0, p2 = 0, p3 = 0;
-                    for (let d in dailyMins[1]) if (dailyMins[1][d] >= 9.5) p1++;
-                    for (let d in dailyMins[2]) if (dailyMins[2][d] >= 9.5) p2++;
-                    for (let d in dailyMins[3]) if (dailyMins[3][d] >= 9.5) p3++;
-                    user.stagePlays[1] = p1;
-                    user.stagePlays[2] = p2;
-                    user.stagePlays[3] = p3;
-                }
+                if (!user.stagePlays) user.stagePlays = { 1: 0, 2: 0, 3: 0 };
 
                 // Decoupled password logic
                 if (user.passwords && user.passwords.length > 0) {
