@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "EyeBuddy",
   "short_name": "EyeBuddy",
   "start_url": "./index.html",
@@ -9,7 +9,7 @@
   "description": "Stereogram Training App",
   "icons": [
     {
-      "src": "app_icon.png",
+      "src": "app_icon_v2.png",
       "sizes": "192x192 512x512",
       "type": "image/png",
       "purpose": "any maskable"
