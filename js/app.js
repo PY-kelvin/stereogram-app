@@ -140,7 +140,8 @@ const Auth = {
             stageDailyProgress: { 1: 0, 2: 0, 3: 0 },
             visualCount: { 1: 0, 2: 0, 3: 0 },
             lastVisitedNode: { 1: '1A', 2: 'entry2', 3: '3A' },
-            unlockedStages: [1]
+            unlockedStages: [1],
+            disclaimer_accepted: false
         };
 
         localStorage.setItem(`user_${username}`, JSON.stringify(userData));
@@ -206,7 +207,6 @@ const Auth = {
         }
 
         localStorage.removeItem('currentUser');
-        sessionStorage.removeItem('disclaimer_accepted');
         window.App.currentUser = null;
         window.App.showScreen('screen-auth');
         document.getElementById('form-login').reset();
@@ -1592,8 +1592,8 @@ const App = {
             Game.resizeCanvas();
         }
         
-        // Show disclaimer if navigating to main menu for the first time this session
-        if (screenId === 'screen-main-menu' && sessionStorage.getItem('disclaimer_accepted') !== 'true') {
+        // Show disclaimer if navigating to main menu and patient hasn't accepted it yet
+        if (screenId === 'screen-main-menu' && this.currentUser && !this.currentUser.disclaimer_accepted) {
             const disclaimerModal = document.getElementById('disclaimer-modal');
             if (disclaimerModal) {
                 disclaimerModal.classList.remove('hidden');
@@ -2121,7 +2121,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnAcceptDisclaimer = document.getElementById('btn-accept-disclaimer');
     if (btnAcceptDisclaimer) {
         btnAcceptDisclaimer.addEventListener('click', () => {
-            sessionStorage.setItem('disclaimer_accepted', 'true');
+            if (window.App.currentUser) {
+                window.App.currentUser.disclaimer_accepted = true;
+                if (window.Progress) window.Progress.saveUser();
+            }
             document.getElementById('disclaimer-modal').classList.add('hidden');
         });
     }
