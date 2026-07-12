@@ -913,7 +913,7 @@ const Map = {
         }
 
         // Unlock 3B
-        if (p3 >= 7) {
+        if (p3 >= 7 || this.hasPasswordBypass(42)) {
             document.getElementById('node-3b').classList.remove('locked');
             const l = document.getElementById('node-3b').querySelector('.lock-overlay');
             if (l) l.style.display = 'none';
