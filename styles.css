@@ -1424,7 +1424,7 @@ img.player-avatar {
     transition: transform 0.2s ease;
 }
 .stage-node:not(.locked):hover .stage-label {
-    transform: translateY(-5px);
+    /* Stable label, no transform on hover */
 }
 
 /* Base hover scaling applied above per-map */
