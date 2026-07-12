@@ -1407,7 +1407,7 @@ const Game = {
 
         // Reset daily progress if new day
         if (user.lastActivityDate !== dateStr) {
-            user.stageDailyProgress = { 1: 0, 2: 0, 3: 0 };
+            user.dailyProgressStage = null;
             user.lastActivityDate = dateStr;
             user.dailyProgress = 0;
         }
@@ -1421,9 +1421,14 @@ const Game = {
         let oldPlays = user.stagePlays[stageNum];
         let newPlays = oldPlays;
 
-        if (user.stageDailyProgress[stageNum] === 0) {
-            user.stageDailyProgress[stageNum] = 1;
+        if (user.dailyProgressStage !== stageNum) {
+            // Revoke star from previously played stage today
+            if (user.dailyProgressStage) {
+                user.stagePlays[user.dailyProgressStage] = Math.max(0, user.stagePlays[user.dailyProgressStage] - 1);
+            }
+            // Award star to current stage
             user.stagePlays[stageNum] += 1;
+            user.dailyProgressStage = stageNum;
             user.dailyProgress = 1;
             newPlays = user.stagePlays[stageNum];
         }
