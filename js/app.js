@@ -350,7 +350,7 @@ const Map = {
     pendingExitClick: null,
 
     drawPathDots() {
-        const pathIds = ['path-line-1', 'path-line-1b', 'path-line-2', 'path-line-2b', 'path-line-3', 'path-line-3b'];
+        const pathIds = ['path-line-1', 'path-line-1b', 'path-line-2', 'path-line-2b', 'path-line-3'];
         pathIds.forEach(id => {
             const path = document.getElementById(id);
             if (!path) return;
@@ -490,7 +490,6 @@ const Map = {
         // Exits
         document.getElementById('node-exit1').addEventListener('click', () => this.handleExitClick(1));
         document.getElementById('node-exit2').addEventListener('click', () => this.handleExitClick(2));
-        document.getElementById('node-exit3').addEventListener('click', () => this.handleExitClick(3));
 
         document.getElementById('btn-cancel-pre-override').addEventListener('click', () => {
             document.getElementById('pre-override-modal').classList.add('hidden');
@@ -914,16 +913,9 @@ const Map = {
         }
 
         // Unlock 3B
-        if (p3 >= 7 || this.hasPasswordBypass(42)) {
+        if (p3 >= 7) {
             document.getElementById('node-3b').classList.remove('locked');
             const l = document.getElementById('node-3b').querySelector('.lock-overlay');
-            if (l) l.style.display = 'none';
-        }
-
-        // Unlock Exit 3
-        if (p3 >= 14 || this.hasPasswordBypass(42)) {
-            document.getElementById('node-exit3').classList.remove('locked');
-            const l = document.getElementById('node-exit3').querySelector('.lock-overlay');
             if (l) l.style.display = 'none';
         }
 
@@ -1008,9 +1000,14 @@ const Map = {
                 localR = Math.max(0, 1 + (counts / 7)); // -7 => 0, 0 => 1
             } else {
                 let ratio = this.getMapPosition(counts);
-                pathId = ratio < 0.5 ? 'path-line-' + l : 'path-line-' + l + 'b';
-                localR = ratio < 0.5 ? ratio * 2 : (ratio - 0.5) * 2;
-                if (ratio === 1) { pathId = 'path-line-' + l + 'b'; localR = 1; }
+                if (l === 3 && ratio >= 0.5) {
+                    pathId = 'path-line-3';
+                    localR = 1;
+                } else {
+                    pathId = ratio < 0.5 ? 'path-line-' + l : 'path-line-' + l + 'b';
+                    localR = ratio < 0.5 ? ratio * 2 : (ratio - 0.5) * 2;
+                    if (ratio === 1) { pathId = 'path-line-' + l + 'b'; localR = 1; }
+                }
             }
             
             const path = document.getElementById(pathId);
