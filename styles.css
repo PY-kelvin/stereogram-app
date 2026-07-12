@@ -414,6 +414,10 @@ h1, h2, h3 {
     opacity: 0.7;
 }
 
+.invisible-node {
+    opacity: 0 !important;
+}
+
 
 .node-icon {
     width: 60px;
