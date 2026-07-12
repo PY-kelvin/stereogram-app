@@ -1179,9 +1179,9 @@ const Game = {
             if (this.isPlaying || (this.timeLeft > 0 && this.timeLeft < 600)) {
                 this.pauseTimer();
                 
-                // If they played for at least 1 minute (timer dropped from 600 to 540 or below)
+                // If they played for at least 5 minutes (timer dropped from 600 to 300 or below)
                 // grant the progress before exiting back to map
-                if (this.timeLeft <= 540) {
+                if (this.timeLeft <= 300) {
                     this.grantSessionProgress();
                 }
 
@@ -1327,7 +1327,7 @@ const Game = {
             this.timeLeft--;
             this.updateTimerDisplay();
 
-            if (this.timeLeft === 540) {
+            if (this.timeLeft === 300) {
                 this.grantSessionProgress();
             }
 
