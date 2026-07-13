@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="https://py-kelvin.github.io/stereogram-app/app_icon_v2.png?v=new2">
     <link rel="icon" href="https://py-kelvin.github.io/stereogram-app/app_icon_v2.png?v=new2">
 
-    <link rel="stylesheet" href="styles.css?v=409">
+    <link rel="stylesheet" href="styles.css?v=410">
 </head>
 
 <body>
@@ -629,7 +629,7 @@
         </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=409"></script>
+    <script src="js/app.js?v=410"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
@@ -652,6 +652,59 @@
                 });
             });
         }
+    </script>
+
+    <!-- Debug Drag Mode -->
+    <div id="drag-debug-ui" style="position: fixed; top: 10px; left: 10px; z-index: 9999; background: rgba(0,0,0,0.8); color: lime; padding: 10px; font-family: monospace; border-radius: 5px; pointer-events: none; font-size: 16px;">
+        Drag a node to see coords
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const ui = document.getElementById('drag-debug-ui');
+            document.querySelectorAll('.stage-node').forEach(node => {
+                const icon = node.querySelector('.node-icon');
+                if (icon) icon.style.border = '2px solid red';
+                
+                let isDragging = false;
+                
+                function startDrag(e) {
+                    isDragging = true;
+                }
+                
+                function doDrag(e) {
+                    if (!isDragging) return;
+                    e.preventDefault(); // prevent scroll
+                    
+                    let clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                    let clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                    
+                    let parent = node.parentElement;
+                    let pRect = parent.getBoundingClientRect();
+                    
+                    // The center of the node will match the pointer
+                    let leftPct = ((clientX - pRect.left) / pRect.width) * 100;
+                    let topPct = ((clientY - pRect.top) / pRect.height) * 100;
+                    
+                    node.style.left = leftPct.toFixed(1) + '%';
+                    node.style.top = topPct.toFixed(1) + '%';
+                    
+                    ui.innerHTML = `<b>${node.id}</b><br>left: ${leftPct.toFixed(1)}%<br>top: ${topPct.toFixed(1)}%`;
+                }
+                
+                function stopDrag() {
+                    isDragging = false;
+                }
+                
+                node.addEventListener('mousedown', startDrag);
+                node.addEventListener('touchstart', startDrag, {passive: false});
+                
+                document.addEventListener('mousemove', doDrag);
+                document.addEventListener('touchmove', doDrag, {passive: false});
+                
+                document.addEventListener('mouseup', stopDrag);
+                document.addEventListener('touchend', stopDrag);
+            });
+        });
     </script>
 <script src="js/simulate.js"></script>
 </body>
