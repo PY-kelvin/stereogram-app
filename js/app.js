@@ -1277,9 +1277,9 @@ const Game = {
         
         gameImageEl.src = imgPath;
 
-        let cmValue = 4.1026;
-        if (nodeName.startsWith('2')) cmValue = 5.1282;
-        if (nodeName.startsWith('3')) cmValue = 6.1538;
+        let cmValue = 4.0;
+        if (nodeName.startsWith('2')) cmValue = 5.0;
+        if (nodeName.startsWith('3')) cmValue = 6.0;
 
         const ratios = this.stageRatios[nodeName];
         if (ratios && ratios[imgPath]) {
