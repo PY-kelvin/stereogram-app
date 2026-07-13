@@ -430,8 +430,8 @@ h1, h2, h3 {
 }
 
 .debug-hotspot-horizontal {
-    width: 105px;
-    height: 32px;
+    width: 105.5px;
+    height: 32.5px;
     background-color: rgba(255, 0, 0, 0.4);
     border: 2px solid red;
     border-radius: 4px;
