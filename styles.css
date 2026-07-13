@@ -447,6 +447,7 @@ h1, h2, h3 {
     align-items: center;
     font-size: 2rem;
     transition: all 0.3s ease;
+    position: relative;
 }
 
 /* --- Magical Glowing Rings --- */
@@ -952,6 +953,9 @@ h1, h2, h3 {
 
 .lock-overlay {
     position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 100%;
     height: 100%;
     border-radius: 50%;
@@ -961,6 +965,10 @@ h1, h2, h3 {
     align-items: center;
     font-size: 1.5rem;
     color: white;
+    margin: 0;
+    padding: 0;
+    padding-bottom: 2px;
+    line-height: 1;
 }
 
 img.player-avatar {
