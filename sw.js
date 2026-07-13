@@ -1,4 +1,4 @@
-const CACHE_NAME = 'eyebuddy-cache-v397';
+const CACHE_NAME = 'eyebuddy-cache-v398';
 const urlsToCache = [
   './',
   './index.html?v=363',
@@ -23,9 +23,9 @@ const urlsToCache = [
   './stage 3/Stage 3C.png',
   './stage 3/stage 3D.png',
   './stage 3/stage 3E.png',
-  './Orthoptics%20Village.png',
-  './Orthoptics%20Town.png',
-  './Orthoptics%20City.png',
+  './Orthoptics%20Street.png',
+  './Eye%20Town.jpeg',
+  './Squint%20Quay.png',
   './avatar_cat.png',
   './avatar_cow.png',
   './avatar_hamster.png',
