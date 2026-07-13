@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="https://py-kelvin.github.io/stereogram-app/app_icon_v2.png?v=new2">
     <link rel="icon" href="https://py-kelvin.github.io/stereogram-app/app_icon_v2.png?v=new2">
 
-    <link rel="stylesheet" href="styles.css?v=413">
+    <link rel="stylesheet" href="styles.css?v=414">
 </head>
 
 <body>
@@ -629,7 +629,7 @@
         </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=413"></script>
+    <script src="js/app.js?v=414"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
@@ -656,6 +656,48 @@
 
     
 <script src="js/simulate.js"></script>
+
+<!-- Debug Drag Mode -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const nodes = document.querySelectorAll('.stage-node');
+        let draggedNode = null;
+        
+        nodes.forEach(node => {
+            node.addEventListener('mousedown', (e) => {
+                if (e.shiftKey) { // Hold shift to drag
+                    draggedNode = node;
+                    node.style.zIndex = 1000;
+                    e.preventDefault();
+                }
+            });
+        });
+        
+        document.addEventListener('mousemove', (e) => {
+            if (!draggedNode) return;
+            const mapContent = draggedNode.closest('.map-content');
+            if (!mapContent) return;
+            const rect = mapContent.getBoundingClientRect();
+            let x = ((e.clientX - rect.left) / rect.width) * 100;
+            let y = ((e.clientY - rect.top) / rect.height) * 100;
+            
+            // Clamp
+            x = Math.max(0, Math.min(100, x));
+            y = Math.max(0, Math.min(100, y));
+            
+            draggedNode.style.left = x.toFixed(1) + '%';
+            draggedNode.style.top = y.toFixed(1) + '%';
+        });
+        
+        document.addEventListener('mouseup', () => {
+            if (draggedNode) {
+                console.log(`Node ${draggedNode.id}: left: ${draggedNode.style.left}, top: ${draggedNode.style.top}`);
+                draggedNode.style.zIndex = '';
+                draggedNode = null;
+            }
+        });
+    });
+</script>
 </body>
 
 </html>
