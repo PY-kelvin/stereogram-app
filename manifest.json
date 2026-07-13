@@ -9,7 +9,7 @@
   "description": "Stereogram Training App",
   "icons": [
     {
-      "src": "./app_icon_v2.png",
+      "src": "https://py-kelvin.github.io/stereogram-app/app_icon_v2.png",
       "sizes": "192x192 512x512",
       "type": "image/png",
       "purpose": "any maskable"
