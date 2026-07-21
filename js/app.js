@@ -1114,17 +1114,18 @@ const Game = {
     uiTimeout: null,
     isDebugMode: false,
     isPreviewMode: false,
+    isDebugMoveImageMode: false, // false = Move Dots, true = Move Images
     currentDebugAnchors: { leftX: 0.5, leftY: 0.5, rightX: 0.5, rightY: 0.5 },
     
     stageImages: {
         '1A': [
-            { left: 'New stage 1/1a.png?v=7', right: 'New stage 1/1b.png?v=7' },
-            { left: 'New stage 1/2a.png?v=7', right: 'New stage 1/2b.png?v=7' },
-            { left: 'New stage 1/3a.png?v=7', right: 'New stage 1/3b.png?v=7' }
+            { left: 'New stage 1/1a.png?v=8', right: 'New stage 1/1b.png?v=8' },
+            { left: 'New stage 1/2a.png?v=8', right: 'New stage 1/2b.png?v=8' },
+            { left: 'New stage 1/3a.png?v=8', right: 'New stage 1/3b.png?v=8' }
         ],
         '1B': [
-            { left: 'New stage 1/4a.png?v=7', right: 'New stage 1/4b.png?v=7' },
-            { left: 'New stage 1/5a.png?v=7', right: 'New stage 1/5b.png?v=7' }
+            { left: 'New stage 1/4a.png?v=8', right: 'New stage 1/4b.png?v=8' },
+            { left: 'New stage 1/5a.png?v=8', right: 'New stage 1/5b.png?v=8' }
         ],
         '2A': ['stage 2/stage 2A.png?v=2', 'stage 2/stage 2B.png?v=2', 'stage 2/stage 2C.png?v=2'],
         '2B': ['stage 2/stage 2D.png?v=2', 'stage 2/stage 2E.png?v=2'],
@@ -1133,16 +1134,16 @@ const Game = {
     },
     
     visualAnchors: {
-        'New stage 1/1a.png?v=7': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/1b.png?v=7': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/2a.png?v=7': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/2b.png?v=7': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/3a.png?v=7': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/3b.png?v=7': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/4a.png?v=7': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/4b.png?v=7': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/5a.png?v=7': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/5b.png?v=7': { anchorX: 0.50, anchorY: 0.50 }
+        'New stage 1/1a.png?v=8': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/1b.png?v=8': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/2a.png?v=8': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/2b.png?v=8': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/3a.png?v=8': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/3b.png?v=8': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/4a.png?v=8': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/4b.png?v=8': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/5a.png?v=8': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/5b.png?v=8': { anchorX: 0.50, anchorY: 0.50 }
     },
 
     stageRatios: {
@@ -1276,10 +1277,23 @@ const Game = {
             this.currentDebugAnchors.rightY = parseFloat(document.getElementById('slider-right-y').value);
             
             document.getElementById('debug-json-output').innerText = 
-                `{ anchorX: ${this.currentDebugAnchors.leftX.toFixed(2)}, anchorY: ${this.currentDebugAnchors.leftY.toFixed(2)} } // left\n{ anchorX: ${this.currentDebugAnchors.rightX.toFixed(2)}, anchorY: ${this.currentDebugAnchors.rightY.toFixed(2)} } // right`;
-            
-            this.loadImage(this.currentStageNode);
+                `Left Image:   ( ${gameImageLeft.offsetLeft.toFixed(1)}, ${gameImageLeft.offsetTop.toFixed(1)} )\n` +
+                `Right Image:  ( ${gameImageRight.offsetLeft.toFixed(1)}, ${gameImageRight.offsetTop.toFixed(1)} )\n` +
+                `Left Dot:     ( ${window._lastLeftDotX?.toFixed(1)}, ${window._lastLeftDotY?.toFixed(1)} )\n` +
+                `Right Dot:    ( ${window._lastRightDotX?.toFixed(1)}, ${window._lastRightDotY?.toFixed(1)} )\n` +
+                `\nFINAL JSON:\n` +
+                `{ anchorX: ${this.currentDebugAnchors.leftX.toFixed(2)}, anchorY: ${this.currentDebugAnchors.leftY.toFixed(2)} } // left\n` +
+                `{ anchorX: ${this.currentDebugAnchors.rightX.toFixed(2)}, anchorY: ${this.currentDebugAnchors.rightY.toFixed(2)} } // right`;
         };
+
+        const btnToggleMode = document.getElementById('btn-toggle-debug-mode');
+        if (btnToggleMode) {
+            btnToggleMode.addEventListener('click', () => {
+                this.isDebugMoveImageMode = !this.isDebugMoveImageMode;
+                btnToggleMode.innerText = this.isDebugMoveImageMode ? 'Mode: Move Images (Dots Fixed)' : 'Mode: Move Dots (Images Fixed)';
+                this.loadImage(this.currentStageNode);
+            });
+        }
 
         const setupDebugControl = (id, prop, isInc) => {
             document.getElementById(id).addEventListener('click', () => {
@@ -1412,20 +1426,35 @@ const Game = {
                 let leftX, leftY, rightX, rightY;
 
                 if (this.isDebugMode && !this.isPreviewMode) {
-                    // Stationary image mode
-                    gameImageLeft.style.left = `${targetLeftX - (0.5 * gameImageLeft.clientWidth)}px`;
-                    gameImageLeft.style.top = `${centerY - (0.5 * gameImageLeft.clientHeight)}px`;
-                    
-                    gameImageRight.style.left = `${targetRightX - (0.5 * gameImageRight.clientWidth)}px`;
-                    gameImageRight.style.top = `${centerY - (0.5 * gameImageRight.clientHeight)}px`;
+                    if (this.isDebugMoveImageMode) {
+                        // Mode: Move Images (Dots Fixed at 4cm targets)
+                        leftX = targetLeftX;
+                        leftY = centerY;
+                        rightX = targetRightX;
+                        rightY = centerY;
 
-                    leftX = targetLeftX + (anchorLeft.anchorX - 0.5) * gameImageLeft.clientWidth;
-                    leftY = centerY + (anchorLeft.anchorY - 0.5) * gameImageLeft.clientHeight;
-                    
-                    rightX = targetRightX + (anchorRight.anchorX - 0.5) * gameImageRight.clientWidth;
-                    rightY = centerY + (anchorRight.anchorY - 0.5) * gameImageRight.clientHeight;
+                        gameImageLeft.style.left = `${targetLeftX - (anchorLeft.anchorX * gameImageLeft.clientWidth)}px`;
+                        gameImageLeft.style.top = `${centerY - (anchorLeft.anchorY * gameImageLeft.clientHeight)}px`;
+
+                        gameImageRight.style.left = `${targetRightX - (anchorRight.anchorX * gameImageRight.clientWidth)}px`;
+                        gameImageRight.style.top = `${centerY - (anchorRight.anchorY * gameImageRight.clientHeight)}px`;
+
+                    } else {
+                        // Mode: Move Dots (Images Fixed at their geometric centers)
+                        gameImageLeft.style.left = `${targetLeftX - (0.5 * gameImageLeft.clientWidth)}px`;
+                        gameImageLeft.style.top = `${centerY - (0.5 * gameImageLeft.clientHeight)}px`;
+                        
+                        gameImageRight.style.left = `${targetRightX - (0.5 * gameImageRight.clientWidth)}px`;
+                        gameImageRight.style.top = `${centerY - (0.5 * gameImageRight.clientHeight)}px`;
+
+                        leftX = targetLeftX + (anchorLeft.anchorX - 0.5) * gameImageLeft.clientWidth;
+                        leftY = centerY + (anchorLeft.anchorY - 0.5) * gameImageLeft.clientHeight;
+                        
+                        rightX = targetRightX + (anchorRight.anchorX - 0.5) * gameImageRight.clientWidth;
+                        rightY = centerY + (anchorRight.anchorY - 0.5) * gameImageRight.clientHeight;
+                    }
                 } else {
-                    // Normal / Preview mode
+                    // Normal / Preview mode (dots unlinked text hidden)
                     gameImageLeft.style.left = `${targetLeftX - (anchorLeft.anchorX * gameImageLeft.clientWidth)}px`;
                     gameImageLeft.style.top = `${centerY - (anchorLeft.anchorY * gameImageLeft.clientHeight)}px`;
 
@@ -1436,6 +1465,29 @@ const Game = {
                     leftY = centerY;
                     rightX = targetRightX;
                     rightY = centerY;
+                }
+
+                // Store dots for JSON readout
+                window._lastLeftDotX = leftX;
+                window._lastLeftDotY = leftY;
+                window._lastRightDotX = rightX;
+                window._lastRightDotY = rightY;
+
+                // Fire an update to the text box so coords stay in sync (wrap in try-catch to avoid loop)
+                if (this.isDebugMode) {
+                    try {
+                        const jsonOut = document.getElementById('debug-json-output');
+                        if (jsonOut) {
+                            jsonOut.innerText = 
+                                `Left Image:   ( ${gameImageLeft.offsetLeft.toFixed(1)}, ${gameImageLeft.offsetTop.toFixed(1)} )\n` +
+                                `Right Image:  ( ${gameImageRight.offsetLeft.toFixed(1)}, ${gameImageRight.offsetTop.toFixed(1)} )\n` +
+                                `Left Dot:     ( ${window._lastLeftDotX?.toFixed(1)}, ${window._lastLeftDotY?.toFixed(1)} )\n` +
+                                `Right Dot:    ( ${window._lastRightDotX?.toFixed(1)}, ${window._lastRightDotY?.toFixed(1)} )\n` +
+                                `\nFINAL JSON:\n` +
+                                `{ anchorX: ${anchorLeft.anchorX.toFixed(2)}, anchorY: ${anchorLeft.anchorY.toFixed(2)} } // left\n` +
+                                `{ anchorX: ${anchorRight.anchorX.toFixed(2)}, anchorY: ${anchorRight.anchorY.toFixed(2)} } // right`;
+                        }
+                    } catch(e){}
                 }
 
                 // Draw debug mode

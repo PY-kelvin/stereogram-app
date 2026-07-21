@@ -507,9 +507,12 @@
 
             <!-- Debug Control Panel -->
             <div id="debug-panel">
+                <div style="display: flex; justify-content: center; margin-bottom: 5px;">
+                    <button id="btn-toggle-debug-mode" style="padding: 5px 10px; border-radius: 4px; border: 1px solid #333; background: #fff;">Mode: Move Dots (Images Fixed)</button>
+                </div>
                 <div class="debug-row">
                     <div class="debug-controls">
-                        <label>Left Image Anchor</label>
+                        <label>Left Anchor</label>
                         <div class="debug-slider-group">
                             <span>X:</span>
                             <button id="btn-left-x-dec">-</button>
@@ -524,7 +527,7 @@
                         </div>
                     </div>
                     <div class="debug-controls">
-                        <label>Right Image Anchor</label>
+                        <label>Right Anchor</label>
                         <div class="debug-slider-group">
                             <span>X:</span>
                             <button id="btn-right-x-dec">-</button>
@@ -539,7 +542,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="debug-json" id="debug-json-output">
+                <div class="debug-json" id="debug-json-output" style="white-space: pre-wrap; font-size: 11px; text-align: left;">
                     { anchorX: 0.50, anchorY: 0.50 }
                 </div>
                 <button id="btn-debug-preview">HOLD TO PREVIEW 4CM ALIGNMENT</button>
@@ -673,7 +676,7 @@
         </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=417"></script>
+    <script src="js/app.js?v=418"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
