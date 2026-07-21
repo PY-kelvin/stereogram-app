@@ -1,4 +1,4 @@
-const CACHE_NAME = 'eyebuddy-cache-v417';
+const CACHE_NAME = 'eyebuddy-cache-v423';
 const urlsToCache = [
   './',
   './index.html?v=363',

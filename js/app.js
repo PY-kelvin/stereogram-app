@@ -1114,12 +1114,32 @@ const Game = {
     uiTimeout: null,
     
     stageImages: {
-        '1A': ['stage 1/stage 1A.png?v=4', 'stage 1/stage 1B.png?v=4', 'stage 1/stage 1C.png?v=4'],
-        '1B': ['stage 1/Stage 1D.png?v=4', 'stage 1/Stage 1E.png?v=4'],
+        '1A': [
+            { left: 'New Stage 1/1a.png?v=5', right: 'New Stage 1/1b.png?v=5' },
+            { left: 'New Stage 1/2a.png?v=5', right: 'New Stage 1/2b.png?v=5' },
+            { left: 'New Stage 1/3a.png?v=5', right: 'New Stage 1/3b.png?v=5' }
+        ],
+        '1B': [
+            { left: 'New Stage 1/4a.png?v=5', right: 'New Stage 1/4b.png?v=5' },
+            { left: 'New Stage 1/5a.png?v=5', right: 'New Stage 1/5b.png?v=5' }
+        ],
         '2A': ['stage 2/stage 2A.png?v=2', 'stage 2/stage 2B.png?v=2', 'stage 2/stage 2C.png?v=2'],
         '2B': ['stage 2/stage 2D.png?v=2', 'stage 2/stage 2E.png?v=2'],
         '3A': ['stage 3/Stage 3C.png?v=2', 'stage 3/stage 3A.png?v=2', 'stage 3/stage 3B.png?v=2'],
         '3B': ['stage 3/stage 3D.png?v=2', 'stage 3/stage 3E.png?v=2']
+    },
+    
+    visualAnchors: {
+        'New Stage 1/1a.png?v=5': { anchorX: 0.50, anchorY: 0.50 },
+        'New Stage 1/1b.png?v=5': { anchorX: 0.50, anchorY: 0.50 },
+        'New Stage 1/2a.png?v=5': { anchorX: 0.50, anchorY: 0.50 },
+        'New Stage 1/2b.png?v=5': { anchorX: 0.50, anchorY: 0.50 },
+        'New Stage 1/3a.png?v=5': { anchorX: 0.50, anchorY: 0.50 },
+        'New Stage 1/3b.png?v=5': { anchorX: 0.50, anchorY: 0.50 },
+        'New Stage 1/4a.png?v=5': { anchorX: 0.50, anchorY: 0.50 },
+        'New Stage 1/4b.png?v=5': { anchorX: 0.50, anchorY: 0.50 },
+        'New Stage 1/5a.png?v=5': { anchorX: 0.50, anchorY: 0.50 },
+        'New Stage 1/5b.png?v=5': { anchorX: 0.50, anchorY: 0.50 }
     },
 
     stageRatios: {
@@ -1272,32 +1292,93 @@ const Game = {
 
     loadImage(nodeName) {
         const images = this.stageImages[nodeName] || this.stageImages['1A'];
-        const imgPath = images[this.currentImageIndex];
-        const gameImageEl = document.getElementById('game-image');
+        const imgData = images[this.currentImageIndex];
         
-        gameImageEl.src = imgPath;
+        const gameImageEl = document.getElementById('game-image');
+        const gameImageLeft = document.getElementById('game-image-left');
+        const gameImageRight = document.getElementById('game-image-right');
+        const debugCanvas = document.getElementById('debug-canvas');
+        const ctx = debugCanvas.getContext('2d');
+        ctx.clearRect(0, 0, debugCanvas.width, debugCanvas.height);
 
         let cmValue = 4.0;
         if (nodeName.startsWith('2')) cmValue = 5.0;
         if (nodeName.startsWith('3')) cmValue = 6.0;
+        const ppcm = window.App.pixelsPerCm || 37.795;
+        const halfSep = (cmValue / 2) * ppcm;
+        const fullSep = cmValue * ppcm;
 
-        const ratios = this.stageRatios[nodeName];
-        if (ratios && ratios[imgPath]) {
-            const ratio = ratios[imgPath];
-            const ppcm = window.App.pixelsPerCm || 37.795;
-            const targetWidthPx = (cmValue * ppcm) / ratio;
-            gameImageEl.style.width = targetWidthPx + 'px';
-            gameImageEl.style.height = 'auto';
-            gameImageEl.style.maxWidth = 'none';
-            gameImageEl.style.maxHeight = 'none';
-            gameImageEl.style.flexShrink = '0';
-            gameImageEl.style.objectFit = 'fill';
+        if (typeof imgData === 'object' && imgData.left && imgData.right) {
+            gameImageEl.style.display = 'none';
+            gameImageLeft.style.display = 'block';
+            gameImageRight.style.display = 'block';
+            
+            gameImageLeft.src = imgData.left;
+            gameImageRight.src = imgData.right;
+
+            // Use requestAnimationFrame to ensure the images are rendered before positioning
+            requestAnimationFrame(() => {
+                const playArea = document.getElementById('game-image-container');
+                const centerX = playArea.clientWidth / 2;
+                const centerY = playArea.clientHeight / 2;
+
+                const targetLeftX = centerX - halfSep;
+                const targetRightX = centerX + halfSep;
+
+                const anchorLeft = this.visualAnchors[imgData.left] || { anchorX: 0.5, anchorY: 0.5 };
+                const anchorRight = this.visualAnchors[imgData.right] || { anchorX: 0.5, anchorY: 0.5 };
+
+                gameImageLeft.style.left = `${targetLeftX - (anchorLeft.anchorX * gameImageLeft.clientWidth)}px`;
+                gameImageLeft.style.top = `${centerY - (anchorLeft.anchorY * gameImageLeft.clientHeight)}px`;
+
+                gameImageRight.style.left = `${targetRightX - (anchorRight.anchorX * gameImageRight.clientWidth)}px`;
+                gameImageRight.style.top = `${centerY - (anchorRight.anchorY * gameImageRight.clientHeight)}px`;
+
+                // Draw debug mode
+                debugCanvas.width = playArea.clientWidth;
+                debugCanvas.height = playArea.clientHeight;
+
+                const leftX = targetLeftX;
+                const leftY = centerY;
+                const rightX = targetRightX;
+                const rightY = centerY;
+
+                ctx.clearRect(0, 0, debugCanvas.width, debugCanvas.height);
+                ctx.fillStyle = 'red';
+                ctx.beginPath(); ctx.arc(leftX, leftY, 4, 0, 2*Math.PI); ctx.fill();
+                ctx.beginPath(); ctx.arc(rightX, rightY, 4, 0, 2*Math.PI); ctx.fill();
+                
+                ctx.strokeStyle = 'red';
+                ctx.beginPath(); ctx.moveTo(leftX, leftY); ctx.lineTo(rightX, rightY); ctx.stroke();
+                
+                ctx.fillStyle = 'red';
+                ctx.font = '12px Arial';
+                ctx.fillText(`Target C-to-C: ${fullSep.toFixed(1)}px (${cmValue}cm)`, 10, 20);
+                ctx.fillText(`Pixels Per Cm: ${ppcm.toFixed(1)}px`, 10, 35);
+            });
         } else {
-            gameImageEl.style.width = '';
-            gameImageEl.style.height = '';
-            gameImageEl.style.maxWidth = '';
-            gameImageEl.style.maxHeight = '';
-            gameImageEl.style.objectFit = '';
+            gameImageLeft.style.display = 'none';
+            gameImageRight.style.display = 'none';
+            gameImageEl.style.display = 'block';
+            gameImageEl.src = imgData;
+
+            const ratios = this.stageRatios[nodeName];
+            if (ratios && ratios[imgData]) {
+                const ratio = ratios[imgData];
+                const targetWidthPx = fullSep / ratio;
+                gameImageEl.style.width = targetWidthPx + 'px';
+                gameImageEl.style.height = 'auto';
+                gameImageEl.style.maxWidth = 'none';
+                gameImageEl.style.maxHeight = 'none';
+                gameImageEl.style.flexShrink = '0';
+                gameImageEl.style.objectFit = 'fill';
+            } else {
+                gameImageEl.style.width = '';
+                gameImageEl.style.height = '';
+                gameImageEl.style.maxWidth = '';
+                gameImageEl.style.maxHeight = '';
+                gameImageEl.style.objectFit = '';
+            }
         }
     },
 

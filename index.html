@@ -491,9 +491,12 @@
                 </div>
             </header>
 
-            <div class="canvas-container">
+            <div class="canvas-container" id="game-image-container" style="position: relative;">
                 <button id="btn-img-prev" class="btn-image-nav game-ui">&lt;</button>
                 <img id="game-image" src="" alt="Stereogram">
+                <img id="game-image-left" src="" alt="Stereogram Left" style="position: absolute; display: none;">
+                <img id="game-image-right" src="" alt="Stereogram Right" style="position: absolute; display: none;">
+                <canvas id="debug-canvas" style="position: absolute; top: 0; left: 0; pointer-events: none; z-index: 10;"></canvas>
                 <button id="btn-img-next" class="btn-image-nav game-ui">&gt;</button>
             </div>
 
