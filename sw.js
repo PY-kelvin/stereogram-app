@@ -1,4 +1,4 @@
-const CACHE_NAME = 'eyebuddy-cache-v423';
+const CACHE_NAME = 'eyebuddy-cache-v424';
 const urlsToCache = [
   './',
   './index.html?v=363',
@@ -8,6 +8,16 @@ const urlsToCache = [
   './music/Stereogram%20music.mp4',
   './manifest.json',
   './app_icon_v2.png',
+  './New stage 1/1a.png',
+  './New stage 1/1b.png',
+  './New stage 1/2a.png',
+  './New stage 1/2b.png',
+  './New stage 1/3a.png',
+  './New stage 1/3b.png',
+  './New stage 1/4a.png',
+  './New stage 1/4b.png',
+  './New stage 1/5a.png',
+  './New stage 1/5b.png',
   './stage 1/stage 1A.png',
   './stage 1/stage 1B.png',
   './stage 1/stage 1C.png',
