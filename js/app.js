@@ -1112,16 +1112,19 @@ const Game = {
     currentImageIndex: 0,
     hasStartedCurrentSession: false,
     uiTimeout: null,
+    isDebugMode: false,
+    isPreviewMode: false,
+    currentDebugAnchors: { leftX: 0.5, leftY: 0.5, rightX: 0.5, rightY: 0.5 },
     
     stageImages: {
         '1A': [
-            { left: 'New stage 1/1a.png?v=6', right: 'New stage 1/1b.png?v=6' },
-            { left: 'New stage 1/2a.png?v=6', right: 'New stage 1/2b.png?v=6' },
-            { left: 'New stage 1/3a.png?v=6', right: 'New stage 1/3b.png?v=6' }
+            { left: 'New stage 1/1a.png?v=7', right: 'New stage 1/1b.png?v=7' },
+            { left: 'New stage 1/2a.png?v=7', right: 'New stage 1/2b.png?v=7' },
+            { left: 'New stage 1/3a.png?v=7', right: 'New stage 1/3b.png?v=7' }
         ],
         '1B': [
-            { left: 'New stage 1/4a.png?v=6', right: 'New stage 1/4b.png?v=6' },
-            { left: 'New stage 1/5a.png?v=6', right: 'New stage 1/5b.png?v=6' }
+            { left: 'New stage 1/4a.png?v=7', right: 'New stage 1/4b.png?v=7' },
+            { left: 'New stage 1/5a.png?v=7', right: 'New stage 1/5b.png?v=7' }
         ],
         '2A': ['stage 2/stage 2A.png?v=2', 'stage 2/stage 2B.png?v=2', 'stage 2/stage 2C.png?v=2'],
         '2B': ['stage 2/stage 2D.png?v=2', 'stage 2/stage 2E.png?v=2'],
@@ -1130,16 +1133,16 @@ const Game = {
     },
     
     visualAnchors: {
-        'New stage 1/1a.png?v=6': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/1b.png?v=6': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/2a.png?v=6': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/2b.png?v=6': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/3a.png?v=6': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/3b.png?v=6': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/4a.png?v=6': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/4b.png?v=6': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/5a.png?v=6': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/5b.png?v=6': { anchorX: 0.50, anchorY: 0.50 }
+        'New stage 1/1a.png?v=7': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/1b.png?v=7': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/2a.png?v=7': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/2b.png?v=7': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/3a.png?v=7': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/3b.png?v=7': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/4a.png?v=7': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/4b.png?v=7': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/5a.png?v=7': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/5b.png?v=7': { anchorX: 0.50, anchorY: 0.50 }
     },
 
     stageRatios: {
@@ -1240,6 +1243,79 @@ const Game = {
             }
         });
 
+        const debugPanel = document.getElementById('debug-panel');
+        document.getElementById('btn-toggle-debug').addEventListener('click', () => {
+            this.isDebugMode = !this.isDebugMode;
+            debugPanel.style.display = this.isDebugMode ? 'flex' : 'none';
+            if (this.isDebugMode) {
+                // Initialize sliders from current visualAnchors if available
+                const images = this.stageImages[this.currentStageNode];
+                if (images && images.length > 0) {
+                    const imgData = images[this.currentImageIndex];
+                    if (imgData && imgData.left && imgData.right) {
+                        const leftAnchor = this.visualAnchors[imgData.left] || { anchorX: 0.5, anchorY: 0.5 };
+                        const rightAnchor = this.visualAnchors[imgData.right] || { anchorX: 0.5, anchorY: 0.5 };
+                        this.currentDebugAnchors.leftX = leftAnchor.anchorX;
+                        this.currentDebugAnchors.leftY = leftAnchor.anchorY;
+                        this.currentDebugAnchors.rightX = rightAnchor.anchorX;
+                        this.currentDebugAnchors.rightY = rightAnchor.anchorY;
+                        document.getElementById('slider-left-x').value = leftAnchor.anchorX;
+                        document.getElementById('slider-left-y').value = leftAnchor.anchorY;
+                        document.getElementById('slider-right-x').value = rightAnchor.anchorX;
+                        document.getElementById('slider-right-y').value = rightAnchor.anchorY;
+                    }
+                }
+            }
+            this.loadImage(this.currentStageNode);
+        });
+
+        const updateDebugAnchors = () => {
+            this.currentDebugAnchors.leftX = parseFloat(document.getElementById('slider-left-x').value);
+            this.currentDebugAnchors.leftY = parseFloat(document.getElementById('slider-left-y').value);
+            this.currentDebugAnchors.rightX = parseFloat(document.getElementById('slider-right-x').value);
+            this.currentDebugAnchors.rightY = parseFloat(document.getElementById('slider-right-y').value);
+            
+            document.getElementById('debug-json-output').innerText = 
+                `{ anchorX: ${this.currentDebugAnchors.leftX.toFixed(2)}, anchorY: ${this.currentDebugAnchors.leftY.toFixed(2)} } // left\n{ anchorX: ${this.currentDebugAnchors.rightX.toFixed(2)}, anchorY: ${this.currentDebugAnchors.rightY.toFixed(2)} } // right`;
+            
+            this.loadImage(this.currentStageNode);
+        };
+
+        const setupDebugControl = (id, prop, isInc) => {
+            document.getElementById(id).addEventListener('click', () => {
+                const slider = document.getElementById(id.replace('-dec', '').replace('-inc', 'slider-').replace('btn-', 'slider-'));
+                let val = parseFloat(slider.value);
+                val += (isInc ? 0.01 : -0.01);
+                val = Math.max(0, Math.min(1, val));
+                slider.value = val.toFixed(2);
+                updateDebugAnchors();
+            });
+        };
+
+        setupDebugControl('btn-left-x-dec', 'leftX', false);
+        setupDebugControl('btn-left-x-inc', 'leftX', true);
+        setupDebugControl('btn-left-y-dec', 'leftY', false);
+        setupDebugControl('btn-left-y-inc', 'leftY', true);
+        setupDebugControl('btn-right-x-dec', 'rightX', false);
+        setupDebugControl('btn-right-x-inc', 'rightX', true);
+        setupDebugControl('btn-right-y-dec', 'rightY', false);
+        setupDebugControl('btn-right-y-inc', 'rightY', true);
+
+        ['slider-left-x', 'slider-left-y', 'slider-right-x', 'slider-right-y'].forEach(id => {
+            document.getElementById(id).addEventListener('input', updateDebugAnchors);
+        });
+
+        const btnPreview = document.getElementById('btn-debug-preview');
+        const startPreview = () => { this.isPreviewMode = true; this.loadImage(this.currentStageNode); };
+        const stopPreview = () => { this.isPreviewMode = false; this.loadImage(this.currentStageNode); };
+        
+        btnPreview.addEventListener('mousedown', startPreview);
+        btnPreview.addEventListener('touchstart', startPreview, {passive: true});
+        btnPreview.addEventListener('mouseup', stopPreview);
+        btnPreview.addEventListener('mouseleave', stopPreview);
+        btnPreview.addEventListener('touchend', stopPreview);
+
+
         document.getElementById('btn-img-prev').addEventListener('click', () => {
             const images = this.stageImages[this.currentStageNode];
             let maxCount = images.length;
@@ -1325,23 +1401,46 @@ const Game = {
                 const targetLeftX = centerX - halfSep;
                 const targetRightX = centerX + halfSep;
 
-                const anchorLeft = this.visualAnchors[imgData.left] || { anchorX: 0.5, anchorY: 0.5 };
-                const anchorRight = this.visualAnchors[imgData.right] || { anchorX: 0.5, anchorY: 0.5 };
+                let anchorLeft = this.visualAnchors[imgData.left] || { anchorX: 0.5, anchorY: 0.5 };
+                let anchorRight = this.visualAnchors[imgData.right] || { anchorX: 0.5, anchorY: 0.5 };
 
-                gameImageLeft.style.left = `${targetLeftX - (anchorLeft.anchorX * gameImageLeft.clientWidth)}px`;
-                gameImageLeft.style.top = `${centerY - (anchorLeft.anchorY * gameImageLeft.clientHeight)}px`;
+                if (this.isDebugMode) {
+                    anchorLeft = { anchorX: this.currentDebugAnchors.leftX, anchorY: this.currentDebugAnchors.leftY };
+                    anchorRight = { anchorX: this.currentDebugAnchors.rightX, anchorY: this.currentDebugAnchors.rightY };
+                }
 
-                gameImageRight.style.left = `${targetRightX - (anchorRight.anchorX * gameImageRight.clientWidth)}px`;
-                gameImageRight.style.top = `${centerY - (anchorRight.anchorY * gameImageRight.clientHeight)}px`;
+                let leftX, leftY, rightX, rightY;
+
+                if (this.isDebugMode && !this.isPreviewMode) {
+                    // Stationary image mode
+                    gameImageLeft.style.left = `${targetLeftX - (0.5 * gameImageLeft.clientWidth)}px`;
+                    gameImageLeft.style.top = `${centerY - (0.5 * gameImageLeft.clientHeight)}px`;
+                    
+                    gameImageRight.style.left = `${targetRightX - (0.5 * gameImageRight.clientWidth)}px`;
+                    gameImageRight.style.top = `${centerY - (0.5 * gameImageRight.clientHeight)}px`;
+
+                    leftX = targetLeftX + (anchorLeft.anchorX - 0.5) * gameImageLeft.clientWidth;
+                    leftY = centerY + (anchorLeft.anchorY - 0.5) * gameImageLeft.clientHeight;
+                    
+                    rightX = targetRightX + (anchorRight.anchorX - 0.5) * gameImageRight.clientWidth;
+                    rightY = centerY + (anchorRight.anchorY - 0.5) * gameImageRight.clientHeight;
+                } else {
+                    // Normal / Preview mode
+                    gameImageLeft.style.left = `${targetLeftX - (anchorLeft.anchorX * gameImageLeft.clientWidth)}px`;
+                    gameImageLeft.style.top = `${centerY - (anchorLeft.anchorY * gameImageLeft.clientHeight)}px`;
+
+                    gameImageRight.style.left = `${targetRightX - (anchorRight.anchorX * gameImageRight.clientWidth)}px`;
+                    gameImageRight.style.top = `${centerY - (anchorRight.anchorY * gameImageRight.clientHeight)}px`;
+
+                    leftX = targetLeftX;
+                    leftY = centerY;
+                    rightX = targetRightX;
+                    rightY = centerY;
+                }
 
                 // Draw debug mode
                 debugCanvas.width = playArea.clientWidth;
                 debugCanvas.height = playArea.clientHeight;
-
-                const leftX = targetLeftX;
-                const leftY = centerY;
-                const rightX = targetRightX;
-                const rightY = centerY;
 
                 ctx.clearRect(0, 0, debugCanvas.width, debugCanvas.height);
                 ctx.fillStyle = 'red';
@@ -1353,8 +1452,12 @@ const Game = {
                 
                 ctx.fillStyle = 'red';
                 ctx.font = '12px Arial';
-                ctx.fillText(`Target C-to-C: ${fullSep.toFixed(1)}px (${cmValue}cm)`, 10, 20);
-                ctx.fillText(`Pixels Per Cm: ${ppcm.toFixed(1)}px`, 10, 35);
+                if (this.isDebugMode && !this.isPreviewMode) {
+                    ctx.fillText(`TUNING MODE - DOTS UNLINKED`, 10, 20);
+                } else {
+                    ctx.fillText(`Target C-to-C: ${fullSep.toFixed(1)}px (${cmValue}cm)`, 10, 20);
+                    ctx.fillText(`Pixels Per Cm: ${ppcm.toFixed(1)}px`, 10, 35);
+                }
             });
         } else {
             gameImageLeft.style.display = 'none';

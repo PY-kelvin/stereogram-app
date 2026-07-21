@@ -502,6 +502,47 @@
 
             <div class="controls-overlay game-ui">
                 <button id="btn-toggle-timer" class="btn btn-primary" title="Pause Exercise">⏸</button>
+                <button id="btn-toggle-debug" class="btn btn-secondary" style="margin-left: 10px;">🛠 Tune Anchors</button>
+            </div>
+
+            <!-- Debug Control Panel -->
+            <div id="debug-panel">
+                <div class="debug-row">
+                    <div class="debug-controls">
+                        <label>Left Image Anchor</label>
+                        <div class="debug-slider-group">
+                            <span>X:</span>
+                            <button id="btn-left-x-dec">-</button>
+                            <input type="range" id="slider-left-x" min="0" max="1" step="0.01" value="0.5">
+                            <button id="btn-left-x-inc">+</button>
+                        </div>
+                        <div class="debug-slider-group">
+                            <span>Y:</span>
+                            <button id="btn-left-y-dec">-</button>
+                            <input type="range" id="slider-left-y" min="0" max="1" step="0.01" value="0.5">
+                            <button id="btn-left-y-inc">+</button>
+                        </div>
+                    </div>
+                    <div class="debug-controls">
+                        <label>Right Image Anchor</label>
+                        <div class="debug-slider-group">
+                            <span>X:</span>
+                            <button id="btn-right-x-dec">-</button>
+                            <input type="range" id="slider-right-x" min="0" max="1" step="0.01" value="0.5">
+                            <button id="btn-right-x-inc">+</button>
+                        </div>
+                        <div class="debug-slider-group">
+                            <span>Y:</span>
+                            <button id="btn-right-y-dec">-</button>
+                            <input type="range" id="slider-right-y" min="0" max="1" step="0.01" value="0.5">
+                            <button id="btn-right-y-inc">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="debug-json" id="debug-json-output">
+                    { anchorX: 0.50, anchorY: 0.50 }
+                </div>
+                <button id="btn-debug-preview">HOLD TO PREVIEW 4CM ALIGNMENT</button>
             </div>
         </section>
 
@@ -632,7 +673,7 @@
         </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=416"></script>
+    <script src="js/app.js?v=417"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
@@ -646,7 +687,6 @@
                 });
 
                 // When a new service worker takes over, automatically reload the page
-                // This ensures the user instantly sees the new app updates without needing to clear cache manually!
                 let refreshing = false;
                 navigator.serviceWorker.addEventListener('controllerchange', () => {
                     if (refreshing) return;

@@ -734,6 +734,74 @@ h1, h2, h3 {
     width: auto;
     object-fit: contain;
     pointer-events: none;
+    mix-blend-mode: multiply;
+}
+
+#debug-panel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    border-top: 2px solid #ccc;
+    padding: 10px;
+    z-index: 100;
+    font-size: 14px;
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+}
+
+.debug-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.debug-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.debug-controls label {
+    font-weight: bold;
+}
+
+.debug-slider-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.debug-slider-group button {
+    padding: 2px 8px;
+    background: #e0e0e0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.debug-json {
+    background: #f0f0f0;
+    padding: 5px;
+    border-radius: 4px;
+    font-family: monospace;
+    text-align: center;
+    user-select: all;
+}
+
+#btn-debug-preview {
+    padding: 10px;
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    touch-action: manipulation;
 }
 
 .controls-overlay {
