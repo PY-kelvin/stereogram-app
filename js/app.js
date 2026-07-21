@@ -1119,13 +1119,13 @@ const Game = {
     
     stageImages: {
         '1A': [
-            { left: 'New stage 1/1a.png?v=8', right: 'New stage 1/1b.png?v=8' },
-            { left: 'New stage 1/2a.png?v=8', right: 'New stage 1/2b.png?v=8' },
-            { left: 'New stage 1/3a.png?v=8', right: 'New stage 1/3b.png?v=8' }
+            { left: 'New stage 1/1a.png?v=9', right: 'New stage 1/1b.png?v=9' },
+            { left: 'New stage 1/2a.png?v=9', right: 'New stage 1/2b.png?v=9' },
+            { left: 'New stage 1/3a.png?v=9', right: 'New stage 1/3b.png?v=9' }
         ],
         '1B': [
-            { left: 'New stage 1/4a.png?v=8', right: 'New stage 1/4b.png?v=8' },
-            { left: 'New stage 1/5a.png?v=8', right: 'New stage 1/5b.png?v=8' }
+            { left: 'New stage 1/4a.png?v=9', right: 'New stage 1/4b.png?v=9' },
+            { left: 'New stage 1/5a.png?v=9', right: 'New stage 1/5b.png?v=9' }
         ],
         '2A': ['stage 2/stage 2A.png?v=2', 'stage 2/stage 2B.png?v=2', 'stage 2/stage 2C.png?v=2'],
         '2B': ['stage 2/stage 2D.png?v=2', 'stage 2/stage 2E.png?v=2'],
@@ -1134,16 +1134,16 @@ const Game = {
     },
     
     visualAnchors: {
-        'New stage 1/1a.png?v=8': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/1b.png?v=8': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/2a.png?v=8': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/2b.png?v=8': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/3a.png?v=8': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/3b.png?v=8': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/4a.png?v=8': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/4b.png?v=8': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/5a.png?v=8': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 1/5b.png?v=8': { anchorX: 0.50, anchorY: 0.50 }
+        'New stage 1/1a.png?v=9': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/1b.png?v=9': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/2a.png?v=9': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/2b.png?v=9': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/3a.png?v=9': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/3b.png?v=9': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/4a.png?v=9': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/4b.png?v=9': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/5a.png?v=9': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 1/5b.png?v=9': { anchorX: 0.50, anchorY: 0.50 }
     },
 
     stageRatios: {
