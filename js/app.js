@@ -1276,14 +1276,8 @@ const Game = {
             this.currentDebugAnchors.rightX = parseFloat(document.getElementById('slider-right-x').value);
             this.currentDebugAnchors.rightY = parseFloat(document.getElementById('slider-right-y').value);
             
-            document.getElementById('debug-json-output').innerText = 
-                `Left Image:   ( ${gameImageLeft.offsetLeft.toFixed(1)}, ${gameImageLeft.offsetTop.toFixed(1)} )\n` +
-                `Right Image:  ( ${gameImageRight.offsetLeft.toFixed(1)}, ${gameImageRight.offsetTop.toFixed(1)} )\n` +
-                `Left Dot:     ( ${window._lastLeftDotX?.toFixed(1)}, ${window._lastLeftDotY?.toFixed(1)} )\n` +
-                `Right Dot:    ( ${window._lastRightDotX?.toFixed(1)}, ${window._lastRightDotY?.toFixed(1)} )\n` +
-                `\nFINAL JSON:\n` +
-                `{ anchorX: ${this.currentDebugAnchors.leftX.toFixed(2)}, anchorY: ${this.currentDebugAnchors.leftY.toFixed(2)} } // left\n` +
-                `{ anchorX: ${this.currentDebugAnchors.rightX.toFixed(2)}, anchorY: ${this.currentDebugAnchors.rightY.toFixed(2)} } // right`;
+            // The JSON readout is updated inside loadImage to ensure access to layout coordinates
+            this.loadImage(this.currentStageNode);
         };
 
         const btnToggleMode = document.getElementById('btn-toggle-debug-mode');
@@ -1297,7 +1291,9 @@ const Game = {
 
         const setupDebugControl = (id, prop, isInc) => {
             document.getElementById(id).addEventListener('click', () => {
-                const slider = document.getElementById(id.replace('-dec', '').replace('-inc', 'slider-').replace('btn-', 'slider-'));
+                const isDec = id.endsWith('-dec');
+                const sliderId = id.replace(isDec ? '-dec' : '-inc', '').replace('btn-', 'slider-');
+                const slider = document.getElementById(sliderId);
                 let val = parseFloat(slider.value);
                 val += (isInc ? 0.01 : -0.01);
                 val = Math.max(0, Math.min(1, val));
