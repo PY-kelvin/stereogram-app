@@ -1127,8 +1127,15 @@ const Game = {
             { left: 'New stage 1/4a.png?v=9', right: 'New stage 1/4b.png?v=9' },
             { left: 'New stage 1/5a.png?v=9', right: 'New stage 1/5b.png?v=9' }
         ],
-        '2A': ['stage 2/stage 2A.png?v=2', 'stage 2/stage 2B.png?v=2', 'stage 2/stage 2C.png?v=2'],
-        '2B': ['stage 2/stage 2D.png?v=2', 'stage 2/stage 2E.png?v=2'],
+        '2A': [
+            { left: 'New stage 2/1a.png?v=1', right: 'New stage 2/1b.png?v=1' },
+            { left: 'New stage 2/2a.png?v=1', right: 'New stage 2/2b.png?v=1' },
+            { left: 'New stage 2/3a.png?v=1', right: 'New stage 2/3b.png?v=1' }
+        ],
+        '2B': [
+            { left: 'New stage 2/4a.png?v=1', right: 'New stage 2/4b.png?v=1' },
+            { left: 'New stage 2/5a.png?v=1', right: 'New stage 2/5b.png?v=1' }
+        ],
         '3A': ['stage 3/Stage 3C.png?v=2', 'stage 3/stage 3A.png?v=2', 'stage 3/stage 3B.png?v=2'],
         '3B': ['stage 3/stage 3D.png?v=2', 'stage 3/stage 3E.png?v=2']
     },
@@ -1143,7 +1150,17 @@ const Game = {
         'New stage 1/4a.png?v=9': { anchorX: 0.48, anchorY: 0.50 },
         'New stage 1/4b.png?v=9': { anchorX: 0.46, anchorY: 0.52 },
         'New stage 1/5a.png?v=9': { anchorX: 0.50, anchorY: 0.52 },
-        'New stage 1/5b.png?v=9': { anchorX: 0.48, anchorY: 0.50 }
+        'New stage 1/5b.png?v=9': { anchorX: 0.48, anchorY: 0.50 },
+        'New stage 2/1a.png?v=1': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 2/1b.png?v=1': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 2/2a.png?v=1': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 2/2b.png?v=1': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 2/3a.png?v=1': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 2/3b.png?v=1': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 2/4a.png?v=1': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 2/4b.png?v=1': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 2/5a.png?v=1': { anchorX: 0.50, anchorY: 0.50 },
+        'New stage 2/5b.png?v=1': { anchorX: 0.50, anchorY: 0.50 }
     },
 
     stageRatios: {
@@ -1393,6 +1410,11 @@ const Game = {
         const ppcm = window.App.pixelsPerCm || 37.795;
         const halfSep = (cmValue / 2) * ppcm;
         const fullSep = cmValue * ppcm;
+
+        const btnDebugPreview = document.getElementById('btn-debug-preview');
+        if (btnDebugPreview) {
+            btnDebugPreview.innerText = `HOLD TO PREVIEW ${cmValue}CM ALIGNMENT`;
+        }
 
         if (typeof imgData === 'object' && imgData.left && imgData.right) {
             gameImageEl.style.display = 'none';
