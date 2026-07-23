@@ -1168,16 +1168,16 @@ const Game = {
         'New stage 2/4b.png?v=1': { anchorX: 0.47, anchorY: 0.55 },
         'New stage 2/5a.png?v=1': { anchorX: 0.50, anchorY: 0.50 },
         'New stage 2/5b.png?v=1': { anchorX: 0.47, anchorY: 0.50 },
-        'New stage 3/1a.png?v=1': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 3/1b.png?v=1': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 3/2a.png?v=1': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 3/2b.png?v=1': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 3/3a.png?v=1': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 3/3b.png?v=1': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 3/4a.png?v=1': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 3/4b.png?v=1': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 3/5a.png?v=1': { anchorX: 0.50, anchorY: 0.50 },
-        'New stage 3/5b.png?v=1': { anchorX: 0.50, anchorY: 0.50 }
+        'New stage 3/1a.png?v=1': { anchorX: 0.44, anchorY: 0.57 },
+        'New stage 3/1b.png?v=1': { anchorX: 0.50, anchorY: 0.54 },
+        'New stage 3/2a.png?v=1': { anchorX: 0.44, anchorY: 0.57 },
+        'New stage 3/2b.png?v=1': { anchorX: 0.50, anchorY: 0.54 },
+        'New stage 3/3a.png?v=1': { anchorX: 0.47, anchorY: 0.54 },
+        'New stage 3/3b.png?v=1': { anchorX: 0.48, anchorY: 0.50 },
+        'New stage 3/4a.png?v=1': { anchorX: 0.51, anchorY: 0.53 },
+        'New stage 3/4b.png?v=1': { anchorX: 0.48, anchorY: 0.60 },
+        'New stage 3/5a.png?v=1': { anchorX: 0.50, anchorY: 0.52 },
+        'New stage 3/5b.png?v=1': { anchorX: 0.53, anchorY: 0.51 }
     },
 
     stageRatios: {
