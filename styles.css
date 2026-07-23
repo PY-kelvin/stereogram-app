@@ -730,7 +730,7 @@ h1, h2, h3 {
 
 #game-image-left, #game-image-right {
     position: absolute;
-    height: 80vh;
+    height: 85vh;
     width: auto;
     object-fit: contain;
     pointer-events: none;
