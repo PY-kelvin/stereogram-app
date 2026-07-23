@@ -1,9 +1,9 @@
-const CACHE_NAME = 'eyebuddy-cache-v509';
+const CACHE_NAME = 'eyebuddy-cache-v510';
 const urlsToCache = [
   './',
-  './index.html?v=509',
-  './styles.css?v=509',
-  './js/app.js?v=509',
+  './index.html?v=510',
+  './styles.css?v=510',
+  './js/app.js?v=510',
   './fonts/fredoka.woff2',
   './music/Stereogram%20music.mp4',
   './manifest.json',
