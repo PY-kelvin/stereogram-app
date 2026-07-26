@@ -1112,10 +1112,7 @@ const Game = {
     currentImageIndex: 0,
     hasStartedCurrentSession: false,
     uiTimeout: null,
-    isDebugMode: false,
-    isPreviewMode: false,
-    isDebugMoveImageMode: false, // false = Move Dots, true = Move Images
-    currentDebugAnchors: { leftX: 0.5, leftY: 0.5, rightX: 0.5, rightY: 0.5 },
+
     
     stageImages: {
         '1A': [
@@ -1278,86 +1275,7 @@ const Game = {
             }
         });
 
-        const debugPanel = document.getElementById('debug-panel');
-        document.getElementById('btn-toggle-debug').addEventListener('click', () => {
-            this.isDebugMode = !this.isDebugMode;
-            debugPanel.style.display = this.isDebugMode ? 'flex' : 'none';
-            if (this.isDebugMode) {
-                // Initialize sliders from current visualAnchors if available
-                const images = this.stageImages[this.currentStageNode];
-                if (images && images.length > 0) {
-                    const imgData = images[this.currentImageIndex];
-                    if (imgData && imgData.left && imgData.right) {
-                        const leftAnchor = this.visualAnchors[imgData.left] || { anchorX: 0.5, anchorY: 0.5 };
-                        const rightAnchor = this.visualAnchors[imgData.right] || { anchorX: 0.5, anchorY: 0.5 };
-                        this.currentDebugAnchors.leftX = leftAnchor.anchorX;
-                        this.currentDebugAnchors.leftY = leftAnchor.anchorY;
-                        this.currentDebugAnchors.rightX = rightAnchor.anchorX;
-                        this.currentDebugAnchors.rightY = rightAnchor.anchorY;
-                        document.getElementById('slider-left-x').value = leftAnchor.anchorX;
-                        document.getElementById('slider-left-y').value = leftAnchor.anchorY;
-                        document.getElementById('slider-right-x').value = rightAnchor.anchorX;
-                        document.getElementById('slider-right-y').value = rightAnchor.anchorY;
-                    }
-                }
-            }
-            this.loadImage(this.currentStageNode);
-        });
 
-        const updateDebugAnchors = () => {
-            this.currentDebugAnchors.leftX = parseFloat(document.getElementById('slider-left-x').value);
-            this.currentDebugAnchors.leftY = parseFloat(document.getElementById('slider-left-y').value);
-            this.currentDebugAnchors.rightX = parseFloat(document.getElementById('slider-right-x').value);
-            this.currentDebugAnchors.rightY = parseFloat(document.getElementById('slider-right-y').value);
-            
-            // The JSON readout is updated inside loadImage to ensure access to layout coordinates
-            this.loadImage(this.currentStageNode);
-        };
-
-        const btnToggleMode = document.getElementById('btn-toggle-debug-mode');
-        if (btnToggleMode) {
-            btnToggleMode.addEventListener('click', () => {
-                this.isDebugMoveImageMode = !this.isDebugMoveImageMode;
-                btnToggleMode.innerText = this.isDebugMoveImageMode ? 'Mode: Move Images (Dots Fixed)' : 'Mode: Move Dots (Images Fixed)';
-                this.loadImage(this.currentStageNode);
-            });
-        }
-
-        const setupDebugControl = (id, prop, isInc) => {
-            document.getElementById(id).addEventListener('click', () => {
-                const isDec = id.endsWith('-dec');
-                const sliderId = id.replace(isDec ? '-dec' : '-inc', '').replace('btn-', 'slider-');
-                const slider = document.getElementById(sliderId);
-                let val = parseFloat(slider.value);
-                val += (isInc ? 0.01 : -0.01);
-                val = Math.max(0, Math.min(1, val));
-                slider.value = val.toFixed(2);
-                updateDebugAnchors();
-            });
-        };
-
-        setupDebugControl('btn-left-x-dec', 'leftX', false);
-        setupDebugControl('btn-left-x-inc', 'leftX', true);
-        setupDebugControl('btn-left-y-dec', 'leftY', false);
-        setupDebugControl('btn-left-y-inc', 'leftY', true);
-        setupDebugControl('btn-right-x-dec', 'rightX', false);
-        setupDebugControl('btn-right-x-inc', 'rightX', true);
-        setupDebugControl('btn-right-y-dec', 'rightY', false);
-        setupDebugControl('btn-right-y-inc', 'rightY', true);
-
-        ['slider-left-x', 'slider-left-y', 'slider-right-x', 'slider-right-y'].forEach(id => {
-            document.getElementById(id).addEventListener('input', updateDebugAnchors);
-        });
-
-        const btnPreview = document.getElementById('btn-debug-preview');
-        const startPreview = () => { this.isPreviewMode = true; this.loadImage(this.currentStageNode); };
-        const stopPreview = () => { this.isPreviewMode = false; this.loadImage(this.currentStageNode); };
-        
-        btnPreview.addEventListener('mousedown', startPreview);
-        btnPreview.addEventListener('touchstart', startPreview, {passive: true});
-        btnPreview.addEventListener('mouseup', stopPreview);
-        btnPreview.addEventListener('mouseleave', stopPreview);
-        btnPreview.addEventListener('touchend', stopPreview);
 
 
         document.getElementById('btn-img-prev').addEventListener('click', () => {
@@ -1417,9 +1335,6 @@ const Game = {
         const gameImageEl = document.getElementById('game-image');
         const gameImageLeft = document.getElementById('game-image-left');
         const gameImageRight = document.getElementById('game-image-right');
-        const debugCanvas = document.getElementById('debug-canvas');
-        const ctx = debugCanvas.getContext('2d');
-        ctx.clearRect(0, 0, debugCanvas.width, debugCanvas.height);
 
         let cmValue = 4.0;
         if (nodeName.startsWith('2')) cmValue = 5.0;
@@ -1427,11 +1342,6 @@ const Game = {
         const ppcm = window.App.pixelsPerCm || 37.795;
         const halfSep = (cmValue / 2) * ppcm;
         const fullSep = cmValue * ppcm;
-
-        const btnDebugPreview = document.getElementById('btn-debug-preview');
-        if (btnDebugPreview) {
-            btnDebugPreview.innerText = `HOLD TO PREVIEW ${cmValue}CM ALIGNMENT`;
-        }
 
         if (typeof imgData === 'object' && imgData.left && imgData.right) {
             gameImageEl.style.display = 'none';
@@ -1453,98 +1363,11 @@ const Game = {
                 let anchorLeft = this.visualAnchors[imgData.left] || { anchorX: 0.5, anchorY: 0.5 };
                 let anchorRight = this.visualAnchors[imgData.right] || { anchorX: 0.5, anchorY: 0.5 };
 
-                if (this.isDebugMode) {
-                    anchorLeft = { anchorX: this.currentDebugAnchors.leftX, anchorY: this.currentDebugAnchors.leftY };
-                    anchorRight = { anchorX: this.currentDebugAnchors.rightX, anchorY: this.currentDebugAnchors.rightY };
-                }
+                gameImageLeft.style.left = `${targetLeftX - (anchorLeft.anchorX * gameImageLeft.clientWidth)}px`;
+                gameImageLeft.style.top = `${centerY - (anchorLeft.anchorY * gameImageLeft.clientHeight)}px`;
 
-                let leftX, leftY, rightX, rightY;
-
-                if (this.isDebugMode && !this.isPreviewMode) {
-                    if (this.isDebugMoveImageMode) {
-                        // Mode: Move Images (Dots Fixed at 4cm targets)
-                        leftX = targetLeftX;
-                        leftY = centerY;
-                        rightX = targetRightX;
-                        rightY = centerY;
-
-                        gameImageLeft.style.left = `${targetLeftX - (anchorLeft.anchorX * gameImageLeft.clientWidth)}px`;
-                        gameImageLeft.style.top = `${centerY - (anchorLeft.anchorY * gameImageLeft.clientHeight)}px`;
-
-                        gameImageRight.style.left = `${targetRightX - (anchorRight.anchorX * gameImageRight.clientWidth)}px`;
-                        gameImageRight.style.top = `${centerY - (anchorRight.anchorY * gameImageRight.clientHeight)}px`;
-
-                    } else {
-                        // Mode: Move Dots (Images Fixed at their geometric centers)
-                        gameImageLeft.style.left = `${targetLeftX - (0.5 * gameImageLeft.clientWidth)}px`;
-                        gameImageLeft.style.top = `${centerY - (0.5 * gameImageLeft.clientHeight)}px`;
-                        
-                        gameImageRight.style.left = `${targetRightX - (0.5 * gameImageRight.clientWidth)}px`;
-                        gameImageRight.style.top = `${centerY - (0.5 * gameImageRight.clientHeight)}px`;
-
-                        leftX = targetLeftX + (anchorLeft.anchorX - 0.5) * gameImageLeft.clientWidth;
-                        leftY = centerY + (anchorLeft.anchorY - 0.5) * gameImageLeft.clientHeight;
-                        
-                        rightX = targetRightX + (anchorRight.anchorX - 0.5) * gameImageRight.clientWidth;
-                        rightY = centerY + (anchorRight.anchorY - 0.5) * gameImageRight.clientHeight;
-                    }
-                } else {
-                    // Normal / Preview mode (dots unlinked text hidden)
-                    gameImageLeft.style.left = `${targetLeftX - (anchorLeft.anchorX * gameImageLeft.clientWidth)}px`;
-                    gameImageLeft.style.top = `${centerY - (anchorLeft.anchorY * gameImageLeft.clientHeight)}px`;
-
-                    gameImageRight.style.left = `${targetRightX - (anchorRight.anchorX * gameImageRight.clientWidth)}px`;
-                    gameImageRight.style.top = `${centerY - (anchorRight.anchorY * gameImageRight.clientHeight)}px`;
-
-                    leftX = targetLeftX;
-                    leftY = centerY;
-                    rightX = targetRightX;
-                    rightY = centerY;
-                }
-
-                // Store dots for JSON readout
-                window._lastLeftDotX = leftX;
-                window._lastLeftDotY = leftY;
-                window._lastRightDotX = rightX;
-                window._lastRightDotY = rightY;
-
-                // Fire an update to the text box so coords stay in sync (wrap in try-catch to avoid loop)
-                if (this.isDebugMode) {
-                    try {
-                        const jsonOut = document.getElementById('debug-json-output');
-                        if (jsonOut) {
-                            jsonOut.innerText = 
-                                `Left Image:   ( ${gameImageLeft.offsetLeft.toFixed(1)}, ${gameImageLeft.offsetTop.toFixed(1)} )\n` +
-                                `Right Image:  ( ${gameImageRight.offsetLeft.toFixed(1)}, ${gameImageRight.offsetTop.toFixed(1)} )\n` +
-                                `Left Dot:     ( ${window._lastLeftDotX?.toFixed(1)}, ${window._lastLeftDotY?.toFixed(1)} )\n` +
-                                `Right Dot:    ( ${window._lastRightDotX?.toFixed(1)}, ${window._lastRightDotY?.toFixed(1)} )\n` +
-                                `\nFINAL JSON:\n` +
-                                `{ anchorX: ${anchorLeft.anchorX.toFixed(2)}, anchorY: ${anchorLeft.anchorY.toFixed(2)} } // left\n` +
-                                `{ anchorX: ${anchorRight.anchorX.toFixed(2)}, anchorY: ${anchorRight.anchorY.toFixed(2)} } // right`;
-                        }
-                    } catch(e){}
-                }
-
-                // Draw debug mode
-                debugCanvas.width = playArea.clientWidth;
-                debugCanvas.height = playArea.clientHeight;
-
-                ctx.clearRect(0, 0, debugCanvas.width, debugCanvas.height);
-                ctx.fillStyle = 'red';
-                ctx.beginPath(); ctx.arc(leftX, leftY, 4, 0, 2*Math.PI); ctx.fill();
-                ctx.beginPath(); ctx.arc(rightX, rightY, 4, 0, 2*Math.PI); ctx.fill();
-                
-                ctx.strokeStyle = 'red';
-                ctx.beginPath(); ctx.moveTo(leftX, leftY); ctx.lineTo(rightX, rightY); ctx.stroke();
-                
-                ctx.fillStyle = 'red';
-                ctx.font = '12px Arial';
-                if (this.isDebugMode && !this.isPreviewMode) {
-                    ctx.fillText(`TUNING MODE - DOTS UNLINKED`, 10, 20);
-                } else {
-                    ctx.fillText(`Target C-to-C: ${fullSep.toFixed(1)}px (${cmValue}cm)`, 10, 20);
-                    ctx.fillText(`Pixels Per Cm: ${ppcm.toFixed(1)}px`, 10, 35);
-                }
+                gameImageRight.style.left = `${targetRightX - (anchorRight.anchorX * gameImageRight.clientWidth)}px`;
+                gameImageRight.style.top = `${centerY - (anchorRight.anchorY * gameImageRight.clientHeight)}px`;
             });
         } else {
             gameImageLeft.style.display = 'none';

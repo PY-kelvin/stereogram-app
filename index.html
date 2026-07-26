@@ -20,7 +20,7 @@
     <link rel="apple-touch-icon" href="https://py-kelvin.github.io/stereogram-app/app_icon_v2.png?v=new2">
     <link rel="icon" href="https://py-kelvin.github.io/stereogram-app/app_icon_v2.png?v=new2">
 
-    <link rel="stylesheet" href="styles.css?v=513">
+    <link rel="stylesheet" href="styles.css?v=514">
 </head>
 
 <body>
@@ -496,57 +496,13 @@
                 <img id="game-image" src="" alt="Stereogram">
                 <img id="game-image-left" src="" alt="Stereogram Left" style="position: absolute; display: none;">
                 <img id="game-image-right" src="" alt="Stereogram Right" style="position: absolute; display: none;">
-                <canvas id="debug-canvas" style="position: absolute; top: 0; left: 0; pointer-events: none; z-index: 10;"></canvas>
                 <button id="btn-img-next" class="btn-image-nav game-ui">&gt;</button>
             </div>
 
             <div class="controls-overlay game-ui">
-                <button id="btn-toggle-timer" class="btn btn-primary" title="Pause Exercise">⏸</button>
-                <button id="btn-toggle-debug" class="btn btn-secondary" style="margin-left: 10px;">🛠 Tune Anchors</button>
             </div>
 
-            <!-- Debug Control Panel -->
-            <div id="debug-panel">
-                <div style="display: flex; justify-content: center; margin-bottom: 2px;">
-                    <button id="btn-toggle-debug-mode" style="padding: 2px 5px; font-size: 10px; border-radius: 4px; border: 1px solid #333; background: #fff;">Mode: Move Dots (Images Fixed)</button>
-                </div>
-                <div class="debug-row">
-                    <div class="debug-controls">
-                        <label>Left Anchor</label>
-                        <div class="debug-slider-group">
-                            <span>X:</span>
-                            <button id="btn-left-x-dec">-</button>
-                            <input type="range" id="slider-left-x" min="0" max="1" step="0.01" value="0.5">
-                            <button id="btn-left-x-inc">+</button>
-                        </div>
-                        <div class="debug-slider-group">
-                            <span>Y:</span>
-                            <button id="btn-left-y-dec">-</button>
-                            <input type="range" id="slider-left-y" min="0" max="1" step="0.01" value="0.5">
-                            <button id="btn-left-y-inc">+</button>
-                        </div>
-                    </div>
-                    <div class="debug-controls">
-                        <label>Right Anchor</label>
-                        <div class="debug-slider-group">
-                            <span>X:</span>
-                            <button id="btn-right-x-dec">-</button>
-                            <input type="range" id="slider-right-x" min="0" max="1" step="0.01" value="0.5">
-                            <button id="btn-right-x-inc">+</button>
-                        </div>
-                        <div class="debug-slider-group">
-                            <span>Y:</span>
-                            <button id="btn-right-y-dec">-</button>
-                            <input type="range" id="slider-right-y" min="0" max="1" step="0.01" value="0.5">
-                            <button id="btn-right-y-inc">+</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="debug-json" id="debug-json-output" style="white-space: pre-wrap; font-size: 9px; text-align: left;">
-                    { anchorX: 0.50, anchorY: 0.50 }
-                </div>
-                <button id="btn-debug-preview">HOLD TO PREVIEW 4CM ALIGNMENT</button>
-            </div>
+
         </section>
 
         <!-- PROGRESS REPORT SCREEN -->
@@ -676,7 +632,7 @@
         </div>
 
     <!-- Scripts -->
-    <script src="js/app.js?v=513"></script>
+    <script src="js/app.js?v=514"></script>
     <script>
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
