@@ -422,6 +422,20 @@ h1, h2, h3 {
     opacity: 0 !important;
 }
 
+.transition-hotspot {
+    width: 60px;
+    height: 150px;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+
+.transition-hotspot-horizontal {
+    width: 119px;
+    height: 38px;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+
 .node-icon {
     width: 60px;
     height: 60px;
