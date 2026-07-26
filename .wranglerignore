@@ -1,0 +1,9 @@
+node_modules/
+.git/
+test-results/
+playwright-report/
+tests/
+*.py
+*.ps1
+package.json
+package-lock.json
