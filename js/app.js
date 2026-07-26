@@ -1347,12 +1347,9 @@ const Game = {
             gameImageEl.style.display = 'none';
             gameImageLeft.style.display = 'block';
             gameImageRight.style.display = 'block';
-            
-            gameImageLeft.src = imgData.left;
-            gameImageRight.src = imgData.right;
 
-            // Use requestAnimationFrame to ensure the images are rendered before positioning
-            requestAnimationFrame(() => {
+            const positionImages = () => {
+                if (!gameImageLeft.complete || !gameImageRight.complete) return;
                 const playArea = document.getElementById('game-image-container');
                 const centerX = playArea.clientWidth / 2;
                 const centerY = playArea.clientHeight / 2;
@@ -1368,7 +1365,22 @@ const Game = {
 
                 gameImageRight.style.left = `${targetRightX - (anchorRight.anchorX * gameImageRight.clientWidth)}px`;
                 gameImageRight.style.top = `${centerY - (anchorRight.anchorY * gameImageRight.clientHeight)}px`;
-            });
+            };
+
+            // Hide them briefly while loading to prevent off-center flashes
+            gameImageLeft.style.left = '-9999px';
+            gameImageRight.style.left = '-9999px';
+
+            gameImageLeft.onload = positionImages;
+            gameImageRight.onload = positionImages;
+
+            gameImageLeft.src = imgData.left;
+            gameImageRight.src = imgData.right;
+
+            // In case they are already cached and onload doesn't fire
+            if (gameImageLeft.complete && gameImageRight.complete) {
+                positionImages();
+            }
         } else {
             gameImageLeft.style.display = 'none';
             gameImageRight.style.display = 'none';
