@@ -7,3 +7,5 @@ tests/
 *.ps1
 package.json
 package-lock.json
+backup/
+*.zip
