@@ -222,21 +222,7 @@ const Auth = {
                 
                 if (!user.stagePlays) user.stagePlays = { 1: 0, 2: 0, 3: 0 };
 
-                // Decoupled password logic
-                if (user.passwords && user.passwords.length > 0) {
-                    let maxLevel = 0;
-                    const pwdMap = [
-                        { level: 7, pwd: 'orthoptics' },
-                        { level: 14, pwd: 'orthoptics1' },
-                        { level: 21, pwd: 'orthoptics2' },
-                        { level: 28, pwd: 'orthoptics3' },
-                        { level: 35, pwd: 'orthoptics4' },
-                        { level: 42, pwd: 'orthoptics5' }
-                    ];
-                    pwdMap.forEach(p => {
-                        if (user.passwords.includes(p.pwd) && p.level > maxLevel) maxLevel = p.level;
-                    });
-                }
+
 
                 if (!user.visualCount) {
                     const sp = user.stagePlays || { 1: 0, 2: 0, 3: 0 };

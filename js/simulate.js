@@ -78,11 +78,11 @@ window.runSimulation = async function() {
                 if (user.stagePlays[1] === 1) passCount++; else log(`<span style="color:red">Bug Fix Failed! Plays is ${user.stagePlays[1]} instead of 1</span>`);
                 
             } else if (i >= 11 && i <= 15) {
-                window.Map.fastForward(14, "orthoptics1");
+                window.Map.fastForward(14, "snec1234");
                 if (user.streak === 14) passCount++; else log(`<span style="color:red">Password Failed User ${i}</span>`);
                 
             } else if (i >= 16 && i <= 20) {
-                window.Map.fastForward(28, "orthoptics3");
+                window.Map.fastForward(28, "s1n2e3c4");
                 window.Game.currentStageNode = '3A';
                 
                 user.sessionHistory.push({
