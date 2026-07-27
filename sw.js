@@ -1,9 +1,8 @@
-const CACHE_NAME = 'eyebuddy-cache-v518';
+const CACHE_NAME = 'eyebuddy-cache-v519';
 const urlsToCache = [
   './',
-  './index.html?v=518',
-  './styles.css?v=518',
-  './js/app.js?v=518',
+  './styles.css',
+  './js/app.js',
   './fonts/fredoka.woff2',
   './music/Stereogram%20music.mp4',
   './manifest.json',
@@ -96,6 +95,19 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('fetch', event => {
+  // Navigation requests (e.g., launching PWA) should use Network-First
+  if (event.request.mode === 'navigate' || event.request.url.includes('.html') || event.request.url.endsWith('/')) {
+    event.respondWith(
+      fetch(event.request)
+        .catch(() => {
+          // If network fails (offline), return the cached root
+          return caches.match('./', { ignoreSearch: true });
+        })
+    );
+    return;
+  }
+
+  // All other requests (CSS, JS, Images) use Cache-First, then Network
   event.respondWith(
     caches.match(event.request, { ignoreSearch: true })
       .then(response => {
