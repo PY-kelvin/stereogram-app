@@ -1514,15 +1514,17 @@ const Game = {
         let newPlays = oldPlays;
 
         if (user.dailyProgressStage !== stageNum) {
-            // Revoke star from previously played stage today
-            if (user.dailyProgressStage) {
-                user.stagePlays[user.dailyProgressStage] = Math.max(0, user.stagePlays[user.dailyProgressStage] - 1);
+            // If they already earned a star today on a different stage, DO NOT steal it.
+            // First-come, first-serve. They just don't get another star.
+            if (user.dailyProgress > 0) {
+                // Abort granting a star, but time is still saved separately in session logs.
+            } else {
+                // Award star to current stage
+                user.stagePlays[stageNum] += 1;
+                user.dailyProgressStage = stageNum;
+                user.dailyProgress = 1;
+                newPlays = user.stagePlays[stageNum];
             }
-            // Award star to current stage
-            user.stagePlays[stageNum] += 1;
-            user.dailyProgressStage = stageNum;
-            user.dailyProgress = 1;
-            newPlays = user.stagePlays[stageNum];
         }
 
         if (window.Progress) window.Progress.saveUser();
