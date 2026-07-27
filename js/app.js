@@ -1197,16 +1197,18 @@ const Game = {
         this.currentStageNode = '1A';
         this.currentImageIndex = 0;
         this.bindEvents();
-        window.addEventListener('beforeunload', () => {
-            if (this.isPlaying || (this.timeLeft > 0 && this.timeLeft < 600)) {
-                this.pauseTimer();
-                const user = window.App.currentUser;
-                if (user) {
-                    user.savedSession = {
-                        timeLeft: this.timeLeft,
-                        timestamp: new Date().getTime()
-                    };
-                    if (window.Progress) window.Progress.saveUser();
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') {
+                if (this.isPlaying || (this.timeLeft > 0 && this.timeLeft < 600)) {
+                    this.pauseTimer();
+                    const user = window.App.currentUser;
+                    if (user) {
+                        user.savedSession = {
+                            timeLeft: this.timeLeft,
+                            timestamp: new Date().getTime()
+                        };
+                        if (window.Progress) window.Progress.saveUser();
+                    }
                 }
             }
         });
