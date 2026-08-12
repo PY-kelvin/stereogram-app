@@ -1948,13 +1948,13 @@ const Menu = {
         }
 
         document.getElementById('btn-inst-dist').addEventListener('click', () => {
-            document.getElementById('written-inst-title').innerText = "Cat Stereogram Exercise (Distance)";
+            document.getElementById('written-inst-title').innerText = "Stereogram Exercise (Distance)";
             document.getElementById('written-inst-content').innerHTML = distContent;
             window.App.showScreen('screen-written-instruction');
         });
 
         document.getElementById('btn-inst-near').addEventListener('click', () => {
-            document.getElementById('written-inst-title').innerText = "Cat Stereogram Exercise (Near)";
+            document.getElementById('written-inst-title').innerText = "Stereogram Exercise (Near)";
             document.getElementById('written-inst-content').innerHTML = nearContent;
             window.App.showScreen('screen-written-instruction');
         });
