@@ -723,6 +723,7 @@ h1, h2, h3 {
     align-items: center;
     position: relative;
     overflow: hidden;
+    touch-action: pan-y;
 }
 
 #game-image-left, #game-image-right {
