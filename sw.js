@@ -1,4 +1,4 @@
-const CACHE_NAME = 'eyebuddy-cache-v521';
+const CACHE_NAME = 'eyebuddy-cache-v522';
 const urlsToCache = [
   './',
   './styles.css',
@@ -95,27 +95,28 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('fetch', event => {
-  // Navigation requests (e.g., launching PWA) should use Network-First
-  if (event.request.mode === 'navigate' || event.request.url.includes('.html') || event.request.url.endsWith('/')) {
-    event.respondWith(
-      fetch(event.request)
-        .catch(() => {
-          // If network fails (offline), return the cached root
-          return caches.match('./', { ignoreSearch: true });
-        })
-    );
-    return;
-  }
+  if (event.request.method !== 'GET') return;
 
-  // All other requests (CSS, JS, Images) use Cache-First, then Network
   event.respondWith(
-    caches.match(event.request, { ignoreSearch: true })
-      .then(response => {
-        if (response) {
-          return response; // Return from cache if found
+    caches.match(event.request, { ignoreSearch: true }).then(cachedResponse => {
+      const networkFetch = fetch(event.request).then(response => {
+        // Update cache with new response
+        if (response && response.status === 200) {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseClone));
         }
-        return fetch(event.request); // Otherwise fetch from network
-      })
+        return response;
+      }).catch(err => {
+        console.log('Offline: cannot update cache in background.');
+        // If network fails and we have no cache for a navigation request, fallback to root
+        if (!cachedResponse && (event.request.mode === 'navigate' || event.request.url.includes('.html') || event.request.url.endsWith('/'))) {
+          return caches.match('./', { ignoreSearch: true });
+        }
+      });
+
+      // Return cached response immediately (Offline-First), or fallback to network
+      return cachedResponse || networkFetch;
+    })
   );
 });
 
