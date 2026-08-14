@@ -1279,6 +1279,28 @@ const Game = {
             this.currentImageIndex = (this.currentImageIndex + 1) % maxCount;
             this.loadImage(this.currentStageNode);
         });
+
+        // Swipe Navigation
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const gameContainer = document.getElementById('game-image-container');
+
+        gameContainer.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, {passive: true});
+
+        gameContainer.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            const threshold = 50;
+            if (touchEndX < touchStartX - threshold) {
+                // Swipe left -> Next
+                document.getElementById('btn-img-next').click();
+            }
+            if (touchEndX > touchStartX + threshold) {
+                // Swipe right -> Prev
+                document.getElementById('btn-img-prev').click();
+            }
+        }, {passive: true});
     },
 
     startStage(nodeName) {

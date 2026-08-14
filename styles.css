@@ -362,11 +362,11 @@ h1, h2, h3 {
 }
 
 #btn-img-prev {
-    left: 45px;
+    left: 10px;
 }
 
 #btn-img-next {
-    right: 45px;
+    right: 10px;
 }
 
 .map-container {
